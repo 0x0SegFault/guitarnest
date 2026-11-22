@@ -32,6 +32,8 @@ jobs:
         run: ./gradlew :shared:jvmTest testDebugUnitTest
       - name: Lint (app and shared)
         run: ./gradlew lintDebug :shared:lintDebug
+      - name: iOS translations generate cleanly
+        run: python3 scripts/ios_strings.py
       - name: Build
         run: ./gradlew assembleDebug assembleRelease
       - name: Check permissions (must match PRIVACY.md)

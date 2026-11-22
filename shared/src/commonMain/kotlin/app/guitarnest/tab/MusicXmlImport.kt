@@ -43,7 +43,7 @@ object MusicXmlImport {
         for (measure in part.all("measure")) {
             var position = 0 // in divisions
             var lastOnset = 0
-            val notesAt = sortedMapOf<Double, MutableList<TabNote>>()
+            val notesAt = mutableMapOf<Double, MutableList<TabNote>>()
             val chords = mutableListOf<ChordMark>()
             for (el in measure.children) {
                 when (el.name) {
@@ -105,7 +105,7 @@ object MusicXmlImport {
             val beatsPerBar = beats * 4 / beatType
             bars += Bar(
                 chords = chords.filter { it.beat < beatsPerBar }.distinctBy { it.beat },
-                beats = notesAt.filter { it.key < beatsPerBar && it.value.isNotEmpty() }.map { (at, n) -> Beat(at, n.sortedBy { it.string }) },
+                beats = notesAt.filter { it.key < beatsPerBar && it.value.isNotEmpty() }.entries.sortedBy { it.key }.map { (at, n) -> Beat(at, n.sortedBy { it.string }) },
             )
         }
         closeSection()

@@ -168,4 +168,6 @@
         <item quantity="many">%1$d canciones restauradas.</item>
         <item quantity="other">%1$d canciones restauradas.</item>
     </plurals>
+    <string name="ios_mxl_not_supported">El MusicXML comprimido (.mxl) no se admite en iPhone. Exporta la partitura como .musicxml.</string>
+    <string name="listen_too_long">El archivo dura más de 15 minutos.</string>
 </resources>

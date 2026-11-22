@@ -85,5 +85,15 @@ data class SpeedTrainer(val start: Int, val target: Int, val step: Int = 5, val 
     }
 }
 
+/** Common strumming patterns (generic rhythms, not from any song). */
+val PRESET_PATTERNS = listOf(
+    app.guitarnest.tab.StrumPattern("downs", "Downstrokes", "D-D-D-D-"),
+    app.guitarnest.tab.StrumPattern("folk", "Folk", "D-DU-UDU"),
+    app.guitarnest.tab.StrumPattern("pop", "Pop", "D-DUDUDU"),
+    app.guitarnest.tab.StrumPattern("eighths", "Eighths", "DUDUDUDU"),
+    app.guitarnest.tab.StrumPattern("waltz", "Waltz (3/4)", "D-DUDU"),
+    app.guitarnest.tab.StrumPattern("sixteenths", "Sixteenths", "D-DUD-DUD-DUD-DU", perBeat = 4),
+)
+
 const val MIN_BPM = 30
 const val MAX_BPM = 250

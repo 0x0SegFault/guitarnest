@@ -168,4 +168,6 @@
         <item quantity="many">%1$d brani ripristinati.</item>
         <item quantity="other">%1$d brani ripristinati.</item>
     </plurals>
+    <string name="ios_mxl_not_supported">Il MusicXML compresso (.mxl) non è supportato su iPhone. Esporta lo spartito come .musicxml.</string>
+    <string name="listen_too_long">Il file dura più di 15 minuti.</string>
 </resources>

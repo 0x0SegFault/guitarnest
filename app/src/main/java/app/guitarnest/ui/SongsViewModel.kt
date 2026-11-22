@@ -25,11 +25,13 @@ import app.guitarnest.tab.TabFormatException
 import app.guitarnest.data.PracticeEntry
 import app.guitarnest.data.SongRepository
 import app.guitarnest.practice.MAX_BPM
+import app.guitarnest.practice.PRESET_PATTERNS
 import app.guitarnest.practice.MIN_BPM
 import app.guitarnest.practice.SpeedTrainer
 import app.guitarnest.practice.TapTempo
 import app.guitarnest.tab.PlayedBar
 import app.guitarnest.tab.Song
+import app.guitarnest.tab.ExampleSong
 import app.guitarnest.tab.StrumPattern
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,15 +42,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
-/** Common strumming patterns (generic rhythms, not from any song). */
-val PRESET_PATTERNS = listOf(
-    StrumPattern("downs", "Downstrokes", "D-D-D-D-"),
-    StrumPattern("folk", "Folk", "D-DU-UDU"),
-    StrumPattern("pop", "Pop", "D-DUDUDU"),
-    StrumPattern("eighths", "Eighths", "DUDUDUDU"),
-    StrumPattern("waltz", "Waltz (3/4)", "D-DUDU"),
-    StrumPattern("sixteenths", "Sixteenths", "D-DUD-DUD-DUD-DU", perBeat = 4),
-)
 
 data class MetronomeSettings(
     val bpm: Int = 80,

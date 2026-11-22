@@ -1,10 +1,5 @@
-package app.guitarnest.ui
+package app.guitarnest.tab
 
-import app.guitarnest.tab.Level
-import app.guitarnest.tab.Section
-import app.guitarnest.tab.Song
-import app.guitarnest.tab.StrumPattern
-import app.guitarnest.tab.TextTab
 
 /** A short exercise written for GuitarNest (not from any song), shown on first launch. */
 object ExampleSong {

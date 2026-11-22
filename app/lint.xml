@@ -13,4 +13,8 @@
     <issue id="InsecureBaseConfiguration">
         <ignore path="src/main/res/xml/network_security_config.xml" />
     </issue>
+    <!-- Shared translations: this text is used by the iOS app (scripts/ios_strings.py). -->
+    <issue id="UnusedResources">
+        <ignore regexp="ios_mxl_not_supported" />
+    </issue>
 </lint>

@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.guitarnest.R
+import app.guitarnest.practice.PRESET_PATTERNS
 import app.guitarnest.practice.MAX_BPM
 import app.guitarnest.practice.MIN_BPM
 

@@ -30,7 +30,7 @@ object AudioFile {
             val format = extractor.getTrackFormat(track)
             val mime = format.getString(MediaFormat.KEY_MIME)!!
             val durationUs = if (format.containsKey(MediaFormat.KEY_DURATION)) format.getLong(MediaFormat.KEY_DURATION) else 0L
-            if (durationUs > MAX_SECONDS * 1_000_000L) throw AudioException("The file is longer than ${MAX_SECONDS / 60} minutes")
+            if (durationUs > MAX_SECONDS * 1_000_000L) throw AudioException(context.getString(app.guitarnest.R.string.listen_too_long))
             val codec = MediaCodec.createDecoderByType(mime)
             codec.configure(format, null, null, 0)
             codec.start()

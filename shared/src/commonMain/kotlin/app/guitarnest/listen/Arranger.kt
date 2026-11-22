@@ -72,7 +72,7 @@ object Arranger {
                 setup.placed.mapNotNull { p ->
                     val at = ((p.note.time - start) / grid.beat * 4).roundToInt() / 4.0
                     if (at < 0 || at >= grid.beatsPerBar) null else at to TabNote(6 - p.string, p.fret)
-                }.groupBy({ it.first }, { it.second }).toSortedMap().map { (at, ns) -> Beat(at, ns.distinctBy { it.string }.sortedBy { it.string }) }
+                }.groupBy({ it.first }, { it.second }).entries.sortedBy { it.key }.map { (at, ns) -> Beat(at, ns.distinctBy { it.string }.sortedBy { it.string }) }
             }
             Bar(chords = chords, beats = tabBeats)
         }

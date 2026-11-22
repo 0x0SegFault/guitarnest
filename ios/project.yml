@@ -1,0 +1,65 @@
+# XcodeGen spec: `xcodegen generate` creates GuitarNest.xcodeproj (not committed).
+name: GuitarNest
+options:
+  bundleIdPrefix: io.github.x0x0segfault
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: en
+settings:
+  base:
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.9"
+    # Simulator builds are signed to run locally; App Store signing is set in Xcode with the maintainer's account.
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    DEVELOPMENT_TEAM: ""
+targets:
+  GuitarNest:
+    type: application
+    platform: iOS
+    sources:
+      - path: GuitarNest
+      # The note model, shared with Android (models/basic-pitch.gnm, Apache-2.0).
+      - path: ../models/basic-pitch.gnm
+        buildPhase: resources
+      - path: ../models/NOTICE-basic-pitch.txt
+        buildPhase: resources
+    dependencies:
+      # Built by: ./gradlew :shared:assembleGuitarNestSharedReleaseXCFramework
+      - framework: ../shared/build/XCFrameworks/release/GuitarNestShared.xcframework
+        embed: false
+      - sdk: AVFoundation.framework
+    info:
+      path: GuitarNest/Info.plist
+      properties:
+        CFBundleDisplayName: GuitarNest
+        CFBundleLocalizations: [en, fr, de, es, it]
+        NSMicrophoneUsageDescription: The tuner hears your guitar, and Tab from audio records you playing. The sound stays on your iPhone and is not saved.
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        ITSAppUsesNonExemptEncryption: false
+        LSSupportsOpeningDocumentsInPlace: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.x0x0segfault.guitarnest
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: NO
+  GuitarNestTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: GuitarNestTests
+    dependencies:
+      - target: GuitarNest
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  GuitarNest:
+    build:
+      targets:
+        GuitarNest: all
+        GuitarNestTests: [test]
+    test:
+      targets: [GuitarNestTests]

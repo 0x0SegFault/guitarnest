@@ -1,0 +1,27 @@
+# SwiftLint: run from ios/ with `swiftlint lint --strict` (CI does this).
+included:
+  - GuitarNest
+  - GuitarNestTests
+identifier_name:
+  # Loop indexes, geometry and short closure values only.
+  excluded: [i, x, y, r, s, b, c, p, f, t, q, d, a, id, to]
+line_length:
+  warning: 160
+  error: 220
+  ignores_urls: true
+  ignores_comments: true
+# SwiftUI views keep their layout in one place.
+function_body_length:
+  warning: 120
+  error: 200
+type_body_length:
+  warning: 400
+  error: 600
+file_length:
+  warning: 600
+opt_in_rules:
+  - empty_count
+  - first_where
+  - sorted_first_last
+  - toggle_bool
+  - unused_optional_binding

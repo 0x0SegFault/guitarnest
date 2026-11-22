@@ -41,10 +41,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.guitarnest.R
+import app.guitarnest.practice.PRESET_PATTERNS
+import app.guitarnest.bridge.Bridge
+import app.guitarnest.bridge.SectionDraft as BridgeDraft
 import app.guitarnest.tab.Level
-import app.guitarnest.tab.Section
 import app.guitarnest.tab.Song
-import app.guitarnest.tab.SongCodec
 import app.guitarnest.tab.StrumPattern
 import app.guitarnest.tab.TextTab
 import app.guitarnest.tuner.Tuning
@@ -61,13 +62,9 @@ class SongDraft(initial: Song) {
     }
 
     fun build(): Result<Song> {
-        val built = sections.map { d ->
-            val bars = TextTab.parseSection(d.text, song.beatsPerBar).getOrElse { return Result.failure(Exception("${d.name}: ${it.message}")) }
-            Section(d.name.ifBlank { "Section" }, bars, d.repeat.coerceIn(1, 16), d.strum)
-        }
-        val result = song.copy(patterns = patterns.toList(), sections = built)
-        val problems = SongCodec.validate(result)
-        return if (problems.isEmpty()) Result.success(result) else Result.failure(Exception(problems.first()))
+        val r = Bridge.build(song, song.title, song.artist, song.source, song.level, song.tuning, song.capo, song.tempo, song.beatsPerBar,
+            patterns.toList(), sections.map { BridgeDraft(it.name, it.repeat, it.strum, it.text) }, song.notes)
+        return r.song?.let { Result.success(it) } ?: Result.failure(Exception(r.error))
     }
 }
 

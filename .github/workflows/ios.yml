@@ -1,0 +1,97 @@
+name: iOS
+
+# Runs only when something the iOS app uses changes.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ios/**"
+      - "shared/**"
+      - "app/src/main/res/values*/strings.xml"
+      - "scripts/ios_strings.py"
+      - "gradle/**"
+      - "*.gradle.kts"
+      - ".github/workflows/ios.yml"
+  pull_request:
+    paths:
+      - "ios/**"
+      - "shared/**"
+      - "app/src/main/res/values*/strings.xml"
+      - "scripts/ios_strings.py"
+      - "gradle/**"
+      - "*.gradle.kts"
+      - ".github/workflows/ios.yml"
+  workflow_dispatch:
+
+# contents: write only to publish the "ios-preview" release (build log and screenshots).
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Tools
+        run: brew install xcodegen swiftlint
+      - name: SwiftLint
+        run: cd ios && swiftlint lint --strict --reporter github-actions-logging
+      - name: Shared Kotlin framework
+        run: ./gradlew :shared:assembleGuitarNestSharedReleaseXCFramework 2>&1 | tee gradle-ios.log
+      - name: Translations from the Android strings
+        run: python3 scripts/ios_strings.py
+      - name: Xcode project
+        run: cd ios && xcodegen generate
+      - name: Pick an iPhone simulator
+        run: |
+          SIM=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          devices = json.load(sys.stdin)['devices']
+          for runtime in sorted(devices, reverse=True):
+              if 'iOS' in runtime:
+                  phones = [d for d in devices[runtime] if d['name'].startswith('iPhone')]
+                  # The App Store requires 6.9-inch screenshots: prefer a Pro Max.
+                  phones.sort(key=lambda d: 'Pro Max' not in d['name'])
+                  if phones:
+                      print(phones[0]['udid']); break
+          ")
+          echo "SIM=$SIM" >> "$GITHUB_ENV"
+          xcrun simctl list devices | grep "$SIM"
+      - name: Build and test
+        run: |
+          set -o pipefail
+          xcodebuild test -project ios/GuitarNest.xcodeproj -scheme GuitarNest -destination "id=$SIM" \
+            -derivedDataPath build/ios 2>&1 | tee ios-build.log | grep -E "error:|warning: |Test Case .* (passed|failed)|\*\* (BUILD|TEST)"
+      - name: Simulator screenshots
+        run: |
+          mkdir -p screenshots
+          xcrun simctl boot "$SIM" 2>/dev/null || true
+          APP=$(find build/ios/Build/Products -path "*iphonesimulator*" -name "GuitarNest.app" | head -1)
+          xcrun simctl install "$SIM" "$APP"
+          shot() { sleep 8; xcrun simctl io "$SIM" screenshot "screenshots/$1.png"; xcrun simctl terminate "$SIM" io.github.x0x0segfault.guitarnest || true; }
+          APPID=io.github.x0x0segfault.guitarnest
+          xcrun simctl launch "$SIM" $APPID --demo; shot 1-library
+          xcrun simctl launch "$SIM" $APPID --demo --open-example --play; shot 2-play-along
+          xcrun simctl launch "$SIM" $APPID --demo --tab metronome --play; shot 3-metronome
+          xcrun simctl launch "$SIM" $APPID --demo --tab tuner --demo-hz 110.1; shot 4-tuner
+          xcrun simctl launch "$SIM" $APPID --demo --tab listen; shot 5-tab-from-audio
+          xcrun simctl launch "$SIM" $APPID --demo -AppleLanguages "(fr)" -AppleLocale fr_FR; shot 6-library-fr
+      - name: Publish the iOS preview (log and screenshots)
+        if: always() && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view ios-preview >/dev/null 2>&1 || gh release create ios-preview --prerelease \
+            --title "iOS preview (CI)" --notes "Build log and simulator screenshots of the latest iOS CI run on main. Not an installable app."
+          FILES=$(ls ios-build.log gradle-ios.log screenshots/*.png 2>/dev/null || true)
+          if [ -n "$FILES" ]; then gh release upload ios-preview $FILES --clobber; else echo "Nothing to publish"; fi

@@ -180,4 +180,6 @@
         <item quantity="one">Restored %1$d song.</item>
         <item quantity="other">Restored %1$d songs.</item>
     </plurals>
+    <string name="ios_mxl_not_supported">Compressed MusicXML (.mxl) is not supported on iPhone. Export the score as .musicxml instead.</string>
+    <string name="listen_too_long">The file is longer than 15 minutes.</string>
 </resources>

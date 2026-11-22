@@ -98,7 +98,7 @@ object TextTab {
         val barCount = perString.maxOf { it.size }
         val result = mutableListOf<List<Beat>>()
         for (b in 0 until barCount) {
-            val notesAt = sortedMapOf<Double, MutableList<TabNote>>()
+            val notesAt = mutableMapOf<Double, MutableList<TabNote>>()
             for (s in 0 until 6) {
                 val content = perString[s].getOrElse(b) { "" }
                 if (content.isEmpty()) continue
@@ -122,7 +122,7 @@ object TextTab {
                     }
                 }
             }
-            result += notesAt.map { (at, notes) -> Beat(at, notes.sortedBy { it.string }) }
+            result += notesAt.entries.sortedBy { it.key }.map { (at, notes) -> Beat(at, notes.sortedBy { it.string }) }
         }
         return Result.success(result)
     }

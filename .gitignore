@@ -49,3 +49,8 @@ CLAUDE.local.md
 __pycache__/
 
 # The app model (models/basic-pitch.gnm) is tracked; the ONNX original in ai/models is downloaded.
+
+# Generated from the Android strings by scripts/ios_strings.py, and by XcodeGen
+ios/GuitarNest/Resources/*.lproj/
+ios/*.xcodeproj/
+ios/GuitarNest/Info.plist
