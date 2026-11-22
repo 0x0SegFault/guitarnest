@@ -89,7 +89,7 @@
     <string name="strumming_patterns">Strumming patterns</string>
     <string name="name">Name</string>
     <string name="sections">Sections</string>
-    <string name="section_help">Chords: one per beat, "." keeps the chord, "|" between bars. Tab: six lines, high e first.</string>
+    <string name="section_help">Chords: one per beat, \".\" keeps the chord, \"|\" between bars. Tab: six lines, high e first.</string>
     <string name="repeat">Repeat</string>
     <string name="add_section">Add section</string>
     <string name="notes">Notes</string>
