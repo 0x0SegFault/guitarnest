@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import onnxruntime as ort
 
-from music import Note
+from .music import Note
 
 SR = 22050
 HOP = 256
@@ -16,7 +16,7 @@ FRAMES_PER_WINDOW = 172
 # Step by the frames kept per window, not WINDOW - OVERLAP: the 188-sample difference
 # makes the note times drift by about 5 ms per second of audio.
 STEP = (FRAMES_PER_WINDOW - OVERLAP_FRAMES) * HOP
-MODEL = Path(__file__).parent / "models" / "nmp.onnx"
+MODEL = Path(__file__).parent.parent / "models" / "nmp.onnx"
 
 
 def activations(audio: np.ndarray):

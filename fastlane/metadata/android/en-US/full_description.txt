@@ -1,20 +1,27 @@
-GuitarNest is a free and open-source guitar app. It works offline and respects your privacy.
+GuitarNest helps you learn songs on the guitar: tabs, strumming patterns, metronome and tuner. Free and open source. No account, no ads, no trackers. Your songs stay on your phone.
 
-<b>Tuner</b>
+<b>Tabs</b>
 <ul>
-<li>9 tunings: standard, half step down, whole step down, drop D, drop C, DADGAD, open D, open G, open E</li>
-<li>Finds the string automatically, or tap a string</li>
-<li>Reference pitch from 415 to 466 Hz</li>
-<li>Clear needle: green when the string is in tune</li>
+<li>Write tabs and strumming patterns, or import GuitarNest and MusicXML files</li>
+<li>Print or save as PDF for your practice</li>
+<li>Play along: the current bar and strum light up with the metronome</li>
+<li>Loop a part, play slower, or speed up step by step</li>
 </ul>
+
+<b>Metronome and tuner</b>
+<ul>
+<li>Metronome with accents, subdivisions, tap tempo and speed trainer</li>
+<li>Tuner with 9 tunings; the string being tuned lights up</li>
+</ul>
+
+<b>Your own AI (optional)</b>
+Connect your own model (local, your gateway, or a cloud account). It arranges a tab for your level or adds strumming patterns. Only the song and your request are sent, to the address you choose.
 
 <b>Privacy</b>
 <ul>
-<li>No internet permission: the app cannot send anything</li>
+<li>Internet only when you search for a song or ask your AI</li>
 <li>The microphone works only while the tuner is open. Nothing is recorded.</li>
-<li>No account, no ads, no trackers, no Google services</li>
+<li>No song database: tabs come from you</li>
 </ul>
-
-<b>Planned</b>: metronome, slow-practice tools, and draft tabs from your own audio files.
 
 This app is developed with AI assistance. The maintainer reviews and tests all code.

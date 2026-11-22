@@ -7,11 +7,14 @@ import time
 
 import numpy as np
 
-import fingering
-import transcribe
-from music import TUNINGS, tab_to_notes
-from pieces import all_pieces
-from synth import render
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "ai"))
+
+from gntab import fingering, transcribe  # noqa: E402
+from gntab.music import TUNINGS, tab_to_notes  # noqa: E402
+from gntab.synth import render  # noqa: E402
+from pieces import all_pieces  # noqa: E402
 
 ONSET_TOLERANCE = 0.05  # 50 ms, as in mir_eval
 

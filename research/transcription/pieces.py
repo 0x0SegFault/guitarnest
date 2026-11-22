@@ -1,5 +1,10 @@
 """Original test pieces (written for this test, not from any song). Each has a known tab, tuning and capo."""
-from music import TabNote
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "ai"))
+
+from gntab.music import TabNote  # noqa: E402
 
 CHORDS = {
     "G": [3, 2, 0, 0, 0, 3], "C": [None, 3, 2, 0, 1, 0], "D": [None, None, 0, 2, 3, 2],

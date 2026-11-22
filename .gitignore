@@ -24,11 +24,18 @@ keystore.properties
 *.guitarnest
 *.csv
 
-# Research data and models (large, downloaded on demand)
-research/**/.venv/
+# Python environments, models (downloaded on demand) and research data
+.venv/
+ai/models/
 research/**/data/
-research/**/models/
 research/**/out/
+
+# Audio: never commit recordings (they are personal, and may be copyrighted)
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.m4a
 
 # IDE / editor / assistant settings
 .idea/

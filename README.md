@@ -1,41 +1,42 @@
 # GuitarNest
 
 [![Build](https://github.com/0x0SegFault/guitarnest/actions/workflows/build.yml/badge.svg)](https://github.com/0x0SegFault/guitarnest/actions/workflows/build.yml)
+[![AI toolkit](https://github.com/0x0SegFault/guitarnest/actions/workflows/ai.yml/badge.svg)](https://github.com/0x0SegFault/guitarnest/actions/workflows/ai.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
-A free and open-source app to learn songs on the guitar: tabs, strumming patterns, metronome and tuner. Offline, no account, no ads, no trackers. Works without Google services.
+A free and open-source app to learn songs on the guitar: tabs, strumming patterns, metronome and tuner. No account, no ads, no trackers. Works without Google services. Your songs stay on your phone.
 
-**Status: early development.** The tuner works. No release yet.
+**Status: early development.** No release yet.
 
 <p>
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="24%" alt="Tuner: A string in tune">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="24%" alt="Tuner: G string too low">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="24%" alt="Half step down tuning">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="24%" alt="Dark theme">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="19%" alt="Song library">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="19%" alt="Play along: current bar and strum">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="19%" alt="Metronome with strumming pattern">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="19%" alt="Tab editor">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="19%" alt="Tuner">
 </p>
 
 ## Features
 
-| Now | Next |
-|---|---|
-| Tuner: 9 tunings, the string being tuned lights up | Metronome |
-| Tap a string to lock it | Strumming patterns that play with the metronome |
-| Reference pitch 415–466 Hz | Tabs: import (Guitar Pro, MusicXML), play along, slow down, loop, print |
-| English, French, German, Spanish, Italian | Draft tabs from your own audio, with tuning, capo and strumming |
+- **Tab library**: write tabs and strumming patterns, import GuitarNest (`.gnt`) and MusicXML (`.musicxml`, `.mxl`) files, export, print or save as PDF.
+- **Play along**: the current bar and strum light up with the metronome; count-in, loop a section, play at 50–100 % or speed up step by step.
+- **Metronome**: 30–250 BPM, accents, subdivisions, tap tempo, speed trainer, strumming patterns.
+- **Tuner**: 9 tunings; the string being tuned lights up.
+- **Your own AI** (optional): connect any OpenAI-compatible model (local Ollama or LM Studio, your LiteLLM gateway, or a cloud account). It arranges a tab for your level or adds strumming patterns. Only the song and your request are sent, to the address you choose.
+- **AI toolkit** for your computer: makes a tab from your own recording, with tempo, chords, capo, tuning and strumming ([ai/](ai/README.md)).
+- **Song search** in MusicBrainz (open data) to start a new tab.
+- English, French, German, Spanish, Italian.
 
-## Privacy
+## Privacy and copyright
 
-- No internet permission. The app cannot send anything.
-- The microphone works only while the tuner is open. Nothing is recorded.
-- No song database: you work only with music you own. See [docs/COPYRIGHT.md](docs/COPYRIGHT.md).
-
-Details: [PRIVACY.md](PRIVACY.md).
+- The app sends data only when you search or ask your AI, and only what [PRIVACY.md](PRIVACY.md) lists.
+- No song or tab database. Tabs come from you: written by you, imported from files you own, or made from your own recordings. See [docs/COPYRIGHT.md](docs/COPYRIGHT.md).
 
 ## How it works
 
-- Pitch detection: YIN algorithm, in a Kotlin Multiplatform module (`shared/`) with tests on synthetic guitar sounds.
-- Tabs from audio: a research prototype measures what is possible today. Results and limits: [research/transcription/](research/transcription/README.md).
-- All sources: [docs/SCIENCE.md](docs/SCIENCE.md).
+- Music logic in a Kotlin Multiplatform module (`shared/`), with tests: pitch detection (YIN), tab format, text tabs, MusicXML import, metronome timing, AI answer checks.
+- Tab format: [docs/TAB_FORMAT.md](docs/TAB_FORMAT.md). Sources and methods: [docs/SCIENCE.md](docs/SCIENCE.md). Plan: [docs/ROADMAP.md](docs/ROADMAP.md).
+- Audio-to-tab accuracy and limits: [research/transcription/](research/transcription/README.md).
 
 ## Build
 
@@ -55,4 +56,4 @@ This project is developed with AI assistance. The maintainer reviews, tests and 
 
 ## License
 
-[GPL-3.0-or-later](LICENSE). Font: Nunito ([OFL](LICENSE-font-Nunito.txt)). Basic Pitch model (research only): Apache-2.0, Spotify.
+[GPL-3.0-or-later](LICENSE). Font: Nunito ([OFL](LICENSE-font-Nunito.txt)). Basic Pitch model (AI toolkit, downloaded separately): Apache-2.0, Spotify.

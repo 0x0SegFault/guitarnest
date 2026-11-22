@@ -1,1 +1,1 @@
-First version: guitar tuner with 9 tunings.
+First version: tab library, play along, metronome, strumming, tuner, your own AI.

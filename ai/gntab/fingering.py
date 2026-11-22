@@ -5,7 +5,7 @@ the optimum path idea of Sayegh 1989 (doi:10.2307/3680014).
 """
 import itertools
 
-from music import TUNINGS, Note, TabNote
+from .music import TUNINGS, Note, TabNote
 
 MAX_FRET = 15
 GROUP_GAP = 0.06  # notes closer than this belong to one strum or chord

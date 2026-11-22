@@ -4,6 +4,8 @@ This prototype measures how accurate a tab from audio can be. It is not part of 
 
 ## Pipeline
 
+The code is in the AI toolkit ([ai/gntab](../../ai/gntab)); this folder keeps the test pieces and the evaluation.
+
 1. **Test audio.** `synth.py` makes guitar audio from a known tab (Karplus-Strong plucked strings). The test pieces in `pieces.py` were written for this test. They are not from any song.
 2. **Notes.** `transcribe.py` runs [Basic Pitch](https://github.com/spotify/basic-pitch) (Spotify, Apache-2.0, 230 KB ONNX model) on the CPU, then finds note starts.
 3. **Tab.** `fingering.py` gives each note a string and a fret with dynamic programming over hand positions. It tries every tuning and capo (0–7) and keeps the cheapest.
@@ -12,10 +14,8 @@ This prototype measures how accurate a tab from audio can be. It is not part of 
 ## Run
 
 ```sh
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-./fetch_model.sh
-.venv/bin/python evaluate.py        # optional: a random seed, for example 11
+cd ../../ai && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && ./fetch_model.sh
+.venv/bin/python ../research/transcription/evaluate.py        # optional: a random seed, for example 11
 ```
 
 ## Results (4 random seeds, 2026-11-22)

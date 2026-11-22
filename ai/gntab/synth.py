@@ -5,7 +5,7 @@ Karplus & Strong 1983 (doi:10.2307/3680062), tuned with an all-pass filter as in
 """
 import numpy as np
 
-from music import TabNote
+from .music import TabNote
 
 SR = 22050
 

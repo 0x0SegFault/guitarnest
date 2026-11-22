@@ -1,0 +1,581 @@
+{
+ "format": 1,
+ "title": "Toolkit sample (advanced)",
+ "artist": "",
+ "source": "AI toolkit, from my recording",
+ "level": "advanced",
+ "tuning": "standard",
+ "capo": 2,
+ "tempo": 90,
+ "beatsPerBar": 4,
+ "patterns": [
+  {
+   "id": "main",
+   "name": "Main",
+   "steps": "D-DU-UDU",
+   "perBeat": 2
+  }
+ ],
+ "sections": [
+  {
+   "name": "Part A",
+   "repeat": 1,
+   "bars": [
+    {
+     "chords": [
+      {
+       "beat": 0,
+       "name": "G"
+      }
+     ],
+     "beats": [
+      {
+       "at": 0.0,
+       "notes": [
+        {
+         "string": 2,
+         "fret": 0
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 0
+        },
+        {
+         "string": 5,
+         "fret": 2
+        },
+        {
+         "string": 6,
+         "fret": 3
+        }
+       ]
+      },
+      {
+       "at": 1.0,
+       "notes": [
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 0
+        },
+        {
+         "string": 5,
+         "fret": 2
+        },
+        {
+         "string": 6,
+         "fret": 3
+        }
+       ]
+      },
+      {
+       "at": 1.5,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 3
+        },
+        {
+         "string": 2,
+         "fret": 3
+        },
+        {
+         "string": 3,
+         "fret": 4
+        },
+        {
+         "string": 4,
+         "fret": 5
+        },
+        {
+         "string": 5,
+         "fret": 5
+        }
+       ]
+      },
+      {
+       "at": 2.5,
+       "notes": [
+        {
+         "string": 2,
+         "fret": 0
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 0
+        }
+       ]
+      },
+      {
+       "at": 3.0,
+       "notes": [
+        {
+         "string": 2,
+         "fret": 0
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 0
+        },
+        {
+         "string": 5,
+         "fret": 2
+        },
+        {
+         "string": 6,
+         "fret": 3
+        }
+       ]
+      },
+      {
+       "at": 3.5,
+       "notes": [
+        {
+         "string": 2,
+         "fret": 0
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 0
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "chords": [
+      {
+       "beat": 0,
+       "name": "C"
+      }
+     ],
+     "beats": [
+      {
+       "at": 0.0,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 0
+        },
+        {
+         "string": 2,
+         "fret": 1
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        },
+        {
+         "string": 5,
+         "fret": 3
+        }
+       ]
+      },
+      {
+       "at": 1.0,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 0
+        },
+        {
+         "string": 2,
+         "fret": 1
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        },
+        {
+         "string": 5,
+         "fret": 3
+        }
+       ]
+      },
+      {
+       "at": 1.5,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 3
+        },
+        {
+         "string": 2,
+         "fret": 5
+        },
+        {
+         "string": 3,
+         "fret": 5
+        },
+        {
+         "string": 4,
+         "fret": 5
+        },
+        {
+         "string": 5,
+         "fret": 7
+        }
+       ]
+      },
+      {
+       "at": 2.5,
+       "notes": [
+        {
+         "string": 2,
+         "fret": 1
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        }
+       ]
+      },
+      {
+       "at": 3.0,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 0
+        },
+        {
+         "string": 2,
+         "fret": 1
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        },
+        {
+         "string": 5,
+         "fret": 3
+        }
+       ]
+      },
+      {
+       "at": 3.5,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 0
+        },
+        {
+         "string": 2,
+         "fret": 1
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "chords": [
+      {
+       "beat": 0,
+       "name": "D"
+      }
+     ],
+     "beats": [
+      {
+       "at": 0.0,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 2
+        },
+        {
+         "string": 2,
+         "fret": 3
+        },
+        {
+         "string": 3,
+         "fret": 2
+        },
+        {
+         "string": 4,
+         "fret": 0
+        }
+       ]
+      },
+      {
+       "at": 1.0,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 2
+        },
+        {
+         "string": 2,
+         "fret": 3
+        },
+        {
+         "string": 3,
+         "fret": 2
+        },
+        {
+         "string": 4,
+         "fret": 0
+        }
+       ]
+      },
+      {
+       "at": 1.5,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 2
+        },
+        {
+         "string": 2,
+         "fret": 3
+        },
+        {
+         "string": 3,
+         "fret": 2
+        },
+        {
+         "string": 4,
+         "fret": 0
+        }
+       ]
+      },
+      {
+       "at": 2.5,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 2
+        },
+        {
+         "string": 3,
+         "fret": 2
+        },
+        {
+         "string": 4,
+         "fret": 0
+        }
+       ]
+      },
+      {
+       "at": 3.0,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 2
+        },
+        {
+         "string": 2,
+         "fret": 3
+        },
+        {
+         "string": 3,
+         "fret": 2
+        },
+        {
+         "string": 4,
+         "fret": 0
+        }
+       ]
+      },
+      {
+       "at": 3.5,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 2
+        },
+        {
+         "string": 2,
+         "fret": 3
+        },
+        {
+         "string": 3,
+         "fret": 2
+        },
+        {
+         "string": 4,
+         "fret": 0
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "chords": [
+      {
+       "beat": 0,
+       "name": "Em"
+      }
+     ],
+     "beats": [
+      {
+       "at": 0.0,
+       "notes": [
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        },
+        {
+         "string": 5,
+         "fret": 2
+        },
+        {
+         "string": 6,
+         "fret": 0
+        }
+       ]
+      },
+      {
+       "at": 1.0,
+       "notes": [
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        }
+       ]
+      },
+      {
+       "at": 1.5,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 0
+        },
+        {
+         "string": 2,
+         "fret": 0
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        },
+        {
+         "string": 6,
+         "fret": 0
+        }
+       ]
+      },
+      {
+       "at": 2.5,
+       "notes": [
+        {
+         "string": 2,
+         "fret": 0
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        }
+       ]
+      },
+      {
+       "at": 3.0,
+       "notes": [
+        {
+         "string": 2,
+         "fret": 0
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        },
+        {
+         "string": 5,
+         "fret": 2
+        },
+        {
+         "string": 6,
+         "fret": 0
+        }
+       ]
+      },
+      {
+       "at": 3.5,
+       "notes": [
+        {
+         "string": 1,
+         "fret": 0
+        },
+        {
+         "string": 2,
+         "fret": 0
+        },
+        {
+         "string": 3,
+         "fret": 0
+        },
+        {
+         "string": 4,
+         "fret": 2
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "strum": "main"
+  }
+ ],
+ "notes": "Made from a recording with the GuitarNest AI toolkit. Tempo, chords, capo and strumming are estimates: check them by ear."
+}

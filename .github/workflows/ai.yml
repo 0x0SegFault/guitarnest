@@ -1,0 +1,30 @@
+name: AI toolkit
+
+on:
+  push:
+    branches: [main]
+    paths: ["ai/**", "research/**", ".github/workflows/ai.yml"]
+  pull_request:
+    paths: ["ai/**", "research/**", ".github/workflows/ai.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  toolkit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r ai/requirements.txt
+      - run: ai/fetch_model.sh
+      - name: Toolkit tests (synthetic audio with known answers)
+        run: python ai/tests/test_toolkit.py
+      - name: Research accuracy report
+        run: python research/transcription/evaluate.py | tee -a "$GITHUB_STEP_SUMMARY"

@@ -1,6 +1,9 @@
 package app.guitarnest.ui
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -129,9 +132,15 @@ fun EditorScreen(draft: SongDraft, error: String?, modifier: Modifier = Modifier
                         FilterChip(selected = d.strum == null, onClick = { draft.sections[i] = d.copy(strum = null) }, label = { Text(stringResource(R.string.none)) })
                         draft.patterns.forEach { p -> FilterChip(selected = d.strum == p.id, onClick = { draft.sections[i] = d.copy(strum = p.id) }, label = { Text(p.name) }) }
                     }
-                    OutlinedTextField(d.text, { draft.sections[i] = d.copy(text = it) }, Modifier.fillMaxWidth(), textStyle = mono, minLines = 3,
-                        isError = TextTab.parseSection(d.text, s.beatsPerBar).isFailure,
-                        supportingText = TextTab.parseSection(d.text, s.beatsPerBar).exceptionOrNull()?.message?.let { { Text(it) } })
+                    // Tab lines must not wrap: the field is as wide as the longest line and scrolls sideways.
+                    val longest = d.text.lines().maxOfOrNull { it.length } ?: 0
+                    val problem = TextTab.parseSection(d.text, s.beatsPerBar).exceptionOrNull()?.message
+                    Box(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+                        OutlinedTextField(d.text, { draft.sections[i] = d.copy(text = it) },
+                            Modifier.widthIn(min = 280.dp).width(((longest + 4) * 8).dp), textStyle = mono, minLines = 3,
+                            isError = problem != null)
+                    }
+                    if (problem != null) Text(problem, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                 }
             }
         }

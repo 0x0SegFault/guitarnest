@@ -1,0 +1,80 @@
+{
+  "format": 1,
+  "title": "Toolkit sample",
+  "artist": "",
+  "source": "AI toolkit, from my recording",
+  "level": "intermediate",
+  "tuning": "standard",
+  "capo": 2,
+  "tempo": 90,
+  "beatsPerBar": 4,
+  "patterns": [
+    {
+      "id": "main",
+      "name": "Main",
+      "steps": "D-DU-UDU",
+      "perBeat": 2
+    }
+  ],
+  "sections": [
+    {
+      "name": "Part A",
+      "repeat": 2,
+      "bars": [
+        {
+          "chords": [
+            {
+              "beat": 0,
+              "name": "G"
+            }
+          ]
+        },
+        {
+          "chords": [
+            {
+              "beat": 0,
+              "name": "C"
+            }
+          ]
+        },
+        {
+          "chords": [
+            {
+              "beat": 0,
+              "name": "D"
+            }
+          ]
+        },
+        {
+          "chords": [
+            {
+              "beat": 0,
+              "name": "Em"
+            }
+          ]
+        }
+      ],
+      "strum": "main"
+    },
+    {
+      "name": "Part B",
+      "repeat": 1,
+      "bars": [
+        {
+          "chords": [
+            {
+              "beat": 0,
+              "name": "Em"
+            },
+            {
+              "beat": 2,
+              "name": "C"
+            }
+          ]
+        }
+      ],
+      "strum": "main"
+    }
+  ],
+  "notes": "Made from a recording with the GuitarNest AI toolkit. Tempo, chords, capo and strumming are estimates: check them by ear."
+}
