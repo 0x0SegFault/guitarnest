@@ -1,0 +1,22 @@
+GuitarNest vous aide à apprendre des morceaux à la guitare : tablatures, rythmiques, métronome et accordeur. Libre et open source. Pas de compte, pas de publicité, pas de traceur. Vos morceaux restent sur votre téléphone.
+
+Tablatures
+• Écrivez des tablatures et des rythmiques, ou importez des fichiers GuitarNest et MusicXML
+• Tablature depuis l'audio : un fichier à vous ou un enregistrement devient une tablature brouillon, avec tempo, accords, capo, accordage et rythmique. Les notes sont trouvées sur votre téléphone.
+• Jouez avec : la mesure et le coup en cours s'allument avec le métronome. Bouclez une partie, jouez plus lentement ou accélérez pas à pas.
+• Imprimez ou enregistrez en PDF pour votre pratique
+
+Métronome et accordeur
+• Métronome avec accents, subdivisions, tempo tapé et entraîneur de vitesse
+• Accordeur avec 9 accordages ; la corde accordée s'allume
+
+Votre propre IA (facultatif)
+Connectez votre modèle : un compte cloud (Anthropic, OpenAI, Mistral, OpenRouter), votre passerelle (LiteLLM) ou un modèle local (Ollama, LM Studio). Il améliore le brouillon, arrange une tablature pour votre niveau ou ajoute des rythmiques. Seuls la tablature et votre demande sont envoyés, jamais l'audio.
+
+Vie privée
+• Internet seulement pour chercher un morceau ou interroger votre IA
+• Le micro fonctionne seulement pendant l'accordage ou l'enregistrement. Rien n'est sauvegardé.
+• Pas de base de morceaux, pas de téléchargement : les tablatures viennent de vous
+• Sauvegardes chiffrées, où vous voulez
+
+Cette app est développée avec l'aide de l'IA. Le mainteneur relit et teste tout le code.

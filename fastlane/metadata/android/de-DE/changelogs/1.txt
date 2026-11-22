@@ -1,0 +1,1 @@
+Erste Version: Tabs, Tab aus Audio, Mitspielen, Metronom, Schlagmuster, Stimmgerät, eigene KI, Sicherungen.

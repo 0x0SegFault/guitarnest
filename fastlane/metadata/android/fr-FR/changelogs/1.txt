@@ -1,0 +1,1 @@
+Première version : tablatures, tablature depuis l'audio, jouer avec, métronome, rythmiques, accordeur, votre IA, sauvegardes.

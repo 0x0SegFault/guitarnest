@@ -3,9 +3,9 @@ GuitarNest helps you learn songs on the guitar: tabs, strumming patterns, metron
 <b>Tabs</b>
 <ul>
 <li>Write tabs and strumming patterns, or import GuitarNest and MusicXML files</li>
+<li>Tab from audio: a song file you own or a recording becomes a draft tab, with tempo, chords, capo, tuning and strumming. The notes are found on your phone.</li>
+<li>Play along: the current bar and strum light up with the metronome. Loop a part, play slower, or speed up step by step.</li>
 <li>Print or save as PDF for your practice</li>
-<li>Play along: the current bar and strum light up with the metronome</li>
-<li>Loop a part, play slower, or speed up step by step</li>
 </ul>
 
 <b>Metronome and tuner</b>
@@ -15,13 +15,14 @@ GuitarNest helps you learn songs on the guitar: tabs, strumming patterns, metron
 </ul>
 
 <b>Your own AI (optional)</b>
-Connect your own model (local, your gateway, or a cloud account). It arranges a tab for your level or adds strumming patterns. Only the song and your request are sent, to the address you choose.
+Connect your own model: a cloud account (Anthropic, OpenAI, Mistral, OpenRouter), your gateway (LiteLLM) or a local model (Ollama, LM Studio). It improves the draft, arranges a tab for your level or adds strumming patterns. Only the tab and your request are sent, never audio.
 
 <b>Privacy</b>
 <ul>
 <li>Internet only when you search for a song or ask your AI</li>
-<li>The microphone works only while the tuner is open. Nothing is recorded.</li>
-<li>No song database: tabs come from you</li>
+<li>The microphone works only while you tune or record. Nothing is saved.</li>
+<li>No song database, no downloads: tabs come from you</li>
+<li>Encrypted backups, where you want them</li>
 </ul>
 
 This app is developed with AI assistance. The maintainer reviews and tests all code.

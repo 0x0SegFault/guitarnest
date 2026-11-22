@@ -1,0 +1,28 @@
+GuitarNest te ayuda a aprender canciones en la guitarra: tablaturas, patrones de rasgueo, metrónomo y afinador. Libre y de código abierto. Sin cuenta, sin anuncios, sin rastreadores. Tus canciones se quedan en tu teléfono.
+
+<b>Tablaturas</b>
+<ul>
+<li>Escribe tablaturas y patrones de rasgueo, o importa archivos GuitarNest y MusicXML</li>
+<li>Tablatura desde audio: un archivo tuyo o una grabación se convierte en un borrador con tempo, acordes, cejilla, afinación y rasgueo. Las notas se encuentran en tu teléfono.</li>
+<li>Toca con la app: el compás y el golpe actual se iluminan con el metrónomo. Repite una parte, toca más lento o acelera paso a paso.</li>
+<li>Imprime o guarda en PDF para practicar</li>
+</ul>
+
+<b>Metrónomo y afinador</b>
+<ul>
+<li>Metrónomo con acentos, subdivisiones, tempo por toques y entrenador de velocidad</li>
+<li>Afinador con 9 afinaciones; la cuerda que afinas se ilumina</li>
+</ul>
+
+<b>Tu propia IA (opcional)</b>
+Conecta tu modelo: una cuenta en la nube (Anthropic, OpenAI, Mistral, OpenRouter), tu pasarela (LiteLLM) o un modelo local (Ollama, LM Studio). Mejora el borrador, arregla una tablatura para tu nivel o añade patrones de rasgueo. Solo se envían la tablatura y tu petición, nunca el audio.
+
+<b>Privacidad</b>
+<ul>
+<li>Internet solo para buscar una canción o preguntar a tu IA</li>
+<li>El micrófono funciona solo al afinar o grabar. No se guarda nada.</li>
+<li>Sin base de canciones, sin descargas: las tablaturas vienen de ti</li>
+<li>Copias cifradas, donde quieras</li>
+</ul>
+
+Esta app se desarrolla con ayuda de IA. El mantenedor revisa y prueba todo el código.

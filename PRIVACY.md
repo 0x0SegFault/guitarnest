@@ -22,6 +22,10 @@ No other permissions. CI fails if a new permission appears.
 
 Audio is never sent: notes are found on this phone. Your AI gets only the draft tab. Your other songs, your practice history and your settings are never sent.
 
+## iPhone
+
+The iPhone app works the same way, with these differences: the microphone asks for permission the first time (Settings → GuitarNest → Microphone); iOS does not let apps capture other apps' sound, so "From another app" does not exist; the AI key is in the iOS Keychain (this device only); app data is excluded from iCloud backup.
+
 ## Data on your phone
 
 - Songs (`.gnt` files), practice history and settings are in the app's private storage.

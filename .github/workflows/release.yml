@@ -48,9 +48,11 @@ jobs:
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
           APK=app/build/outputs/apk/release/app-release.apk
           $BT/apksigner verify --print-certs "$APK" | grep "SHA-256"
-          if $BT/aapt2 dump permissions "$APK" | grep -q "android.permission.INTERNET"; then
-            echo "INTERNET permission found" && exit 1
-          fi
+          # Permissions must match PRIVACY.md (same list as build.yml).
+          $BT/aapt2 dump permissions "$APK" | sed -n "s/^uses-permission: name='\(.*\)'/\1/p" | sed 's/^io.github.x0x0segfault.guitarnest\.//' | sort > found.txt
+          printf '%s\n' DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION android.permission.FOREGROUND_SERVICE android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION \
+            android.permission.INTERNET android.permission.RECORD_AUDIO | sort > allowed.txt
+          diff allowed.txt found.txt
           cp "$APK" "guitarnest-$VERSION.apk"
           sha256sum "guitarnest-$VERSION.apk" > "guitarnest-$VERSION.apk.sha256"
           # App Bundle for Google Play (signed with the same key; not for direct install).

@@ -1,1 +1,1 @@
-First version: tab library, play along, metronome, strumming, tuner, your own AI.
+First version: tabs, tab from audio, play along, metronome, strumming, tuner, your own AI, backups.

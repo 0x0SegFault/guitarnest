@@ -1,0 +1,28 @@
+GuitarNest ti aiuta a imparare brani alla chitarra: tablature, ritmiche, metronomo e accordatore. Libera e open source. Nessun account, nessuna pubblicità, nessun tracker. I tuoi brani restano sul telefono.
+
+<b>Tablature</b>
+<ul>
+<li>Scrivi tablature e ritmiche, o importa file GuitarNest e MusicXML</li>
+<li>Tablatura da audio: un file tuo o una registrazione diventa una bozza con tempo, accordi, capotasto, accordatura e ritmica. Le note vengono trovate sul telefono.</li>
+<li>Suona insieme: la battuta e il colpo attuali si illuminano con il metronomo. Ripeti una parte, suona più lento o accelera passo dopo passo.</li>
+<li>Stampa o salva in PDF per esercitarti</li>
+</ul>
+
+<b>Metronomo e accordatore</b>
+<ul>
+<li>Metronomo con accenti, suddivisioni, tap tempo e allenatore di velocità</li>
+<li>Accordatore con 9 accordature; la corda che accordi si illumina</li>
+</ul>
+
+<b>La tua IA (facoltativa)</b>
+Collega il tuo modello: un account cloud (Anthropic, OpenAI, Mistral, OpenRouter), il tuo gateway (LiteLLM) o un modello locale (Ollama, LM Studio). Migliora la bozza, arrangia una tablatura per il tuo livello o aggiunge ritmiche. Vengono inviati solo la tablatura e la tua richiesta, mai l'audio.
+
+<b>Privacy</b>
+<ul>
+<li>Internet solo per cercare un brano o chiedere alla tua IA</li>
+<li>Il microfono funziona solo mentre accordi o registri. Non viene salvato nulla.</li>
+<li>Nessun database di brani, nessun download: le tablature vengono da te</li>
+<li>Backup cifrati, dove vuoi</li>
+</ul>
+
+Questa app è sviluppata con l'aiuto dell'IA. Il manutentore controlla e prova tutto il codice.

@@ -1,6 +1,6 @@
 # Roadmap
 
-Status on 2026-11-22: steps 1 to 6 are in the app or the toolkit. "Next" lists what is still open.
+Status on 2026-11-22: steps 1 to 6 are in the Android and iPhone apps and in the toolkit; tabs from audio run on the phone. "Next" lists what is still open.
 
 Goal: learn songs on the guitar with tabs, strumming patterns and a metronome.
 
@@ -40,7 +40,7 @@ Goal: learn songs on the guitar with tabs, strumming patterns and a metronome.
 
 ## Next
 
-- Listen on the phone: run the audio-to-notes model in the app, so the AI connection can work from a recording without a computer. Needs an on-device model runtime; check F-Droid rules first.
 - Test the toolkit on real recordings (GuitarSet, CC BY 4.0) and publish the numbers.
 - Tab editor: tap-to-edit notes on the fretboard, in addition to text.
-- iOS app with the shared module.
+- Test on real phones and real guitars; measure listening speed on a mid-range phone.
+- Optional listener server (your own computer): guitar separation for full songs (Demucs or Open-Unmix), then the same tab steps.

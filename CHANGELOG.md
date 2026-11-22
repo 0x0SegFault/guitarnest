@@ -8,6 +8,9 @@
 - Metronome: accents, subdivisions, tap tempo, speed trainer, strumming patterns.
 - Your own AI connection (any OpenAI-compatible endpoint): arrange for a level, add strumming patterns, write a new tab.
 - Song search in MusicBrainz.
+- Tab from audio on the phone: a file you own, a recording, or (Android) an app that allows capture. Notes found on the device by Basic Pitch in pure Kotlin; your AI can refine the draft.
+- Encrypted backup and restore (same format on Android and iPhone).
+- iPhone app (SwiftUI) with the same features, except capture from other apps.
 - AI toolkit (`ai/`): tab from your own recording, with tempo, chords, capo, tuning and strumming; skill file for AI agents.
 - Clear microphone permission screen. Internet only on the player's action.
 - English, French, German, Spanish and Italian.

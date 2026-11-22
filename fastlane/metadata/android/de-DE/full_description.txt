@@ -1,0 +1,28 @@
+GuitarNest hilft dir, Songs auf der Gitarre zu lernen: Tabulaturen, Schlagmuster, Metronom und Stimmgerät. Frei und Open Source. Kein Konto, keine Werbung, keine Tracker. Deine Songs bleiben auf deinem Telefon.
+
+<b>Tabulaturen</b>
+<ul>
+<li>Schreibe Tabs und Schlagmuster oder importiere GuitarNest- und MusicXML-Dateien</li>
+<li>Tabulatur aus Audio: Eine eigene Audiodatei oder eine Aufnahme wird ein Tab-Entwurf mit Tempo, Akkorden, Kapo, Stimmung und Schlagmuster. Die Noten werden auf deinem Telefon gefunden.</li>
+<li>Mitspielen: Takt und Schlag leuchten mit dem Metronom. Teil wiederholen, langsamer spielen oder schrittweise schneller werden.</li>
+<li>Drucken oder als PDF speichern zum Üben</li>
+</ul>
+
+<b>Metronom und Stimmgerät</b>
+<ul>
+<li>Metronom mit Betonung, Unterteilungen, Tap-Tempo und Tempotrainer</li>
+<li>Stimmgerät mit 9 Stimmungen; die gestimmte Saite leuchtet</li>
+</ul>
+
+<b>Deine eigene KI (optional)</b>
+Verbinde dein Modell: ein Cloud-Konto (Anthropic, OpenAI, Mistral, OpenRouter), dein Gateway (LiteLLM) oder ein lokales Modell (Ollama, LM Studio). Es verbessert den Entwurf, arrangiert einen Tab für dein Niveau oder fügt Schlagmuster hinzu. Gesendet werden nur der Tab und deine Anfrage, nie Audio.
+
+<b>Datenschutz</b>
+<ul>
+<li>Internet nur, wenn du einen Song suchst oder deine KI fragst</li>
+<li>Das Mikrofon arbeitet nur beim Stimmen oder Aufnehmen. Nichts wird gespeichert.</li>
+<li>Keine Song-Datenbank, keine Downloads: Die Tabs kommen von dir</li>
+<li>Verschlüsselte Sicherungen, wo du willst</li>
+</ul>
+
+Diese App wird mit KI-Unterstützung entwickelt. Der Maintainer prüft und testet den gesamten Code.
