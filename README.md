@@ -22,7 +22,7 @@ A free and open-source app to learn songs on the guitar: tabs, strumming pattern
 - **Play along**: the current bar and strum light up with the metronome; count-in, loop a section, play at 50–100 % or speed up step by step.
 - **Metronome**: 30–250 BPM, accents, subdivisions, tap tempo, speed trainer, strumming patterns.
 - **Tuner**: 9 tunings; the string being tuned lights up.
-- **Your own AI** (optional): connect any OpenAI-compatible model (local Ollama or LM Studio, your LiteLLM gateway, or a cloud account). It arranges a tab for your level or adds strumming patterns. Only the song and your request are sent, to the address you choose.
+- **Your own AI** (optional): connect your own model: a cloud account (Anthropic, OpenAI, Mistral, OpenRouter), your LiteLLM gateway, or a local model (Ollama, LM Studio). It arranges a tab for your level or adds strumming patterns. Only the song and your request are sent, to the address you choose.
 - **AI toolkit** for your computer: makes a tab from your own recording, with tempo, chords, capo, tuning and strumming ([ai/](ai/README.md)).
 - **Song search** in MusicBrainz (open data) to start a new tab.
 - English, French, German, Spanish, Italian.

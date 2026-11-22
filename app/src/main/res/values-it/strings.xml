@@ -100,7 +100,7 @@
     <string name="settings">Impostazioni</string>
     <string name="write_tab">Scrivi una tablatura</string>
     <string name="ai_connection">Connessione IA</string>
-    <string name="ai_connection_help">Collega la tua IA: un modello sul tuo computer o server di casa (Ollama, LM Studio, llama.cpp), il tuo gateway (LiteLLM) o un account cloud. Funziona qualsiasi indirizzo compatibile con OpenAI.</string>
+    <string name="ai_connection_help">Collega la tua IA: un modello sul tuo computer o server di casa (Ollama, LM Studio, llama.cpp), il tuo gateway (LiteLLM) o un account cloud (Anthropic, OpenAI, Mistral, OpenRouter). Funziona qualsiasi indirizzo compatibile con OpenAI.</string>
     <string name="ai_address">Indirizzo (URL di base)</string>
     <string name="ai_http_warning">L\'HTTP semplice non è cifrato. Usalo solo nella tua rete di casa.</string>
     <string name="ai_model">Modello</string>

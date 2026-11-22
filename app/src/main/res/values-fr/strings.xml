@@ -100,7 +100,7 @@
     <string name="settings">Réglages</string>
     <string name="write_tab">Écrire une tablature</string>
     <string name="ai_connection">Connexion IA</string>
-    <string name="ai_connection_help">Connectez votre propre IA : un modèle sur votre ordinateur ou serveur domestique (Ollama, LM Studio, llama.cpp), votre passerelle (LiteLLM) ou un compte cloud. Toute adresse compatible OpenAI fonctionne.</string>
+    <string name="ai_connection_help">Connectez votre propre IA : un modèle sur votre ordinateur ou serveur domestique (Ollama, LM Studio, llama.cpp), votre passerelle (LiteLLM) ou un compte cloud (Anthropic, OpenAI, Mistral, OpenRouter). Toute adresse compatible OpenAI fonctionne.</string>
     <string name="ai_address">Adresse (URL de base)</string>
     <string name="ai_http_warning">Le HTTP simple n\'est pas chiffré. Utilisez-le seulement dans votre réseau domestique.</string>
     <string name="ai_model">Modèle</string>

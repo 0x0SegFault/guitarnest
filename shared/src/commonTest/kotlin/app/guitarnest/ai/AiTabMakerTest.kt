@@ -57,4 +57,18 @@ class AiTabMakerTest {
         assertEquals(4, fixed.messages.size)
         assertTrue("Capo must be 0 to 12" in fixed.messages.last().content)
     }
+
+    @Test
+    fun anthropicStyle() {
+        assertEquals(ApiStyle.ANTHROPIC, AiTabMaker.styleFor("https://api.anthropic.com/v1"))
+        assertEquals(ApiStyle.OPENAI, AiTabMaker.styleFor("https://openrouter.ai/api/v1"))
+        assertEquals(ApiStyle.OPENAI, AiTabMaker.styleFor("http://anthropic.com.evil.example/v1"))
+        assertEquals("/messages", AiTabMaker.path(ApiStyle.ANTHROPIC))
+        val body = AiTabMaker.encode(AiTabMaker.request("model-x", AiTask.ARRANGE, Level.BEGINNER, "", song), ApiStyle.ANTHROPIC)
+        assertTrue("\"system\":\"You write guitar tabs" in body)
+        assertTrue("\"max_tokens\":16000" in body)
+        assertFalse("\"role\":\"system\"" in body)
+        val answer = """{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"text","text":"{\"title\":"},{"type":"text","text":"\"T\"}"}],"stop_reason":"end_turn"}"""
+        assertEquals("{\"title\":\"T\"}", AiTabMaker.answerText(answer, ApiStyle.ANTHROPIC))
+    }
 }

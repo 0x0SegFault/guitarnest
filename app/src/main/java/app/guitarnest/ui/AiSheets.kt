@@ -43,14 +43,15 @@ import app.guitarnest.data.AiConnection
 import app.guitarnest.tab.Level
 import app.guitarnest.tab.Song
 
-/** Common OpenAI-compatible endpoints. Home-network addresses are examples to edit. */
+/** Name, address, suggested model (empty: the player types it). Home-network addresses are examples to edit. */
 private val PRESETS = listOf(
-    "Ollama" to "http://192.168.1.10:11434/v1",
-    "LM Studio" to "http://192.168.1.10:1234/v1",
-    "LiteLLM" to "https://litellm.example.org/v1",
-    "OpenRouter" to "https://openrouter.ai/api/v1",
-    "Mistral" to "https://api.mistral.ai/v1",
-    "OpenAI" to "https://api.openai.com/v1",
+    Triple("Anthropic", "https://api.anthropic.com/v1", "claude-sonnet-5-5"),
+    Triple("OpenAI", "https://api.openai.com/v1", ""),
+    Triple("Mistral", "https://api.mistral.ai/v1", "mistral-large-latest"),
+    Triple("OpenRouter", "https://openrouter.ai/api/v1", ""),
+    Triple("LiteLLM", "https://litellm.example.org/v1", ""),
+    Triple("Ollama", "http://192.168.1.10:11434/v1", ""),
+    Triple("LM Studio", "http://192.168.1.10:1234/v1", ""),
 )
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -67,13 +68,15 @@ fun AiConnectionSheet(current: AiConnection, job: Job<String>, onTest: (AiConnec
         Text(stringResource(R.string.ai_connection), style = MaterialTheme.typography.titleLarge)
         Text(stringResource(R.string.ai_connection_help), style = MaterialTheme.typography.bodyMedium)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            PRESETS.forEach { (name, address) -> FilterChip(selected = url == address, onClick = { url = address }, label = { Text(name) }) }
+            PRESETS.forEach { (name, address, suggested) ->
+                FilterChip(selected = url == address, onClick = { url = address; if (suggested.isNotEmpty()) model = suggested }, label = { Text(name) })
+            }
         }
         OutlinedTextField(url, { url = it.trim() }, Modifier.fillMaxWidth(), singleLine = true, label = { Text(stringResource(R.string.ai_address)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri))
         if (connection.unencrypted) Text(stringResource(R.string.ai_http_warning), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
         OutlinedTextField(model, { model = it.trim() }, Modifier.fillMaxWidth(), singleLine = true, label = { Text(stringResource(R.string.ai_model)) },
-            placeholder = { Text("llama3.1, mistral-small, gpt-4o-mini…") })
+            placeholder = { Text("llama3.1, mistral-small…") })
         OutlinedTextField(key, { key = it.trim() }, Modifier.fillMaxWidth(), singleLine = true, label = { Text(stringResource(R.string.ai_key)) },
             visualTransformation = PasswordVisualTransformation(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password))
         Text(stringResource(R.string.ai_privacy), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

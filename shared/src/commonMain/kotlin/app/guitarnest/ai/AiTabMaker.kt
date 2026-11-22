@@ -21,6 +21,24 @@ private data class ChatResponse(val choices: List<Choice> = emptyList()) {
     @Serializable data class Choice(val message: ChatMessage? = null)
 }
 
+/** Anthropic Messages API: the system prompt is a separate field, and max_tokens is required. */
+@Serializable
+private data class AnthropicRequest(
+    val model: String,
+    @kotlinx.serialization.SerialName("max_tokens") val maxTokens: Int,
+    val system: String? = null,
+    val messages: List<ChatMessage>,
+    val temperature: Double,
+)
+
+@Serializable
+private data class AnthropicResponse(val content: List<Block> = emptyList()) {
+    @Serializable data class Block(val type: String = "", val text: String? = null)
+}
+
+/** The two API styles. Every other provider (local or cloud) speaks the OpenAI style. */
+enum class ApiStyle { OPENAI, ANTHROPIC }
+
 /**
  * Builds requests for any OpenAI-compatible chat endpoint (LiteLLM, Ollama, LM Studio, vLLM,
  * OpenRouter, OpenAI, Mistral...) and turns the answer into a checked GuitarNest song.
@@ -73,15 +91,41 @@ Rules:
         previous.copy(messages = previous.messages + ChatMessage("assistant", answer) +
             ChatMessage("user", "This is not a valid GuitarNest song: $problem. Answer again with the corrected JSON object only."))
 
-    fun encode(request: ChatRequest): String = json.encodeToString(ChatRequest.serializer(), request)
+    /** Anthropic's API is used for api.anthropic.com; everything else is OpenAI-compatible. */
+    fun styleFor(baseUrl: String): ApiStyle =
+        if (baseUrl.substringAfter("://").substringBefore('/').substringBefore(':').endsWith("anthropic.com")) ApiStyle.ANTHROPIC else ApiStyle.OPENAI
 
-    /** The assistant text from a chat completion response. */
-    fun answerText(responseBody: String): String = try {
-        json.decodeFromString(ChatResponse.serializer(), responseBody).choices.firstOrNull()?.message?.content
-            ?: throw TabFormatException("The AI sent an empty answer")
+    /** Path after the base URL. */
+    fun path(style: ApiStyle): String = if (style == ApiStyle.ANTHROPIC) "/messages" else "/chat/completions"
+
+    fun encode(request: ChatRequest, style: ApiStyle = ApiStyle.OPENAI): String = when (style) {
+        ApiStyle.OPENAI -> json.encodeToString(ChatRequest.serializer(), request)
+        ApiStyle.ANTHROPIC -> json.encodeToString(
+            AnthropicRequest.serializer(),
+            AnthropicRequest(
+                model = request.model,
+                maxTokens = MAX_TOKENS,
+                system = request.messages.filter { it.role == "system" }.joinToString("\n\n") { it.content }.ifEmpty { null },
+                messages = request.messages.filter { it.role != "system" },
+                temperature = request.temperature,
+            ),
+        )
+    }
+
+    /** The assistant text from the server's response. */
+    fun answerText(responseBody: String, style: ApiStyle = ApiStyle.OPENAI): String = try {
+        val text = when (style) {
+            ApiStyle.OPENAI -> json.decodeFromString(ChatResponse.serializer(), responseBody).choices.firstOrNull()?.message?.content
+            ApiStyle.ANTHROPIC -> json.decodeFromString(AnthropicResponse.serializer(), responseBody).content
+                .filter { it.type == "text" }.mapNotNull { it.text }.joinToString("").ifEmpty { null }
+        }
+        text ?: throw TabFormatException("The AI sent an empty answer")
     } catch (e: IllegalArgumentException) {
         throw TabFormatException("Unexpected answer from the AI server")
     }
+
+    /** Enough for a long advanced tab. */
+    private const val MAX_TOKENS = 16_000
 
     /** The song in the AI's answer, checked. [source] says who made it. */
     fun songFrom(answer: String, source: String, level: Level?): Song {

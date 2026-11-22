@@ -98,7 +98,7 @@
     <string name="settings">Einstellungen</string>
     <string name="write_tab">Tabulatur schreiben</string>
     <string name="ai_connection">KI-Verbindung</string>
-    <string name="ai_connection_help">Verbinde deine eigene KI: ein Modell auf deinem Computer oder Heimserver (Ollama, LM Studio, llama.cpp), dein Gateway (LiteLLM) oder ein Cloud-Konto. Jede OpenAI-kompatible Adresse funktioniert.</string>
+    <string name="ai_connection_help">Verbinde deine eigene KI: ein Modell auf deinem Computer oder Heimserver (Ollama, LM Studio, llama.cpp), dein Gateway (LiteLLM) oder ein Cloud-Konto (Anthropic, OpenAI, Mistral, OpenRouter). Jede OpenAI-kompatible Adresse funktioniert.</string>
     <string name="ai_address">Adresse (Basis-URL)</string>
     <string name="ai_http_warning">Einfaches HTTP ist nicht verschlüsselt. Nutze es nur in deinem Heimnetz.</string>
     <string name="ai_model">Modell</string>
