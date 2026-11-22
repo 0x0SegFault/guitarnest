@@ -32,7 +32,7 @@
     <string name="back">Back</string>
     <string name="more">More</string>
     <string name="search_library">Search your songs</string>
-    <string name="library_empty">No songs yet. Write a tab, or import a GuitarNest file (.gnt).</string>
+    <string name="library_empty">No songs yet. Write a tab, or import a GuitarNest file (.gnt) or MusicXML (.musicxml, .mxl).</string>
     <string name="new_song">New song</string>
     <string name="edit_song">Edit song</string>
     <string name="import_file">Import file</string>

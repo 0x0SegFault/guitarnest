@@ -79,8 +79,8 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
 
     val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri ?: return@rememberLauncherForActivityResult
-        val text = runCatching { context.contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() } }.getOrNull()
-        if (text == null) vm.showMessage(context.getString(R.string.import_failed)) else vm.import(text) { openId = it.id; tab = Tab.SONGS }
+        val bytes = runCatching { context.contentResolver.openInputStream(uri)?.use { it.readBytes() } }.getOrNull()
+        if (bytes == null) vm.showMessage(context.getString(R.string.import_failed)) else vm.import(bytes) { openId = it.id; tab = Tab.SONGS }
     }
     val exporter = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
         val song = open ?: return@rememberLauncherForActivityResult

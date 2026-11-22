@@ -3,11 +3,14 @@ package app.guitarnest.data
 import android.content.Context
 import android.util.AtomicFile
 import app.guitarnest.tab.Song
+import app.guitarnest.tab.MusicXmlImport
 import app.guitarnest.tab.SongCodec
+import app.guitarnest.tab.TabFormatException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.util.UUID
+import java.util.zip.ZipInputStream
 
 /** One practice session, kept on the phone. */
 @Serializable
@@ -39,11 +42,38 @@ class SongRepository(context: Context) {
         AtomicFile(File(dir, id + EXT)).delete()
     }
 
-    /** Imports a .gnt text. A song with the same id is kept as a copy, not overwritten. */
-    fun import(text: String): Song {
-        val song = SongCodec.decode(text)
+    /**
+     * Imports a .gnt, MusicXML (.musicxml, .xml) or compressed MusicXML (.mxl) file.
+     * A song with the same id is kept as a copy, not overwritten.
+     */
+    fun import(bytes: ByteArray): Song {
+        val song = when {
+            bytes.size > 4 && bytes[0] == 'P'.code.toByte() && bytes[1] == 'K'.code.toByte() -> MusicXmlImport.import(unzipMusicXml(bytes), IMPORTED)
+            bytes.decodeToString().trimStart().startsWith("<") -> MusicXmlImport.import(bytes.decodeToString(), IMPORTED)
+            else -> SongCodec.decode(bytes.decodeToString())
+        }
         val existing = song.id.isNotBlank() && File(dir, song.id + EXT).exists()
         return save(if (existing || song.id.isBlank()) song.copy(id = "") else song)
+    }
+
+    /** The score inside a .mxl file: META-INF/container.xml names it. Size-limited against zip bombs. */
+    private fun unzipMusicXml(bytes: ByteArray): String {
+        val entries = mutableMapOf<String, String>()
+        ZipInputStream(bytes.inputStream()).use { zip ->
+            var total = 0L
+            while (true) {
+                val entry = zip.nextEntry ?: break
+                if (entry.isDirectory) continue
+                val data = zip.readBytes()
+                total += data.size
+                if (total > MAX_UNZIPPED) throw TabFormatException("File too large")
+                if (entry.name.endsWith(".xml") || entry.name.endsWith(".musicxml")) entries[entry.name] = data.decodeToString()
+            }
+        }
+        val container = entries["META-INF/container.xml"]
+        val main = container?.let { Regex("full-path=\"([^\"]+)\"").find(it)?.groupValues?.get(1) }
+        return entries[main] ?: entries.entries.firstOrNull { !it.key.startsWith("META-INF/") }?.value
+            ?: throw TabFormatException("No score in this .mxl file")
     }
 
     private val seededMark = File(context.filesDir, ".seeded")
@@ -77,5 +107,7 @@ class SongRepository(context: Context) {
 
     companion object {
         const val EXT = ".gnt"
+        const val IMPORTED = "Imported file"
+        private const val MAX_UNZIPPED = 20L * 1024 * 1024
     }
 }

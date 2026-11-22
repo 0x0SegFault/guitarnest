@@ -40,7 +40,7 @@
     <string name="back">Indietro</string>
     <string name="more">Altro</string>
     <string name="search_library">Cerca nei tuoi brani</string>
-    <string name="library_empty">Ancora nessun brano. Scrivi una tablatura o importa un file GuitarNest (.gnt).</string>
+    <string name="library_empty">Ancora nessun brano. Scrivi una tablatura o importa un file GuitarNest (.gnt) o MusicXML (.musicxml, .mxl).</string>
     <string name="new_song">Nuovo brano</string>
     <string name="edit_song">Modifica brano</string>
     <string name="import_file">Importa file</string>

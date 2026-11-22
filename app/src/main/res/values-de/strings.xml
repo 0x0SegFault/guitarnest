@@ -39,7 +39,7 @@
     <string name="back">Zurück</string>
     <string name="more">Mehr</string>
     <string name="search_library">Deine Songs durchsuchen</string>
-    <string name="library_empty">Noch keine Songs. Schreibe eine Tabulatur oder importiere eine GuitarNest-Datei (.gnt).</string>
+    <string name="library_empty">Noch keine Songs. Schreibe eine Tabulatur oder importiere eine GuitarNest-Datei (.gnt) oder MusicXML (.musicxml, .mxl).</string>
     <string name="new_song">Neuer Song</string>
     <string name="edit_song">Song bearbeiten</string>
     <string name="import_file">Datei importieren</string>
