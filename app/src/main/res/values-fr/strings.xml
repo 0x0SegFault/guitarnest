@@ -149,4 +149,23 @@
     <string name="capture_silent">Silence : cette app n\'autorise pas la capture.</string>
     <string name="listen_privacy">L\'audio reste sur ce téléphone et n\'est pas enregistré. Votre IA reçoit seulement la tablature brouillon, jamais l\'audio.</string>
     <string name="permission_apps">Depuis une autre app : Android demande d\'abord et affiche une notification pendant que GuitarNest écoute d\'autres apps. La plupart des apps de streaming ne l\'autorisent pas.</string>
+    <string name="backup_title">Sauvegarde et restauration</string>
+    <string name="backup_help">Un fichier chiffré avec tous vos morceaux et votre historique de pratique. Gardez-le où vous voulez : un dossier, une clé USB, Proton Drive, Nextcloud, un e-mail. La clé d\'IA n\'est pas incluse.</string>
+    <string name="backup_password">Mot de passe de la sauvegarde</string>
+    <string name="backup_repeat">Répétez le mot de passe</string>
+    <string name="backup_password_hint">Au moins 8 caractères. Sans lui, personne ne peut ouvrir la sauvegarde, pas même vous.</string>
+    <string name="backup_to_file">Enregistrer dans un fichier</string>
+    <string name="backup_to_app">Envoyer vers une app</string>
+    <string name="backup_saved">Sauvegarde enregistrée.</string>
+    <string name="backup_wrong_password">Mot de passe incorrect.</string>
+    <string name="backup_not_a_backup">Ce n\'est pas une sauvegarde GuitarNest.</string>
+    <string name="restore_title">Restaurer</string>
+    <string name="restore_help">Les morceaux de la sauvegarde sont ajoutés ; ceux qui existent déjà dans l\'app sont remplacés. Fonctionne avec les sauvegardes Android et iPhone.</string>
+    <string name="restore_choose">Choisir un fichier de sauvegarde</string>
+    <string name="restore_now">Restaurer maintenant</string>
+    <plurals name="restored_songs">
+        <item quantity="one">%1$d morceau restauré.</item>
+        <item quantity="many">%1$d morceaux restaurés.</item>
+        <item quantity="other">%1$d morceaux restaurés.</item>
+    </plurals>
 </resources>

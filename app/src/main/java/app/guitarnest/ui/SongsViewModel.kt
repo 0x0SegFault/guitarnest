@@ -10,7 +10,12 @@ import app.guitarnest.ai.ChatMessage
 import app.guitarnest.ai.ChatRequest
 import app.guitarnest.ai.SongInfo
 import app.guitarnest.audio.ClickPlayer
+import app.guitarnest.R
 import app.guitarnest.data.AiConnection
+import app.guitarnest.data.BackupContent
+import app.guitarnest.data.BackupCrypto
+import app.guitarnest.data.NotABackupException
+import app.guitarnest.data.WrongPasswordException
 import app.guitarnest.data.AiSettings
 import app.guitarnest.net.AiClient
 import app.guitarnest.net.MusicBrainzClient
@@ -126,6 +131,31 @@ class SongsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun showMessage(text: String?) { _message.value = text }
+
+    // Backups: songs and practice history, encrypted with the player's password.
+
+    fun createBackup(password: CharArray, done: (ByteArray) -> Unit) = viewModelScope.launch {
+        val blob = withContext(Dispatchers.Default) {
+            BackupCrypto.encrypt(BackupContent.encode(repo.backupContent()).toByteArray(), password).also { password.fill(' ') }
+        }
+        done(blob)
+    }
+
+    /** [done] gets null on success, else the message to show in the sheet. */
+    fun restoreBackup(blob: ByteArray, password: CharArray, done: (String?) -> Unit) = viewModelScope.launch {
+        val app = getApplication<Application>()
+        val result = withContext(Dispatchers.Default) {
+            runCatching { repo.restore(BackupContent.decode(BackupCrypto.decrypt(blob, password).decodeToString())) }.also { password.fill(' ') }
+        }
+        result.onSuccess { n -> refresh(); _message.value = app.resources.getQuantityString(R.plurals.restored_songs, n, n); done(null) }
+            .onFailure { e ->
+                done(app.getString(when (e) {
+                    is WrongPasswordException -> R.string.backup_wrong_password
+                    is NotABackupException -> R.string.backup_not_a_backup
+                    else -> R.string.import_failed
+                }))
+            }
+    }
 
     // AI connection (the player's own model) and song search
 

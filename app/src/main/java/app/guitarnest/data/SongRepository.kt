@@ -6,15 +6,11 @@ import app.guitarnest.tab.Song
 import app.guitarnest.tab.MusicXmlImport
 import app.guitarnest.tab.SongCodec
 import app.guitarnest.tab.TabFormatException
-import kotlinx.serialization.Serializable
+import app.guitarnest.data.BackupContent
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.util.UUID
 import java.util.zip.ZipInputStream
-
-/** One practice session, kept on the phone. */
-@Serializable
-data class PracticeEntry(val songId: String, val day: Long, val seconds: Int, val bestTempo: Int)
 
 /**
  * The tab library: one .gnt file per song in the app's private storage, plus a practice log.
@@ -92,6 +88,16 @@ class SongRepository(context: Context) {
     fun logPractice(entry: PracticeEntry) {
         if (entry.seconds < 10) return
         write(logFile, json.encodeToString(practiceLog() + entry))
+    }
+
+    /** All songs and the practice history, for a backup. */
+    fun backupContent(): BackupContent = BackupContent(songs = all(), practice = practiceLog())
+
+    /** Restores a backup by merging. Returns the number of songs restored. */
+    fun restore(content: BackupContent): Int {
+        content.songs.forEach { save(it) }
+        write(logFile, json.encodeToString(BackupContent.merge(practiceLog(), content.practice)))
+        return content.songs.size
     }
 
     private fun write(file: AtomicFile, text: String) {

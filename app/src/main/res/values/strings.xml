@@ -162,4 +162,22 @@
     <string name="capture_silent">Silence: this app does not allow capture.</string>
     <string name="listen_privacy">The audio stays on this phone and is not saved. Your AI gets only the draft tab, never the audio.</string>
     <string name="permission_apps">From another app: Android asks first and shows a notification while GuitarNest listens to other apps. Most streaming apps do not allow it.</string>
+    <string name="backup_title">Backup and restore</string>
+    <string name="backup_help">One encrypted file with all your songs and your practice history. Keep it where you want: a folder, a USB stick, Proton Drive, Nextcloud, e-mail. The AI key is not included.</string>
+    <string name="backup_password">Backup password</string>
+    <string name="backup_repeat">Repeat the password</string>
+    <string name="backup_password_hint">At least 8 characters. Without it, nobody can open the backup, not even you.</string>
+    <string name="backup_to_file">Save to a file</string>
+    <string name="backup_to_app">Send to an app</string>
+    <string name="backup_saved">Backup saved.</string>
+    <string name="backup_wrong_password">Wrong password.</string>
+    <string name="backup_not_a_backup">This is not a GuitarNest backup.</string>
+    <string name="restore_title">Restore</string>
+    <string name="restore_help">Songs from the backup are added; songs with the same name in this app are replaced. Works with backups from Android and iPhone.</string>
+    <string name="restore_choose">Choose a backup file</string>
+    <string name="restore_now">Restore now</string>
+    <plurals name="restored_songs">
+        <item quantity="one">Restored %1$d song.</item>
+        <item quantity="other">Restored %1$d songs.</item>
+    </plurals>
 </resources>

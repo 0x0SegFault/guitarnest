@@ -147,4 +147,22 @@
     <string name="capture_silent">Stille: Diese App erlaubt keine Aufnahme.</string>
     <string name="listen_privacy">Der Ton bleibt auf diesem Telefon und wird nicht gespeichert. Deine KI bekommt nur den Tabulatur-Entwurf, nie den Ton.</string>
     <string name="permission_apps">Aus einer anderen App: Android fragt zuerst und zeigt eine Benachrichtigung, solange GuitarNest anderen Apps zuhört. Die meisten Streaming-Apps erlauben es nicht.</string>
+    <string name="backup_title">Sichern und wiederherstellen</string>
+    <string name="backup_help">Eine verschlüsselte Datei mit allen Songs und deinem Übungsverlauf. Bewahre sie auf, wo du willst: Ordner, USB-Stick, Proton Drive, Nextcloud, E-Mail. Der KI-Schlüssel ist nicht enthalten.</string>
+    <string name="backup_password">Passwort der Sicherung</string>
+    <string name="backup_repeat">Passwort wiederholen</string>
+    <string name="backup_password_hint">Mindestens 8 Zeichen. Ohne Passwort kann niemand die Sicherung öffnen, auch du nicht.</string>
+    <string name="backup_to_file">In eine Datei speichern</string>
+    <string name="backup_to_app">An eine App senden</string>
+    <string name="backup_saved">Sicherung gespeichert.</string>
+    <string name="backup_wrong_password">Falsches Passwort.</string>
+    <string name="backup_not_a_backup">Das ist keine GuitarNest-Sicherung.</string>
+    <string name="restore_title">Wiederherstellen</string>
+    <string name="restore_help">Songs aus der Sicherung werden hinzugefügt; vorhandene gleiche Songs werden ersetzt. Funktioniert mit Sicherungen von Android und iPhone.</string>
+    <string name="restore_choose">Sicherungsdatei wählen</string>
+    <string name="restore_now">Jetzt wiederherstellen</string>
+    <plurals name="restored_songs">
+        <item quantity="one">%1$d Song wiederhergestellt.</item>
+        <item quantity="other">%1$d Songs wiederhergestellt.</item>
+    </plurals>
 </resources>

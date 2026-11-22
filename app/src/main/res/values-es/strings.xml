@@ -149,4 +149,23 @@
     <string name="capture_silent">Silencio: esta app no permite la captura.</string>
     <string name="listen_privacy">El audio se queda en este teléfono y no se guarda. Tu IA recibe solo el borrador, nunca el audio.</string>
     <string name="permission_apps">Desde otra app: Android pregunta primero y muestra una notificación mientras GuitarNest escucha otras apps. La mayoría de apps de streaming no lo permiten.</string>
+    <string name="backup_title">Copia de seguridad y restauración</string>
+    <string name="backup_help">Un archivo cifrado con todas tus canciones y tu historial de práctica. Guárdalo donde quieras: una carpeta, un USB, Proton Drive, Nextcloud, un correo. La clave de IA no se incluye.</string>
+    <string name="backup_password">Contraseña de la copia</string>
+    <string name="backup_repeat">Repite la contraseña</string>
+    <string name="backup_password_hint">Al menos 8 caracteres. Sin ella nadie puede abrir la copia, ni siquiera tú.</string>
+    <string name="backup_to_file">Guardar en un archivo</string>
+    <string name="backup_to_app">Enviar a una app</string>
+    <string name="backup_saved">Copia guardada.</string>
+    <string name="backup_wrong_password">Contraseña incorrecta.</string>
+    <string name="backup_not_a_backup">No es una copia de GuitarNest.</string>
+    <string name="restore_title">Restaurar</string>
+    <string name="restore_help">Las canciones de la copia se añaden; las que ya existen en la app se reemplazan. Funciona con copias de Android y iPhone.</string>
+    <string name="restore_choose">Elegir un archivo de copia</string>
+    <string name="restore_now">Restaurar ahora</string>
+    <plurals name="restored_songs">
+        <item quantity="one">%1$d canción restaurada.</item>
+        <item quantity="many">%1$d canciones restauradas.</item>
+        <item quantity="other">%1$d canciones restauradas.</item>
+    </plurals>
 </resources>
