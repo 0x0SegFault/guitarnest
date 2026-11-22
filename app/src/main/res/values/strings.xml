@@ -182,4 +182,8 @@
     </plurals>
     <string name="ios_mxl_not_supported">Compressed MusicXML (.mxl) is not supported on iPhone. Export the score as .musicxml instead.</string>
     <string name="listen_too_long">The file is longer than 15 minutes.</string>
+    <string name="openrouter_sign_in">Sign in with OpenRouter</string>
+    <string name="openrouter_help">OpenRouter gives one account for many models (Claude, GPT, Gemini, Llama, Mistral…). Pay-as-you-go. GuitarNest gets a key you can delete at any time on openrouter.ai.</string>
+    <string name="ai_or_manual">Or enter an address and key</string>
+    <string name="openrouter_signed_in">Signed in with OpenRouter. Model: Auto (you can change it).</string>
 </resources>

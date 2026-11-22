@@ -35,6 +35,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Back to the app after "Sign in with OpenRouter" (the page in the browser links here). -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="guitarnest" android:host="signed-in" />
+            </intent-filter>
         </activity>
 
         <provider

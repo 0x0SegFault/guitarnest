@@ -19,6 +19,7 @@ import app.guitarnest.data.WrongPasswordException
 import app.guitarnest.data.AiSettings
 import app.guitarnest.net.AiClient
 import app.guitarnest.net.MusicBrainzClient
+import app.guitarnest.net.OpenRouterSignIn
 import app.guitarnest.net.makeSong
 import app.guitarnest.tab.Level
 import app.guitarnest.tab.TabFormatException
@@ -165,6 +166,17 @@ class SongsViewModel(app: Application) : AndroidViewModel(app) {
     fun resetJobs() {
         _aiJob.value = Job()
         _search.value = Job()
+    }
+
+    /** One-click account connection with OpenRouter (many models, one account). */
+    fun signInOpenRouter() = viewModelScope.launch {
+        _aiJob.value = Job(running = true)
+        runCatching { OpenRouterSignIn.signIn(getApplication()) }
+            .onSuccess { key ->
+                saveAi(AiConnection(OpenRouterSignIn.BASE_URL, _ai.value.model.takeIf { _ai.value.baseUrl == OpenRouterSignIn.BASE_URL && it.isNotBlank() } ?: OpenRouterSignIn.DEFAULT_MODEL, key))
+                _aiJob.value = Job(result = getApplication<Application>().getString(R.string.openrouter_signed_in))
+            }
+            .onFailure { _aiJob.value = Job(error = it.message) }
     }
 
     /** Sends a small request to check the address, model and key. */

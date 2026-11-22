@@ -56,10 +56,13 @@ private val PRESETS = listOf(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun AiConnectionSheet(current: AiConnection, job: Job<String>, onTest: (AiConnection) -> Unit, onSave: (AiConnection) -> Unit, onClear: () -> Unit) {
-    var url by rememberSaveable { mutableStateOf(current.baseUrl) }
-    var model by rememberSaveable { mutableStateOf(current.model) }
-    var key by rememberSaveable { mutableStateOf(current.apiKey) }
+fun AiConnectionSheet(
+    current: AiConnection, job: Job<String>, onTest: (AiConnection) -> Unit, onSave: (AiConnection) -> Unit, onClear: () -> Unit,
+    onOpenRouter: () -> Unit,
+) {
+    var url by rememberSaveable(current) { mutableStateOf(current.baseUrl) }
+    var model by rememberSaveable(current) { mutableStateOf(current.model) }
+    var key by rememberSaveable(current) { mutableStateOf(current.apiKey) }
     val connection = AiConnection(url, model, key)
     Column(
         Modifier.verticalScroll(rememberScrollState()).padding(start = 24.dp, end = 24.dp, bottom = 32.dp),
@@ -67,6 +70,9 @@ fun AiConnectionSheet(current: AiConnection, job: Job<String>, onTest: (AiConnec
     ) {
         Text(stringResource(R.string.ai_connection), style = MaterialTheme.typography.titleLarge)
         Text(stringResource(R.string.ai_connection_help), style = MaterialTheme.typography.bodyMedium)
+        Button(onClick = onOpenRouter, enabled = !job.running, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.openrouter_sign_in)) }
+        Text(stringResource(R.string.openrouter_help), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(stringResource(R.string.ai_or_manual), style = MaterialTheme.typography.titleSmall)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             PRESETS.forEach { (name, address, suggested) ->
                 FilterChip(selected = url == address, onClick = { url = address; if (suggested.isNotEmpty()) model = suggested }, label = { Text(name) })

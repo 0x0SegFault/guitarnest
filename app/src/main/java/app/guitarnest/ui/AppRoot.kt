@@ -190,7 +190,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
     if (about) ModalBottomSheet(onDismissRequest = { about = false }) { AboutSheet() }
     when (sheet) {
         "ai" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
-            AiConnectionSheet(ai, aiJob, vm::testAi, onSave = { vm.saveAi(it); sheet = null }, onClear = vm::clearAi)
+            AiConnectionSheet(ai, aiJob, vm::testAi, onSave = { vm.saveAi(it); sheet = null }, onClear = vm::clearAi, onOpenRouter = vm::signInOpenRouter)
         }
         "ask" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             AskAiSheet(if (tab == Tab.SONGS) open else null, ai, aiJob, onSetup = { vm.resetJobs(); sheet = "ai" }) { task, level, request ->

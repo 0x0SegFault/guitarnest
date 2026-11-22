@@ -170,4 +170,8 @@
     </plurals>
     <string name="ios_mxl_not_supported">Il MusicXML compresso (.mxl) non è supportato su iPhone. Esporta lo spartito come .musicxml.</string>
     <string name="listen_too_long">Il file dura più di 15 minuti.</string>
+    <string name="openrouter_sign_in">Accedi con OpenRouter</string>
+    <string name="openrouter_help">OpenRouter dà un solo account per molti modelli (Claude, GPT, Gemini, Llama, Mistral…). Pagamento a consumo. GuitarNest riceve una chiave che puoi eliminare in qualsiasi momento su openrouter.ai.</string>
+    <string name="ai_or_manual">Oppure inserisci indirizzo e chiave</string>
+    <string name="openrouter_signed_in">Accesso con OpenRouter eseguito. Modello: Auto (modificabile).</string>
 </resources>
