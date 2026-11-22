@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">GuitarNest</string>
+
+    <!-- Tuner -->
+    <string name="tuning">Tuning</string>
+    <string name="tuning_standard">Standard</string>
+    <string name="tuning_half_step_down">Half step down</string>
+    <string name="tuning_whole_step_down">Whole step down</string>
+    <string name="tuning_drop_d">Drop D</string>
+    <string name="tuning_drop_c">Drop C</string>
+    <string name="tuning_open_d">Open D</string>
+    <string name="tuning_open_g">Open G</string>
+    <string name="tuning_open_e">Open E</string>
+    <string name="play_a_string">Play one string</string>
+    <string name="not_listening">The tuner is not listening</string>
+    <string name="in_tune">In tune</string>
+    <string name="tune_up">Too low: tighten the string</string>
+    <string name="tune_down">Too high: loosen the string</string>
+    <plurals name="reading_description">
+        <item quantity="one">%1$s, %2$d cent. %3$s</item>
+        <item quantity="other">%1$s, %2$d cents. %3$s</item>
+    </plurals>
+    <string name="strings_auto">Strings: automatic. Tap a string to select it.</string>
+    <string name="strings_locked">String selected. Tap it again for automatic.</string>
+    <string name="string_description">String %1$d, %2$s</string>
+    <string name="reference_pitch">Reference pitch</string>
+    <string name="reset">Reset</string>
+    <string name="capo_hint">Tune without the capo. Put the capo on after tuning, then check the tuning again.</string>
+
+    <!-- Microphone permission -->
+    <string name="mic_title">The tuner needs the microphone</string>
+    <string name="mic_why">GuitarNest listens only while the tuner is open. The sound stays in memory on your phone. It is not recorded, saved or sent.</string>
+    <string name="mic_allow">Allow the microphone</string>
+    <string name="open_settings">Open app settings</string>
+    <string name="mic_error">The microphone is not available. Another app may be using it.</string>
+
+    <!-- About -->
+    <string name="about">About and permissions</string>
+    <string name="about_privacy">GuitarNest works offline. It has no account, no ads and no trackers. It cannot connect to the internet.</string>
+    <string name="permissions">Permissions</string>
+    <string name="permission_mic">Microphone: to hear your guitar in the tuner. Used only while the tuner is open. Nothing is recorded.</string>
+    <string name="permission_none_else">No other permissions. No internet access.</string>
+    <string name="version">Version %1$s</string>
+    <string name="source_code">Source code</string>
+</resources>

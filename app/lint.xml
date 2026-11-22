@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Dependency updates are proposed by Dependabot and reviewed manually. -->
+    <issue id="GradleDependency" severity="informational" />
+    <issue id="NewerVersionAvailable" severity="informational" />
+    <!-- Adaptive icons still need the -v26 qualifier for aapt to pick them up. -->
+    <issue id="ObsoleteSdkInt">
+        <ignore path="src/main/res/mipmap-anydpi-v26" />
+    </issue>
+    <!-- Android Gradle plugin 8.13 supports up to API 36; API 37 comes with the AGP 9 migration. -->
+    <issue id="OldTargetApi" severity="informational" />
+</lint>

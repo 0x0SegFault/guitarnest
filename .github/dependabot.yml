@@ -1,0 +1,31 @@
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      # Kotlin plugins and libraries must move together.
+      kotlin:
+        patterns: ["org.jetbrains.kotlin*", "org.jetbrains.kotlinx*"]
+      androidx:
+        patterns: ["androidx.*"]
+    ignore:
+      # These need Android Gradle plugin 9 (a planned migration, not an automatic update).
+      - dependency-name: "com.android.application"
+        versions: [">= 9.0.0"]
+      - dependency-name: "androidx.core:*"
+        versions: [">= 1.19.0"]
+      - dependency-name: "androidx.lifecycle:*"
+        versions: [">= 2.11.0"]
+      # Gradle 9.6+ removed an internal API that Android Gradle plugin 8 uses.
+      - dependency-name: "gradle-wrapper"
+        versions: [">= 9.6.0"]
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]

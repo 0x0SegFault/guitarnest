@@ -1,0 +1,20 @@
+GuitarNest is a free and open-source guitar app. It works offline and respects your privacy.
+
+<b>Tuner</b>
+<ul>
+<li>9 tunings: standard, half step down, whole step down, drop D, drop C, DADGAD, open D, open G, open E</li>
+<li>Finds the string automatically, or tap a string</li>
+<li>Reference pitch from 415 to 466 Hz</li>
+<li>Clear needle: green when the string is in tune</li>
+</ul>
+
+<b>Privacy</b>
+<ul>
+<li>No internet permission: the app cannot send anything</li>
+<li>The microphone works only while the tuner is open. Nothing is recorded.</li>
+<li>No account, no ads, no trackers, no Google services</li>
+</ul>
+
+<b>Planned</b>: metronome, slow-practice tools, and draft tabs from your own audio files.
+
+This app is developed with AI assistance. The maintainer reviews and tests all code.

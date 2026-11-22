@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tuning">Afinación</string>
+    <string name="tuning_standard">Estándar</string>
+    <string name="tuning_half_step_down">Medio tono abajo</string>
+    <string name="tuning_whole_step_down">Un tono abajo</string>
+    <string name="tuning_drop_d">Drop D</string>
+    <string name="tuning_drop_c">Drop C</string>
+    <string name="tuning_open_d">Open D</string>
+    <string name="tuning_open_g">Open G</string>
+    <string name="tuning_open_e">Open E</string>
+    <string name="play_a_string">Toca una cuerda</string>
+    <string name="not_listening">El afinador no está escuchando</string>
+    <string name="in_tune">Afinada</string>
+    <string name="tune_up">Demasiado baja: tensa la cuerda</string>
+    <string name="tune_down">Demasiado alta: afloja la cuerda</string>
+    <string name="strings_auto">Cuerdas: automático. Toca una cuerda para elegirla.</string>
+    <string name="strings_locked">Cuerda elegida. Tócala otra vez para volver a automático.</string>
+    <plurals name="reading_description">
+        <item quantity="one">%1$s, %2$d cent. %3$s</item>
+        <item quantity="other">%1$s, %2$d cents. %3$s</item>
+    </plurals>
+    <string name="string_description">Cuerda %1$d, %2$s</string>
+    <string name="reference_pitch">Tono de referencia</string>
+    <string name="reset">Restablecer</string>
+    <string name="capo_hint">Afina sin la cejilla. Ponla después y vuelve a comprobar la afinación.</string>
+    <string name="mic_title">El afinador necesita el micrófono</string>
+    <string name="mic_why">GuitarNest solo escucha mientras el afinador está abierto. El sonido se queda en la memoria del teléfono. No se graba, no se guarda y no se envía.</string>
+    <string name="mic_allow">Permitir el micrófono</string>
+    <string name="open_settings">Abrir los ajustes de la app</string>
+    <string name="mic_error">El micrófono no está disponible. Quizá otra app lo está usando.</string>
+    <string name="about">Información y permisos</string>
+    <string name="about_privacy">GuitarNest funciona sin conexión. Sin cuenta, sin anuncios y sin rastreadores. La app no puede conectarse a Internet.</string>
+    <string name="permissions">Permisos</string>
+    <string name="permission_mic">Micrófono: para oír tu guitarra en el afinador. Solo se usa mientras el afinador está abierto. No se graba nada.</string>
+    <string name="permission_none_else">Ningún otro permiso. Sin acceso a Internet.</string>
+    <string name="version">Versión %1$s</string>
+    <string name="source_code">Código fuente</string>
+</resources>

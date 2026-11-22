@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GuitarNest: a guitar pick with a sound hole and strings.
+     108dp adaptive-icon canvas; artwork kept inside the 66dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#8B4A1C"
+        android:pathData="M54,25C68,25 79,30 79,40C79,55 63,73 57,80C55.5,81.8 52.5,81.8 51,80C45,73 29,55 29,40C29,30 40,25 54,25Z" />
+    <path
+        android:fillColor="#3A1D0A"
+        android:pathData="M42,46a12,12 0 1,0 24,0a12,12 0 1,0 -24,0" />
+    <path
+        android:strokeColor="#F6D9B8"
+        android:strokeWidth="1.6"
+        android:pathData="M48,27V78M52,26V80M56,26V80M60,27V78" />
+</vector>

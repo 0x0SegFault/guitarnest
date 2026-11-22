@@ -1,0 +1,16 @@
+name: Feature request
+description: Suggest an idea or improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to do?
+      description: Describe the need or problem first, then your idea.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Source (if it is about a method)
+      description: Practice or audio methods need a published source.

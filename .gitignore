@@ -1,0 +1,42 @@
+# Build output
+.gradle/
+.kotlin/
+build/
+captures/
+*.apk
+*.aab
+*.idsig
+
+# Local machine config (contains your SDK path)
+local.properties
+
+# Signing keys and secrets — never commit these
+keystore.properties
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+.env
+.env.*
+
+# Personal data: backups, user audio and tabs
+*.guitarnest
+*.csv
+
+# Research data and models (large, downloaded on demand)
+research/**/.venv/
+research/**/data/
+research/**/models/
+research/**/out/
+
+# IDE / editor / assistant settings
+.idea/
+*.iml
+.vscode/
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.DS_Store
+
+__pycache__/

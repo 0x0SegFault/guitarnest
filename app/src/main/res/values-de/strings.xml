@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tuning">Stimmung</string>
+    <string name="tuning_standard">Standard</string>
+    <string name="tuning_half_step_down">Einen Halbton tiefer</string>
+    <string name="tuning_whole_step_down">Einen Ganzton tiefer</string>
+    <string name="tuning_drop_d">Drop D</string>
+    <string name="tuning_drop_c">Drop C</string>
+    <string name="tuning_open_d">Open D</string>
+    <string name="tuning_open_g">Open G</string>
+    <string name="tuning_open_e">Open E</string>
+    <string name="play_a_string">Spiele eine Saite</string>
+    <string name="not_listening">Das Stimmgerät hört nicht zu</string>
+    <string name="in_tune">Gestimmt</string>
+    <string name="tune_up">Zu tief: Saite spannen</string>
+    <string name="tune_down">Zu hoch: Saite lockern</string>
+    <string name="strings_auto">Saiten: automatisch. Tippe auf eine Saite, um sie zu wählen.</string>
+    <string name="strings_locked">Saite gewählt. Tippe erneut für automatisch.</string>
+    <plurals name="reading_description">
+        <item quantity="one">%1$s, %2$d Cent. %3$s</item>
+        <item quantity="other">%1$s, %2$d Cent. %3$s</item>
+    </plurals>
+    <string name="string_description">Saite %1$d, %2$s</string>
+    <string name="reference_pitch">Kammerton</string>
+    <string name="reset">Zurücksetzen</string>
+    <string name="capo_hint">Stimme ohne Kapodaster. Setze ihn danach auf und prüfe die Stimmung noch einmal.</string>
+    <string name="mic_title">Das Stimmgerät braucht das Mikrofon</string>
+    <string name="mic_why">GuitarNest hört nur zu, solange das Stimmgerät offen ist. Der Ton bleibt im Speicher deines Telefons. Er wird nicht aufgenommen, gespeichert oder gesendet.</string>
+    <string name="mic_allow">Mikrofon erlauben</string>
+    <string name="open_settings">App-Einstellungen öffnen</string>
+    <string name="mic_error">Das Mikrofon ist nicht verfügbar. Vielleicht nutzt eine andere App es.</string>
+    <string name="about">Info und Berechtigungen</string>
+    <string name="about_privacy">GuitarNest funktioniert offline. Kein Konto, keine Werbung, keine Tracker. Die App kann keine Verbindung zum Internet herstellen.</string>
+    <string name="permissions">Berechtigungen</string>
+    <string name="permission_mic">Mikrofon: um deine Gitarre im Stimmgerät zu hören. Nur genutzt, solange das Stimmgerät offen ist. Nichts wird aufgenommen.</string>
+    <string name="permission_none_else">Keine anderen Berechtigungen. Kein Internetzugang.</string>
+    <string name="version">Version %1$s</string>
+    <string name="source_code">Quellcode</string>
+</resources>

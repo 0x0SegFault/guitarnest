@@ -1,0 +1,53 @@
+name: Build & test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Workflows (including ones from forks) only get read access to the repository.
+permissions:
+  contents: read
+
+# A new push cancels the older run of the same branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 17
+      # Refuses to run a tampered Gradle wrapper (supply-chain protection).
+      - uses: gradle/actions/wrapper-validation@v6
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Translations
+        run: python3 scripts/check_translations.py
+      - name: Unit tests
+        run: ./gradlew :shared:jvmTest testDebugUnitTest
+      - name: Lint (app and shared)
+        run: ./gradlew lintDebug :shared:lintDebug
+      - name: Build
+        run: ./gradlew assembleDebug assembleRelease
+      - name: Check permissions (must match PRIVACY.md)
+        run: |
+          AAPT=$(ls $ANDROID_HOME/build-tools/*/aapt2 | tail -1)
+          $AAPT dump permissions app/build/outputs/apk/release/*.apk | sed -n "s/^uses-permission: name='\(.*\)'/\1/p" | sed 's/^io.github.x0x0segfault.guitarnest\.//' | sort > found.txt
+          printf '%s\n' DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION android.permission.RECORD_AUDIO | sort > allowed.txt
+          diff allowed.txt found.txt || { echo "Permissions changed: update PRIVACY.md, the in-app list and this check"; exit 1; }
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: reports
+          path: |
+            app/build/reports/
+            app/build/test-results/
+      - uses: actions/upload-artifact@v7
+        with:
+          name: guitarnest-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk

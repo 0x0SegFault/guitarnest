@@ -1,0 +1,18 @@
+name: Translation
+description: Fix a translation or add a new language
+labels: [translation]
+body:
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      placeholder: Portuguese (Brazil)
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What should change?
+      description: You can also open a pull request directly. See CONTRIBUTING.md.
+    validations:
+      required: true

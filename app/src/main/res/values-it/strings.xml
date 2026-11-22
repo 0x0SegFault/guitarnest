@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tuning">Accordatura</string>
+    <string name="tuning_standard">Standard</string>
+    <string name="tuning_half_step_down">Mezzo tono sotto</string>
+    <string name="tuning_whole_step_down">Un tono sotto</string>
+    <string name="tuning_drop_d">Drop D</string>
+    <string name="tuning_drop_c">Drop C</string>
+    <string name="tuning_open_d">Open D</string>
+    <string name="tuning_open_g">Open G</string>
+    <string name="tuning_open_e">Open E</string>
+    <string name="play_a_string">Suona una corda</string>
+    <string name="not_listening">L\'accordatore non sta ascoltando</string>
+    <string name="in_tune">Accordata</string>
+    <string name="tune_up">Troppo bassa: tendi la corda</string>
+    <string name="tune_down">Troppo alta: allenta la corda</string>
+    <string name="strings_auto">Corde: automatico. Tocca una corda per sceglierla.</string>
+    <string name="strings_locked">Corda scelta. Toccala di nuovo per tornare in automatico.</string>
+    <plurals name="reading_description">
+        <item quantity="one">%1$s, %2$d centesimo. %3$s</item>
+        <item quantity="other">%1$s, %2$d centesimi. %3$s</item>
+    </plurals>
+    <string name="string_description">Corda %1$d, %2$s</string>
+    <string name="reference_pitch">Diapason</string>
+    <string name="reset">Ripristina</string>
+    <string name="capo_hint">Accorda senza capotasto. Mettilo dopo e controlla di nuovo l\'accordatura.</string>
+    <string name="mic_title">L\'accordatore ha bisogno del microfono</string>
+    <string name="mic_why">GuitarNest ascolta solo mentre l\'accordatore è aperto. Il suono resta nella memoria del telefono. Non viene registrato, salvato o inviato.</string>
+    <string name="mic_allow">Consenti il microfono</string>
+    <string name="open_settings">Apri le impostazioni dell\'app</string>
+    <string name="mic_error">Il microfono non è disponibile. Forse un\'altra app lo sta usando.</string>
+    <string name="about">Informazioni e permessi</string>
+    <string name="about_privacy">GuitarNest funziona offline. Nessun account, nessuna pubblicità, nessun tracker. L\'app non può connettersi a Internet.</string>
+    <string name="permissions">Permessi</string>
+    <string name="permission_mic">Microfono: per sentire la tua chitarra nell\'accordatore. Usato solo mentre l\'accordatore è aperto. Non viene registrato nulla.</string>
+    <string name="permission_none_else">Nessun altro permesso. Nessun accesso a Internet.</string>
+    <string name="version">Versione %1$s</string>
+    <string name="source_code">Codice sorgente</string>
+</resources>
