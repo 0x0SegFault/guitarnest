@@ -90,3 +90,16 @@ class ListenTest {
         assertEquals(2, Arranger.capoForOpenShapes(listOf("A", "D", "E", "F#m")))
     }
 }
+
+class ResampleTest {
+    @Test
+    fun keepsPitchAndLength() {
+        val sr = 48_000
+        val x = FloatArray(sr) { kotlin.math.sin(2 * Math.PI * 440.0 * it / sr).toFloat() }
+        val y = Resample.toRate(x, sr, BasicPitch.SAMPLE_RATE)
+        assertEquals(BasicPitch.SAMPLE_RATE, y.size)
+        val f = app.guitarnest.tuner.PitchDetector(BasicPitch.SAMPLE_RATE).detect(y.copyOfRange(2000, 2000 + 4096))!!.frequency
+        assertTrue(kotlin.math.abs(f - 440.0) < 0.5, "$f")
+        assertEquals(listOf(1.5f), Resample.mono(floatArrayOf(1f, 2f), 2).toList())
+    }
+}

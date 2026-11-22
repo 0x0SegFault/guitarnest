@@ -30,7 +30,7 @@
     <string name="about">Información y permisos</string>
     <string name="about_privacy">GuitarNest no tiene cuenta, ni anuncios, ni rastreadores. Tus canciones se quedan en este teléfono.</string>
     <string name="permissions">Permisos</string>
-    <string name="permission_mic">Micrófono: para oír tu guitarra en el afinador. Solo se usa mientras el afinador está abierto. No se graba nada.</string>
+    <string name="permission_mic">Micrófono: para oír tu guitarra en el afinador y grabar para Tablatura desde audio. Solo se usa con el afinador abierto o mientras grabas. No se guarda nada.</string>
     <string name="permission_none_else">Internet: solo cuando buscas una canción (MusicBrainz) o usas tu propia conexión IA. La app no envía nada por su cuenta.</string>
     <string name="version">Versión %1$s</string>
     <string name="source_code">Código fuente</string>
@@ -125,4 +125,28 @@
     <string name="find_song_privacy">Busca en MusicBrainz (datos musicales abiertos). Solo se envían tus palabras de búsqueda.</string>
     <string name="no_results">Sin resultados.</string>
     <string name="working">Trabajando…</string>
+    <string name="listen_title">Tablatura desde audio</string>
+    <string name="listen_help">GuitarNest escucha en este teléfono y escribe un borrador de tablatura: tempo, acordes, cejilla, afinación y rasgueo. Tu IA puede mejorarlo después.</string>
+    <string name="source_file">Archivo de audio tuyo</string>
+    <string name="listen_files_note">Comprado sin DRM, tus CD copiados o música libre Creative Commons.</string>
+    <string name="source_record">Grabar</string>
+    <string name="listen_record_note">Con el micrófono: tú, un profesor o una jam.</string>
+    <string name="source_apps">Desde otra app</string>
+    <string name="listen_apps_note">Solo apps que lo permiten. La mayoría de apps de streaming no lo permiten y sus condiciones lo prohíben. Respeta las condiciones de cada servicio.</string>
+    <string name="recording">Grabando…</string>
+    <string name="stop_make">Parar y crear la tablatura</string>
+    <string name="improve_ai">Mejorar con mi IA</string>
+    <string name="improve_ai_off">Conecta tu IA (Ajustes) para mejorar el resultado.</string>
+    <string name="step_reading">Leyendo el archivo</string>
+    <string name="step_listening">Buscando las notas</string>
+    <string name="step_arranging">Escribiendo la tablatura</string>
+    <string name="step_asking">Preguntando a tu IA</string>
+    <string name="listen_too_short">La grabación es demasiado corta. Graba al menos 3 segundos.</string>
+    <string name="listen_no_notes">No se encontraron notas. Usa una grabación clara de la guitarra.</string>
+    <string name="listen_ai_failed">La tablatura se creó sin IA: %1$s</string>
+    <string name="capture_channel">Captura desde apps</string>
+    <string name="capture_running">GuitarNest escucha el sonido de otras apps</string>
+    <string name="capture_silent">Silencio: esta app no permite la captura.</string>
+    <string name="listen_privacy">El audio se queda en este teléfono y no se guarda. Tu IA recibe solo el borrador, nunca el audio.</string>
+    <string name="permission_apps">Desde otra app: Android pregunta primero y muestra una notificación mientras GuitarNest escucha otras apps. La mayoría de apps de streaming no lo permiten.</string>
 </resources>

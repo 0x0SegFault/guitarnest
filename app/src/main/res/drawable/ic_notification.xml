@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Notification icon: the guitar pick outline. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,25C68,25 79,30 79,40C79,55 63,73 57,80C55.5,81.8 52.5,81.8 51,80C45,73 29,55 29,40C29,30 40,25 54,25Z" />
+</vector>

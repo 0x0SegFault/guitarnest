@@ -70,6 +70,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
     var tab by rememberSaveable { mutableStateOf(Tab.SONGS) }
     var openId by rememberSaveable { mutableStateOf<String?>(null) }
     var editing by rememberSaveable { mutableStateOf<String?>(null) } // song id, or "" for a new song
+    var listening by rememberSaveable { mutableStateOf(false) }
     var about by rememberSaveable { mutableStateOf(false) }
     var sheet by rememberSaveable { mutableStateOf<String?>(null) } // "ai", "ask", "search"
     var seed by remember { mutableStateOf<Song?>(null) }
@@ -97,8 +98,9 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
             .onFailure { vm.showMessage(it.message) }
     }
 
-    BackHandler(enabled = editing != null || openId != null) {
+    BackHandler(enabled = editing != null || openId != null || listening) {
         when {
+            listening -> listening = false
             editing != null -> { editing = null; editorError = null }
             else -> { vm.stop(); openId = null }
         }
@@ -111,6 +113,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
                 title = {
                     Text(
                         when {
+                            listening -> stringResource(R.string.listen_title)
                             editing != null -> stringResource(if (editing == "") R.string.new_song else R.string.edit_song)
                             open != null && tab == Tab.SONGS -> open.title
                             else -> stringResource(R.string.app_name)
@@ -119,14 +122,15 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
                     )
                 },
                 navigationIcon = {
-                    if (editing != null || (open != null && tab == Tab.SONGS)) {
-                        IconButton(onClick = { if (editing != null) { editing = null; editorError = null } else { vm.stop(); openId = null } }) {
+                    if (listening || editing != null || (open != null && tab == Tab.SONGS)) {
+                        IconButton(onClick = { if (listening) listening = false else if (editing != null) { editing = null; editorError = null } else { vm.stop(); openId = null } }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                         }
                     }
                 },
                 actions = {
                     when {
+                        listening -> {}
                         editing != null -> TextButton(onClick = {
                             draft.build().onSuccess { song -> vm.save(song) { saved -> openId = saved.id; editing = null; editorError = null } }
                                 .onFailure { editorError = it.message }
@@ -141,6 +145,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
                         tab == Tab.SONGS -> {
                             IconButton(onClick = { importer.launch(arrayOf("*/*")) }) { Icon(Icons.Filled.LibraryMusic, stringResource(R.string.import_file)) }
                             NewSongMenu(
+                                onListen = { listening = true },
                                 onWrite = { seed = null; editing = "" },
                                 onAi = { vm.resetJobs(); sheet = "ask" },
                                 onSearch = { vm.resetJobs(); sheet = "search" },
@@ -153,7 +158,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
             )
         },
         bottomBar = {
-            if (editing == null) {
+            if (editing == null && !listening) {
                 NavigationBar {
                     NavigationBarItem(tab == Tab.SONGS, { tab = Tab.SONGS }, { Icon(Icons.Filled.LibraryMusic, null) }, label = { Text(stringResource(R.string.songs)) })
                     NavigationBarItem(tab == Tab.METRONOME, { tab = Tab.METRONOME }, { Icon(Icons.Filled.Timer, null) }, label = { Text(stringResource(R.string.metronome)) })
@@ -164,6 +169,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
     ) { padding ->
         val m = Modifier.fillMaxSize().padding(padding)
         when {
+            listening -> ListenScreen(onMade = { id -> vm.refresh(); listening = false; tab = Tab.SONGS; openId = id }, modifier = m)
             editing != null -> EditorScreen(draft, editorError, m)
             tab == Tab.SONGS && open != null -> SongScreen(open, playing, log, vm, m)
             tab == Tab.SONGS -> LibraryScreen(songs, log, { openId = it.id }, { seed = null; editing = "" }, { importer.launch(arrayOf("*/*")) }, m)
@@ -215,10 +221,11 @@ private fun SongMenu(onAskAi: () -> Unit, onEdit: () -> Unit, onPrint: () -> Uni
 }
 
 @Composable
-private fun NewSongMenu(onWrite: () -> Unit, onAi: () -> Unit, onSearch: () -> Unit) {
+private fun NewSongMenu(onListen: () -> Unit, onWrite: () -> Unit, onAi: () -> Unit, onSearch: () -> Unit) {
     var open by remember { mutableStateOf(false) }
     IconButton(onClick = { open = true }) { Icon(Icons.Filled.Add, stringResource(R.string.new_song)) }
     DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+        DropdownMenuItem(text = { Text(stringResource(R.string.listen_title)) }, onClick = { open = false; onListen() })
         DropdownMenuItem(text = { Text(stringResource(R.string.write_tab)) }, onClick = { open = false; onWrite() })
         DropdownMenuItem(text = { Text(stringResource(R.string.find_song)) }, onClick = { open = false; onSearch() })
         DropdownMenuItem(text = { Text(stringResource(R.string.ai_new_tab)) }, onClick = { open = false; onAi() })
@@ -243,6 +250,7 @@ private fun AboutSheet() {
         Text(stringResource(R.string.about_privacy), style = MaterialTheme.typography.bodyMedium)
         Text(stringResource(R.string.permissions), style = MaterialTheme.typography.titleMedium)
         Text(stringResource(R.string.permission_mic), style = MaterialTheme.typography.bodyMedium)
+        Text(stringResource(R.string.permission_apps), style = MaterialTheme.typography.bodyMedium)
         Text(stringResource(R.string.permission_none_else), style = MaterialTheme.typography.bodyMedium)
         Text(stringResource(R.string.copyright_note), style = MaterialTheme.typography.bodySmall)
         Text(

@@ -1,7 +1,11 @@
 package app.guitarnest.net
 
 import app.guitarnest.ai.AiTabMaker
+import app.guitarnest.ai.AiTask
 import app.guitarnest.ai.ApiStyle
+import app.guitarnest.tab.Level
+import app.guitarnest.tab.Song
+import app.guitarnest.tab.TabFormatException
 import app.guitarnest.ai.ChatRequest
 import app.guitarnest.data.AiConnection
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +15,21 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class AiException(message: String) : Exception(message)
+
+/** Asks the AI for a song; an invalid answer is sent back once with the problem, so the AI can fix it. */
+suspend fun AiClient.makeSong(connection: AiConnection, task: AiTask, level: Level, request: String, song: Song?): Song {
+    var chat = AiTabMaker.request(connection.model, task, level, request, song)
+    var answer = chat(connection, chat)
+    val source = "AI (${connection.model})"
+    val keepLevel = level.takeIf { task != AiTask.STRUMMING }
+    return try {
+        AiTabMaker.songFrom(answer, source, keepLevel)
+    } catch (e: TabFormatException) {
+        chat = AiTabMaker.repair(chat, answer, e.message ?: "invalid")
+        answer = chat(connection, chat)
+        AiTabMaker.songFrom(answer, source, keepLevel)
+    }
+}
 
 /**
  * Calls the player's AI: Anthropic's Messages API for api.anthropic.com, else an OpenAI-compatible

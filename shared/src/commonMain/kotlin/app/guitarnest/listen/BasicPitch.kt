@@ -13,6 +13,29 @@ class BasicPitch(model: ByteArray) {
     /** Number of 2-second windows for [samples] of 22050 Hz audio, for progress bars. */
     fun windowCount(samples: Int): Int = (samples + OVERLAP / 2 + STEP - 1) / STEP
 
+    /** Audio with the half-overlap of silence in front, ready for [window]. */
+    fun padded(audio: FloatArray): FloatArray = FloatArray(OVERLAP / 2) + audio
+
+    /** Kept frames (note, onset) of window [k]. Windows are independent, so callers may run them in parallel. */
+    fun window(padded: FloatArray, k: Int): Pair<List<FloatArray>, List<FloatArray>> {
+        val start = k * STEP
+        val input = FloatArray(WINDOW)
+        padded.copyInto(input, 0, start, minOf(padded.size, start + WINDOW))
+        val out = graph.run(Tensor(intArrayOf(1, WINDOW, 1), input))
+        val n = out.getValue(NOTE).data
+        val o = out.getValue(ONSET).data
+        return (HALF until FRAMES - HALF).map { f -> n.copyOfRange(f * BINS, (f + 1) * BINS) } to
+            (HALF until FRAMES - HALF).map { f -> o.copyOfRange(f * BINS, (f + 1) * BINS) }
+    }
+
+    /** Notes from the per-window results, in window order. */
+    fun notesFrom(audioLength: Int, windows: List<Pair<List<FloatArray>, List<FloatArray>>>): List<HeardNote> {
+        val frames = (audioLength.toLong() * FPS_NUM / (SAMPLE_RATE.toLong() * FPS_DEN)).toInt()
+        val note = windows.flatMap { it.first }.take(frames).toTypedArray()
+        val onset = windows.flatMap { it.second }.take(frames).toTypedArray()
+        return extract(note, onset)
+    }
+
     /** Frame-wise note and onset activations, 88 bins (MIDI 21-108) per frame. [progress] gets (done, total). */
     fun activations(audio: FloatArray, progress: (Int, Int) -> Unit = { _, _ -> }): Pair<Array<FloatArray>, Array<FloatArray>> {
         val padded = FloatArray(OVERLAP / 2) + audio

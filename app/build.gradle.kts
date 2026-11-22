@@ -58,6 +58,9 @@ android {
         buildConfig = true
     }
 
+    // The note model (models/basic-pitch.gnm) is shared with iOS and the JVM tests.
+    sourceSets["main"].assets.srcDir(rootProject.file("models"))
+
     // Lets Android 13+ offer a per-app language choice in system settings.
     androidResources {
         generateLocaleConfig = true

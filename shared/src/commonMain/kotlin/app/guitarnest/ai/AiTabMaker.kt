@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 /** What the player asks the AI to do. */
-enum class AiTask { ARRANGE, STRUMMING, WRITE }
+enum class AiTask { ARRANGE, STRUMMING, WRITE, REFINE }
 
 @Serializable
 data class ChatMessage(val role: String, val content: String)
@@ -64,8 +64,9 @@ Levels:
 - intermediate: full chords, the real strumming pattern, short riffs.
 - advanced: the full part as played, with techniques.
 Rules:
-- Work only from the material the player gives you: their tab, chords, notes from their own recording, or their description.
-- Do not reproduce published tabs or lyrics from memory.
+- Work from the material the player gives you: their tab, chords, a draft made from their own recording, or their description.
+- Use your music knowledge to correct and complete it: key, chord choice, half or double tempo, capo, strumming feel, form. Simple facts about a known song (key, tuning, capo, tempo) are fine.
+- Do not reproduce published tabs, chord sheets or lyrics from memory.
 - Answer with the JSON object only. No text before or after it.
 """.trim()
 
@@ -74,6 +75,8 @@ Rules:
             AiTask.ARRANGE -> "Arrange this song for the ${level.name.lowercase()} level. Keep the title, artist, key and form."
             AiTask.STRUMMING -> "Add strumming patterns that fit each section of this song. Keep everything else."
             AiTask.WRITE -> "Write a new ${level.name.lowercase()} tab from the player's description."
+            AiTask.REFINE -> "This draft was made automatically from a recording; tempo, chords, capo and strumming are estimates. " +
+                "Check and correct it with your music knowledge, keep what is right, and arrange it for the ${level.name.lowercase()} level."
         }
         val content = buildString {
             appendLine(ask)

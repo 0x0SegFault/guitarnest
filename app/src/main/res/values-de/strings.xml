@@ -29,7 +29,7 @@
     <string name="about">Info und Berechtigungen</string>
     <string name="about_privacy">GuitarNest hat kein Konto, keine Werbung und keine Tracker. Deine Songs bleiben auf diesem Telefon.</string>
     <string name="permissions">Berechtigungen</string>
-    <string name="permission_mic">Mikrofon: um deine Gitarre im Stimmgerät zu hören. Nur genutzt, solange das Stimmgerät offen ist. Nichts wird aufgenommen.</string>
+    <string name="permission_mic">Mikrofon: um deine Gitarre im Stimmgerät zu hören und für Tabulatur aus Audio aufzunehmen. Nur genutzt, solange das Stimmgerät offen ist oder du aufnimmst. Nichts wird gespeichert.</string>
     <string name="permission_none_else">Internet: nur wenn du einen Song suchst (MusicBrainz) oder deine eigene KI-Verbindung nutzt. Die App sendet nichts von selbst.</string>
     <string name="version">Version %1$s</string>
     <string name="source_code">Quellcode</string>
@@ -123,4 +123,28 @@
     <string name="find_song_privacy">Sucht in MusicBrainz (offene Musikdaten). Nur deine Suchwörter werden gesendet.</string>
     <string name="no_results">Keine Ergebnisse.</string>
     <string name="working">Läuft…</string>
+    <string name="listen_title">Tabulatur aus Audio</string>
+    <string name="listen_help">GuitarNest hört auf diesem Telefon zu und schreibt einen Tabulatur-Entwurf: Tempo, Akkorde, Kapo, Stimmung und Schlagmuster. Deine KI kann ihn dann verbessern.</string>
+    <string name="source_file">Eigene Audiodatei</string>
+    <string name="listen_files_note">Ohne DRM gekauft, deine CD-Rips oder freie Creative-Commons-Musik.</string>
+    <string name="source_record">Aufnehmen</string>
+    <string name="listen_record_note">Mit dem Mikrofon: du, eine Lehrkraft oder eine Session.</string>
+    <string name="source_apps">Aus einer anderen App</string>
+    <string name="listen_apps_note">Nur Apps, die es erlauben. Die meisten Streaming-Apps erlauben es nicht, und ihre Bedingungen verbieten es. Beachte die Bedingungen jedes Dienstes.</string>
+    <string name="recording">Aufnahme läuft…</string>
+    <string name="stop_make">Stoppen und Tabulatur erstellen</string>
+    <string name="improve_ai">Mit meiner KI verbessern</string>
+    <string name="improve_ai_off">Verbinde deine KI (Einstellungen), um das Ergebnis zu verbessern.</string>
+    <string name="step_reading">Datei wird gelesen</string>
+    <string name="step_listening">Noten werden gesucht</string>
+    <string name="step_arranging">Tabulatur wird geschrieben</string>
+    <string name="step_asking">Deine KI wird gefragt</string>
+    <string name="listen_too_short">Die Aufnahme ist zu kurz. Nimm mindestens 3 Sekunden auf.</string>
+    <string name="listen_no_notes">Keine Noten gefunden. Nutze eine klare Aufnahme der Gitarre.</string>
+    <string name="listen_ai_failed">Die Tabulatur wurde ohne KI erstellt: %1$s</string>
+    <string name="capture_channel">Aufnahme aus Apps</string>
+    <string name="capture_running">GuitarNest hört den Ton anderer Apps</string>
+    <string name="capture_silent">Stille: Diese App erlaubt keine Aufnahme.</string>
+    <string name="listen_privacy">Der Ton bleibt auf diesem Telefon und wird nicht gespeichert. Deine KI bekommt nur den Tabulatur-Entwurf, nie den Ton.</string>
+    <string name="permission_apps">Aus einer anderen App: Android fragt zuerst und zeigt eine Benachrichtigung, solange GuitarNest anderen Apps zuhört. Die meisten Streaming-Apps erlauben es nicht.</string>
 </resources>

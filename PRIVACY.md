@@ -6,7 +6,8 @@ GuitarNest has no account, no ads, no analytics and no trackers. Your songs, tab
 
 | Permission | Why | When |
 |---|---|---|
-| Microphone (`RECORD_AUDIO`) | The tuner hears your guitar. | Only while the tuner is open. Nothing is recorded or saved. You can refuse it; the rest of the app works. |
+| Microphone (`RECORD_AUDIO`) | The tuner hears your guitar; Tab from audio records you playing; capture from other apps needs it too. | Only while the tuner is open or while you record. The sound stays in memory and is not saved. You can refuse it; the rest of the app works. |
+| Foreground service, media projection (`FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_MEDIA_PROJECTION`) | "From another app": Android shows its own consent screen and a notification while the sound of other apps is captured. | Only after you tap Start in Android's dialog, until you stop. Apps that do not allow capture give silence. |
 | Internet (`INTERNET`) | Song search and your own AI connection. | Only when you tap Search or Make. The app sends nothing on its own. |
 
 No other permissions. CI fails if a new permission appears.
@@ -19,7 +20,7 @@ No other permissions. CI fails if a new permission appears.
 | Ask AI / Make a tab with AI | The song you selected (as a GuitarNest tab), the level and your request | The address you set in Settings → AI connection: your own computer, your own server, or the cloud service you chose. Their privacy policy applies. |
 | Search for tabs in the browser | Artist and title | Opens your browser with a DuckDuckGo search. The app itself downloads nothing. |
 
-Audio is never sent. Your other songs, your practice history and your settings are never sent.
+Audio is never sent: notes are found on this phone. Your AI gets only the draft tab. Your other songs, your practice history and your settings are never sent.
 
 ## Data on your phone
 

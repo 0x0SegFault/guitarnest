@@ -106,7 +106,7 @@
     <string name="about">About and permissions</string>
     <string name="about_privacy">GuitarNest has no account, no ads and no trackers. Your songs stay on this phone.</string>
     <string name="permissions">Permissions</string>
-    <string name="permission_mic">Microphone: to hear your guitar in the tuner. Used only while the tuner is open. Nothing is recorded.</string>
+    <string name="permission_mic">Microphone: to hear your guitar in the tuner and to record for Tab from audio. Used only while the tuner is open or while you record. Nothing is saved.</string>
     <string name="permission_none_else">Internet: only when you search for a song (MusicBrainz) or use your own AI connection. The app sends nothing on its own.</string>
     <string name="version">Version %1$s</string>
     <string name="source_code">Source code</string>
@@ -138,4 +138,28 @@
     <string name="find_song_privacy">Searches MusicBrainz (open music data). Only your search words are sent.</string>
     <string name="no_results">No results.</string>
     <string name="working">Working…</string>
+    <string name="listen_title">Tab from audio</string>
+    <string name="listen_help">GuitarNest listens on this phone and writes a draft tab: tempo, chords, capo, tuning and strumming. Your AI can then improve it.</string>
+    <string name="source_file">Song file you own</string>
+    <string name="listen_files_note">Bought without DRM, your CD rips, or free Creative Commons music.</string>
+    <string name="source_record">Record</string>
+    <string name="listen_record_note">With the microphone: you, a teacher or a jam.</string>
+    <string name="source_apps">From another app</string>
+    <string name="listen_apps_note">Only apps that allow it. Most streaming apps do not, and their terms forbid it. Follow each service\'s terms.</string>
+    <string name="recording">Recording…</string>
+    <string name="stop_make">Stop and make the tab</string>
+    <string name="improve_ai">Improve with my AI</string>
+    <string name="improve_ai_off">Connect your AI (Settings) to improve the result.</string>
+    <string name="step_reading">Reading the file</string>
+    <string name="step_listening">Finding the notes</string>
+    <string name="step_arranging">Writing the tab</string>
+    <string name="step_asking">Asking your AI</string>
+    <string name="listen_too_short">The recording is too short. Record at least 3 seconds.</string>
+    <string name="listen_no_notes">No notes found. Use a clear recording of the guitar.</string>
+    <string name="listen_ai_failed">The tab was made without AI: %1$s</string>
+    <string name="capture_channel">Capture from apps</string>
+    <string name="capture_running">GuitarNest is listening to the sound of other apps</string>
+    <string name="capture_silent">Silence: this app does not allow capture.</string>
+    <string name="listen_privacy">The audio stays on this phone and is not saved. Your AI gets only the draft tab, never the audio.</string>
+    <string name="permission_apps">From another app: Android asks first and shows a notification while GuitarNest listens to other apps. Most streaming apps do not allow it.</string>
 </resources>

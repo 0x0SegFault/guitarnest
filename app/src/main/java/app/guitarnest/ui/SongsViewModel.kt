@@ -14,6 +14,7 @@ import app.guitarnest.data.AiConnection
 import app.guitarnest.data.AiSettings
 import app.guitarnest.net.AiClient
 import app.guitarnest.net.MusicBrainzClient
+import app.guitarnest.net.makeSong
 import app.guitarnest.tab.Level
 import app.guitarnest.tab.TabFormatException
 import app.guitarnest.data.PracticeEntry
@@ -155,18 +156,7 @@ class SongsViewModel(app: Application) : AndroidViewModel(app) {
     fun askAi(task: AiTask, level: Level, request: String, song: Song?, done: (Song) -> Unit) = viewModelScope.launch {
         val connection = _ai.value
         _aiJob.value = Job(running = true)
-        val result = runCatching {
-            var chat = AiTabMaker.request(connection.model, task, level, request, song)
-            var answer = AiClient.chat(connection, chat)
-            val source = "AI (${connection.model})"
-            try {
-                AiTabMaker.songFrom(answer, source, level.takeIf { task != AiTask.STRUMMING })
-            } catch (e: TabFormatException) {
-                chat = AiTabMaker.repair(chat, answer, e.message ?: "invalid")
-                answer = AiClient.chat(connection, chat)
-                AiTabMaker.songFrom(answer, source, level.takeIf { task != AiTask.STRUMMING })
-            }
-        }
+        val result = runCatching { AiClient.makeSong(connection, task, level, request, song) }
         result.onSuccess { made ->
             val saved = withContext(Dispatchers.IO) { repo.save(made) }
             refresh()
