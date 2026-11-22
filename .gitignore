@@ -47,3 +47,5 @@ CLAUDE.local.md
 .DS_Store
 
 __pycache__/
+
+# The app model (models/basic-pitch.gnm) is tracked; the ONNX original in ai/models is downloaded.
