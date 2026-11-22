@@ -6,12 +6,13 @@ import GuitarNestShared
 @MainActor
 final class TunerEngine: ObservableObject {
     @Published private(set) var frequency: Double?
+    /// False while an older reading is kept on screen (dimmed) as the string rings out.
+    @Published private(set) var fresh = true
     @Published private(set) var listening = false
     @Published private(set) var denied = false
 
     private let engine = AVAudioEngine()
-    private let smoother = PitchSmoother(size: 5)
-    private var silent = 0
+    private let tracker = Bridge.shared.tunerTracker()
 
     /// Runs on the audio side: keeps the last window of samples and detects the pitch.
     private final class Worker: @unchecked Sendable {
@@ -25,14 +26,12 @@ final class TunerEngine: ObservableObject {
             size = Int(detector.windowSize)
         }
 
-        func add(_ samples: [Float], result: @escaping @Sendable (Double?) -> Void) {
+        func add(_ samples: [Float], result: @escaping @Sendable (Pitch?) -> Void) {
             queue.async {
                 self.window.append(contentsOf: samples)
                 if self.window.count > self.size { self.window.removeFirst(self.window.count - self.size) }
                 guard self.window.count == self.size else { return }
-                let pitch = self.detector.detect(samples: Convert.floats(self.window))
-                let clear = pitch.map { $0.clarity > 0.85 } ?? false
-                result(clear ? pitch?.frequency : nil)
+                result(self.detector.detect(samples: Convert.floats(self.window)))
             }
         }
     }
@@ -61,8 +60,8 @@ final class TunerEngine: ObservableObject {
         input.installTap(onBus: 0, bufferSize: 2048, format: format) { [weak self] buffer, _ in
             guard let channel = buffer.floatChannelData?[0] else { return }
             let samples = Array(UnsafeBufferPointer(start: channel, count: Int(buffer.frameLength)))
-            worker.add(samples) { value in
-                Task { @MainActor in self?.update(value) }
+            worker.add(samples) { pitch in
+                Task { @MainActor in self?.update(pitch) }
             }
         }
         do {
@@ -73,17 +72,10 @@ final class TunerEngine: ObservableObject {
         }
     }
 
-    private func update(_ value: Double?) {
-        if let value {
-            silent = 0
-            frequency = smoother.add(frequency: value)
-        } else {
-            silent += 1
-            if silent > 12 {
-                smoother.reset()
-                frequency = nil
-            }
-        }
+    private func update(_ pitch: Pitch?) {
+        let reading = tracker.update(pitch: pitch, nowMs: Int64(ProcessInfo.processInfo.systemUptime * 1000))
+        frequency = reading.frequency?.doubleValue
+        fresh = reading.fresh
     }
 
     func stop() {

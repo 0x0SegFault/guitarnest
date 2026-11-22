@@ -26,6 +26,7 @@ import app.guitarnest.tuner.NoteReading
 import app.guitarnest.tuner.Notes
 import app.guitarnest.tuner.PitchDetector
 import app.guitarnest.tuner.Tuning
+import app.guitarnest.tuner.TunerTracker
 import app.guitarnest.tuner.readingOf
 
 /** A section while it is edited: its bars are text (see [TextTab]). */
@@ -100,6 +101,7 @@ object Bridge {
     fun decodeSong(text: String): Song = SongCodec.decode(text)
 
     fun pitchDetector(sampleRate: Int): PitchDetector = PitchDetector(sampleRate)
+    fun tunerTracker(): TunerTracker = TunerTracker()
     fun noteReading(frequency: Double, a4: Double): NoteReading = readingOf(frequency, a4)
     fun noteName(midi: Int, flats: Boolean): String = Notes.name(midi, flats)
 

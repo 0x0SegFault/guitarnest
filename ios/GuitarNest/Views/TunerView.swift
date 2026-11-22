@@ -11,7 +11,7 @@ struct TunerView: View {
 
     var body: some View {
         let reading = currentReading()
-        let color = tone(reading.cents)
+        let color = tone(reading.cents).opacity(engine.fresh ? 1 : 0.55)
         ScrollView {
             VStack(spacing: 18) {
                 Picker(L10n.t("tuning"), selection: $tuningId) {

@@ -16,8 +16,8 @@ class PitchDetector(
     private val minFrequency: Double = 60.0,
     private val maxFrequency: Double = 1400.0,
     private val threshold: Double = 0.15,
-    /** Signals with a lower RMS level are silence. */
-    private val minLevel: Double = 0.01,
+    /** Signals with a lower RMS level are silence. Low, so a string can ring out (phone microphones are quiet). */
+    private val minLevel: Double = 0.003,
 ) {
     /** Samples needed for one detection: two periods of the lowest note, plus the lag range. */
     val windowSize: Int = run {

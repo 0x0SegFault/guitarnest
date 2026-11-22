@@ -69,14 +69,21 @@ enum AIClient {
         }
     }
 
-    /// Song search in MusicBrainz (open data). Only the search words are sent.
+    /// Song search in MusicBrainz (open data). Only the search words are sent. MusicBrainz allows about
+    /// 1 request per second per IP and answers 503 above that: wait for Retry-After and try again, up to 3 times.
     static func search(_ query: String) async throws -> [SongInfo] {
         guard let url = URL(string: Bridge.shared.searchUrl(query: query)) else { return [] }
         var http = URLRequest(url: url, timeoutInterval: 20)
         http.setValue(Bridge.shared.searchUserAgent(), forHTTPHeaderField: "User-Agent")
         http.setValue("application/json", forHTTPHeaderField: "Accept")
-        let (data, response) = try await URLSession.shared.data(for: http)
-        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw AppError("MusicBrainz: try again in a moment.") }
-        return try Bridge.shared.searchParse(body: String(data: data, encoding: .utf8) ?? "")
+        for attempt in 1...3 {
+            let (data, response) = try await URLSession.shared.data(for: http)
+            let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+            if status == 200 { return try Bridge.shared.searchParse(body: String(bytes: data, encoding: .utf8) ?? "") }
+            guard status == 503, attempt < 3 else { break }
+            let wait = Double((response as? HTTPURLResponse)?.value(forHTTPHeaderField: "Retry-After") ?? "") ?? Double(attempt)
+            try await Task.sleep(nanoseconds: UInt64((min(10, max(1, wait)) + 0.2) * 1_000_000_000))
+        }
+        throw AppError("MusicBrainz is busy. Try again in a minute.")
     }
 }

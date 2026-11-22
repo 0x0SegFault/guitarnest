@@ -2,6 +2,7 @@ package app.guitarnest.ui
 
 import android.app.Application
 import android.content.Context
+import android.os.SystemClock
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -10,7 +11,7 @@ import app.guitarnest.BuildConfig
 import app.guitarnest.audio.DemoSignal
 import app.guitarnest.audio.Microphone
 import app.guitarnest.tuner.PitchDetector
-import app.guitarnest.tuner.PitchSmoother
+import app.guitarnest.tuner.TunerTracker
 import app.guitarnest.tuner.Tuning
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +27,8 @@ data class TunerState(
     /** Null: pick the nearest string automatically. */
     val lockedString: Int? = null,
     val frequency: Double? = null,
+    /** False while an older reading is kept on screen (shown dimmed). */
+    val fresh: Boolean = true,
     val listening: Boolean = false,
     val micError: Boolean = false,
 ) {
@@ -37,9 +40,8 @@ class TunerViewModel(app: Application, handle: SavedStateHandle) : AndroidViewMo
     private val mic = Microphone(app)
     private val detector = PitchDetector(mic.sampleRate)
     private val demoHz: Float? = if (BuildConfig.DEBUG) handle.get<Float>("demo_hz") else null
-    private val smoother = PitchSmoother()
+    private val tracker = TunerTracker()
     private var job: Job? = null
-    private var silentFrames = 0
 
     private val _state = MutableStateFlow(
         TunerState(
@@ -65,7 +67,7 @@ class TunerViewModel(app: Application, handle: SavedStateHandle) : AndroidViewMo
     fun stop() {
         job?.cancel()
         job = null
-        smoother.reset()
+        tracker.reset()
         _state.update { it.copy(listening = false, frequency = null) }
     }
 
@@ -85,18 +87,8 @@ class TunerViewModel(app: Application, handle: SavedStateHandle) : AndroidViewMo
         _state.update { it.copy(lockedString = if (it.lockedString == index) null else index) }
 
     private fun onWindow(samples: FloatArray) {
-        val pitch = detector.detect(samples)?.takeIf { it.clarity > 0.85 }
-        if (pitch == null) {
-            // Keep the last reading briefly so the needle does not blink between frames.
-            if (++silentFrames > HOLD_FRAMES) {
-                smoother.reset()
-                _state.update { it.copy(frequency = null) }
-            }
-            return
-        }
-        silentFrames = 0
-        val smooth = smoother.add(pitch.frequency)
-        _state.update { it.copy(frequency = smooth) }
+        val reading = tracker.update(detector.detect(samples), SystemClock.elapsedRealtime())
+        _state.update { it.copy(frequency = reading.frequency, fresh = reading.fresh) }
     }
 
     override fun onCleared() = stop()
@@ -104,6 +96,5 @@ class TunerViewModel(app: Application, handle: SavedStateHandle) : AndroidViewMo
     private companion object {
         const val KEY_TUNING = "tuning"
         const val KEY_A4 = "a4"
-        const val HOLD_FRAMES = 12
     }
 }

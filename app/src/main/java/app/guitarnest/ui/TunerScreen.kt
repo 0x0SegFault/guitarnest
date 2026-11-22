@@ -140,7 +140,8 @@ fun TunerScreen(modifier: Modifier = Modifier, vm: TunerViewModel = viewModel())
     }
 
     val reading = currentReading(state)
-    val color = toneOf(reading.cents)
+    // An older reading stays on screen, dimmed, so the player can read it while the string rings out.
+    val color = toneOf(reading.cents).copy(alpha = if (state.fresh) 1f else 0.55f)
     Column(
         modifier.verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
