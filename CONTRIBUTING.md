@@ -12,7 +12,7 @@ GuitarNest is a small, privacy-first project. The maintainer reviews every contr
 
 1. **Network only on the player's action** (song search, their own AI). No background requests. CI checks the permission list.
 2. **No trackers, analytics, ads or proprietary libraries** (no Google Play Services, Firebase, etc.).
-3. **No song database.** The app does not download or share tabs or songs. Users work only with music they own. See [docs/COPYRIGHT.md](docs/COPYRIGHT.md).
+3. **Never download audio, and no song database.** The app does not download or share tabs or songs. Users work only with music they own. See [docs/COPYRIGHT.md](docs/COPYRIGHT.md).
 4. **Claims need evidence.** Cite the source in `docs/SCIENCE.md` and add tests.
 5. **All user-facing text goes in `strings.xml`.**
 

@@ -6,6 +6,7 @@ Goal: learn songs on the guitar with tabs, strumming patterns and a metronome.
 
 ## Rules
 
+- Never download audio, from any service. Analyse only files the player owns (bought DRM-free, own CD rips, own recordings).
 - No third-party tabs in the app or the repository. Tabs come from the player: imported files they own, tabs they write, or tabs an AI makes for them from their own audio.
 - The app stores everything on the phone. The AI is the player's own: the app sends a song and a request only to the address the player sets, and only when they ask. The toolkit runs on the player's computer.
 
