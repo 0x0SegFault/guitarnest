@@ -100,8 +100,8 @@ struct ListenView: View {
         Task.detached(priority: .userInitiated) {
             do {
                 guard let url = Bundle.main.url(forResource: "basic-pitch", withExtension: "gnm") else { throw AppError("Model missing") }
-                let pitch = try Bridge.shared.basicPitch(model: KT.bytes(try Data(contentsOf: url)))
-                let draft = try Bridge.shared.listen(model: pitch, audio: KT.floats(audio), level: levelValue, title: name) { done, total in
+                let pitch = try Bridge.shared.basicPitch(model: Convert.bytes(try Data(contentsOf: url)))
+                let draft = try Bridge.shared.listen(model: pitch, audio: Convert.floats(audio), level: levelValue, title: name) { done, total in
                     let value = Double(truncating: done) / Double(max(1, Int(truncating: total)))
                     Task { @MainActor in progress = value }
                 }

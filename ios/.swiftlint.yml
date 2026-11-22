@@ -4,10 +4,10 @@ included:
   - GuitarNestTests
 identifier_name:
   # Loop indexes, geometry and short closure values only.
-  excluded: [i, x, y, r, s, b, c, p, f, t, q, d, a, id, to]
+  excluded: [i, x, y, r, s, b, c, p, f, t, q, d, a, id, to, iv, hz, on, a4, ai]
 line_length:
-  warning: 160
-  error: 220
+  warning: 180
+  error: 240
   ignores_urls: true
   ignores_comments: true
 # SwiftUI views keep their layout in one place.

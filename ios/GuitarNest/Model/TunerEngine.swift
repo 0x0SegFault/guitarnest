@@ -30,7 +30,7 @@ final class TunerEngine: ObservableObject {
                 self.window.append(contentsOf: samples)
                 if self.window.count > self.size { self.window.removeFirst(self.window.count - self.size) }
                 guard self.window.count == self.size else { return }
-                let pitch = self.detector.detect(samples: KT.floats(self.window))
+                let pitch = self.detector.detect(samples: Convert.floats(self.window))
                 let clear = pitch.map { $0.clarity > 0.85 } ?? false
                 result(clear ? pitch?.frequency : nil)
             }

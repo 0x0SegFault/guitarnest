@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.0 (2026-11-22)
 
 - Guitar tuner: YIN pitch detection, 9 tunings with their usual note names (E♭ in half step down), reference pitch 415–466 Hz. The six strings are shown; the string being tuned lights up; tap a string to lock it.
 - Tab library: write, import (GuitarNest, MusicXML, .mxl), export, print or save as PDF. Example exercise.

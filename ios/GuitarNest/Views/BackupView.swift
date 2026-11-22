@@ -88,7 +88,7 @@ struct BackupView: View {
                 switch result {
                 case .success(let plain):
                     do {
-                        let count = try model.restore(String(decoding: plain, as: UTF8.self))
+                        let count = try model.restore(String(bytes: plain, encoding: .utf8) ?? "")
                         model.message = String.localizedStringWithFormat(NSLocalizedString("restored_songs", comment: ""), count)
                         dismiss()
                     } catch {

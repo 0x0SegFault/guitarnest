@@ -2,7 +2,7 @@ import Foundation
 import GuitarNestShared
 
 /// Conversions between Swift and the shared Kotlin types.
-enum KT {
+enum Convert {
     static func floats(_ values: [Float]) -> KotlinFloatArray {
         let array = KotlinFloatArray(size: Int32(values.count))
         for (i, value) in values.enumerated() {
