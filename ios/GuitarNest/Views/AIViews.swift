@@ -23,11 +23,16 @@ struct AIConnectionView: View {
     @State private var connection = AIConnection.load()
     @State private var status: String?
     @State private var working = false
+    @State private var signIn = OpenRouterSignIn()
 
     var body: some View {
         Form {
             Section {
                 Text(L10n.t("ai_connection_help")).font(.callout)
+                Button(L10n.t("openrouter_sign_in")) { openRouter() }.buttonStyle(.borderedProminent).disabled(working)
+                Text(L10n.t("openrouter_help")).font(.caption).foregroundStyle(.secondary)
+            }
+            Section(L10n.t("ai_or_manual")) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(presets, id: \.name) { preset in
@@ -57,6 +62,23 @@ struct AIConnectionView: View {
         }
         .navigationTitle(L10n.t("ai_connection"))
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func openRouter() {
+        working = true
+        status = nil
+        Task {
+            do {
+                let key = try await signIn.signIn()
+                let model = connection.baseUrl == OpenRouterSignIn.baseUrl && !connection.model.isEmpty ? connection.model : OpenRouterSignIn.defaultModel
+                connection = AIConnection(baseUrl: OpenRouterSignIn.baseUrl, model: model, apiKey: key)
+                connection.save()
+                status = L10n.t("openrouter_signed_in")
+            } catch {
+                status = error.localizedDescription
+            }
+            working = false
+        }
     }
 
     private func test() {

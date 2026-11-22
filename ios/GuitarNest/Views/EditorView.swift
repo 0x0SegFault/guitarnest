@@ -95,7 +95,7 @@ struct EditorView: View {
     private func load() {
         guard !loaded else { return }
         loaded = true
-        let song = model.song(id: songId) ?? Bridge.shared.newSong(title: seedTitle)
+        let song = model.song(id: songId) ?? Bridge.shared.createSong(title: seedTitle)
         title = song.title
         artist = songId.isEmpty ? seedArtist : song.artist
         source = song.source
@@ -110,7 +110,7 @@ struct EditorView: View {
     }
 
     private func save() {
-        let base = model.song(id: songId) ?? Bridge.shared.newSong(title: title)
+        let base = model.song(id: songId) ?? Bridge.shared.createSong(title: title)
         let result = Bridge.shared.build(
             base: base, title: title, artist: artist, source: source, level: Bridge.shared.level(index: Int32(level)), tuning: tuning,
             capo: Int32(capo), tempo: Int32(tempo), beatsPerBar: Int32(beatsPerBar),

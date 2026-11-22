@@ -40,7 +40,8 @@ data class BuildResult(val song: Song?, val error: String?)
  * and the editor rules shared by Android and iOS.
  */
 object Bridge {
-    fun newSong(title: String): Song = Song(title = title)
+    // Not "newSong": Objective-C reserves names that start with "new", "init", "copy", "alloc".
+    fun createSong(title: String): Song = Song(title = title)
 
     fun level(index: Int): Level = Level.entries[index.coerceIn(0, Level.entries.size - 1)]
 
