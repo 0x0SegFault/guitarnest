@@ -38,7 +38,7 @@ jobs:
         run: |
           AAPT=$(ls $ANDROID_HOME/build-tools/*/aapt2 | tail -1)
           $AAPT dump permissions app/build/outputs/apk/release/*.apk | sed -n "s/^uses-permission: name='\(.*\)'/\1/p" | sed 's/^io.github.x0x0segfault.guitarnest\.//' | sort > found.txt
-          printf '%s\n' DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION android.permission.RECORD_AUDIO | sort > allowed.txt
+          printf '%s\n' DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION android.permission.INTERNET android.permission.RECORD_AUDIO | sort > allowed.txt
           diff allowed.txt found.txt || { echo "Permissions changed: update PRIVACY.md, the in-app list and this check"; exit 1; }
       - uses: actions/upload-artifact@v7
         if: always()

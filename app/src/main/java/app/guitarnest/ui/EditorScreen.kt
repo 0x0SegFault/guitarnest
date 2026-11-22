@@ -69,7 +69,7 @@ class SongDraft(initial: Song) {
 }
 
 @Composable
-fun rememberDraft(song: Song?): SongDraft = remember(song?.id) { SongDraft(song ?: Song(title = "")) }
+fun rememberDraft(song: Song?): SongDraft = remember(song?.id, song?.title) { SongDraft(song ?: Song(title = "")) }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

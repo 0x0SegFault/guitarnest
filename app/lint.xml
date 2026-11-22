@@ -9,4 +9,8 @@
     </issue>
     <!-- Android Gradle plugin 8.13 supports up to API 36; API 37 comes with the AGP 9 migration. -->
     <issue id="OldTargetApi" severity="informational" />
+    <!-- Plain HTTP is needed for AI model servers in the home network; the app warns on http://. See res/xml/network_security_config.xml. -->
+    <issue id="InsecureBaseConfiguration">
+        <ignore path="src/main/res/xml/network_security_config.xml" />
+    </issue>
 </lint>

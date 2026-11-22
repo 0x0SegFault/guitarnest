@@ -28,10 +28,10 @@
     <string name="open_settings">Ouvrir les paramètres de l\'app</string>
     <string name="mic_error">Le micro n\'est pas disponible. Une autre app l\'utilise peut-être.</string>
     <string name="about">À propos et autorisations</string>
-    <string name="about_privacy">GuitarNest fonctionne hors ligne. Pas de compte, pas de publicité, pas de traceur. L\'app ne peut pas se connecter à Internet.</string>
+    <string name="about_privacy">GuitarNest n\'a ni compte, ni publicité, ni traceur. Vos morceaux restent sur ce téléphone.</string>
     <string name="permissions">Autorisations</string>
     <string name="permission_mic">Micro : pour entendre votre guitare dans l\'accordeur. Utilisé seulement quand l\'accordeur est ouvert. Rien n\'est enregistré.</string>
-    <string name="permission_none_else">Aucune autre autorisation. Pas d\'accès à Internet.</string>
+    <string name="permission_none_else">Internet : seulement quand vous cherchez un morceau (MusicBrainz) ou utilisez votre propre connexion IA. L\'app n\'envoie rien d\'elle-même.</string>
     <string name="version">Version %1$s</string>
     <string name="source_code">Code source</string>
     <string name="songs">Morceaux</string>
@@ -97,4 +97,32 @@
         <item quantity="many">Pratiqué il y a %1$d jours</item>
         <item quantity="other">Pratiqué il y a %1$d jours</item>
     </plurals>
+    <string name="settings">Réglages</string>
+    <string name="write_tab">Écrire une tablature</string>
+    <string name="ai_connection">Connexion IA</string>
+    <string name="ai_connection_help">Connectez votre propre IA : un modèle sur votre ordinateur ou serveur domestique (Ollama, LM Studio, llama.cpp), votre passerelle (LiteLLM) ou un compte cloud. Toute adresse compatible OpenAI fonctionne.</string>
+    <string name="ai_address">Adresse (URL de base)</string>
+    <string name="ai_http_warning">Le HTTP simple n\'est pas chiffré. Utilisez-le seulement dans votre réseau domestique.</string>
+    <string name="ai_model">Modèle</string>
+    <string name="ai_key">Clé d\'API (si nécessaire)</string>
+    <string name="ai_privacy">GuitarNest envoie seulement le morceau, le niveau et votre demande à cette adresse, et seulement quand vous touchez Créer. Jamais d\'audio. La clé est chiffrée sur ce téléphone.</string>
+    <string name="ai_test">Tester</string>
+    <string name="ai_test_ok">Connecté. L\'IA a répondu : %1$s</string>
+    <string name="ai_remove">Supprimer</string>
+    <string name="ai_new_tab">Créer une tablature avec l\'IA</string>
+    <string name="ask_ai">Demander à l\'IA</string>
+    <string name="ai_not_set">Aucune IA n\'est connectée. Connectez d\'abord votre propre modèle.</string>
+    <string name="ai_arrange">Arranger pour un niveau</string>
+    <string name="ai_strumming">Rythmiques</string>
+    <string name="ai_request">Votre demande</string>
+    <string name="ai_request_hint">Par exemple : accords plus faciles, sans barré</string>
+    <string name="ai_request_hint_new">Par exemple : accords G C D Em, 90 BPM, style folk, couplet et refrain</string>
+    <string name="ai_sends">Envoyé à %2$s (modèle %1$s) : ce morceau et votre demande.</string>
+    <string name="ai_make">Créer la tablature</string>
+    <string name="find_song">Trouver un morceau</string>
+    <string name="find_song_hint">Titre ou artiste</string>
+    <string name="search">Rechercher</string>
+    <string name="find_song_privacy">Recherche dans MusicBrainz (données musicales ouvertes). Seuls vos mots de recherche sont envoyés.</string>
+    <string name="no_results">Aucun résultat.</string>
+    <string name="working">En cours…</string>
 </resources>

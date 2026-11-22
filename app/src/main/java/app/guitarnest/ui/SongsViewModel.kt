@@ -4,7 +4,18 @@ import android.app.Application
 import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import app.guitarnest.ai.AiTabMaker
+import app.guitarnest.ai.AiTask
+import app.guitarnest.ai.ChatMessage
+import app.guitarnest.ai.ChatRequest
+import app.guitarnest.ai.SongInfo
 import app.guitarnest.audio.ClickPlayer
+import app.guitarnest.data.AiConnection
+import app.guitarnest.data.AiSettings
+import app.guitarnest.net.AiClient
+import app.guitarnest.net.MusicBrainzClient
+import app.guitarnest.tab.Level
+import app.guitarnest.tab.TabFormatException
 import app.guitarnest.data.PracticeEntry
 import app.guitarnest.data.SongRepository
 import app.guitarnest.practice.MAX_BPM
@@ -54,8 +65,18 @@ data class Playing(val songId: String?, val bar: Int, val beat: Int, val step: I
 
 data class PlayOptions(val tempoPercent: Int = 100, val loopSection: Int? = null, val trainer: Boolean = false, val countIn: Boolean = true)
 
+/** State of a network job (AI or search) for the sheets. */
+data class Job<T>(val running: Boolean = false, val result: T? = null, val error: String? = null)
+
 class SongsViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = SongRepository(app)
+    private val aiSettings = AiSettings(app)
+    private val _ai = MutableStateFlow(aiSettings.load())
+    val ai: StateFlow<AiConnection> = _ai.asStateFlow()
+    private val _aiJob = MutableStateFlow(Job<String>())
+    val aiJob: StateFlow<Job<String>> = _aiJob.asStateFlow()
+    private val _search = MutableStateFlow(Job<List<SongInfo>>())
+    val search: StateFlow<Job<List<SongInfo>>> = _search.asStateFlow()
     private val player = ClickPlayer()
     private val tap = TapTempo()
 
@@ -104,6 +125,61 @@ class SongsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun showMessage(text: String?) { _message.value = text }
+
+    // AI connection (the player's own model) and song search
+
+    fun saveAi(connection: AiConnection) {
+        aiSettings.save(connection)
+        _ai.value = aiSettings.load()
+    }
+
+    fun clearAi() {
+        aiSettings.clear()
+        _ai.value = aiSettings.load()
+    }
+
+    fun resetJobs() {
+        _aiJob.value = Job()
+        _search.value = Job()
+    }
+
+    /** Sends a small request to check the address, model and key. */
+    fun testAi(connection: AiConnection) = viewModelScope.launch {
+        _aiJob.value = Job(running = true)
+        _aiJob.value = runCatching {
+            AiClient.chat(connection, ChatRequest(connection.model, listOf(ChatMessage("user", "Answer with the word OK."))))
+        }.fold({ Job(result = it.take(80)) }, { Job(error = it.message) })
+    }
+
+    /** Asks the player's AI for a tab. The result is saved as a new song; the original is not changed. */
+    fun askAi(task: AiTask, level: Level, request: String, song: Song?, done: (Song) -> Unit) = viewModelScope.launch {
+        val connection = _ai.value
+        _aiJob.value = Job(running = true)
+        val result = runCatching {
+            var chat = AiTabMaker.request(connection.model, task, level, request, song)
+            var answer = AiClient.chat(connection, chat)
+            val source = "AI (${connection.model})"
+            try {
+                AiTabMaker.songFrom(answer, source, level.takeIf { task != AiTask.STRUMMING })
+            } catch (e: TabFormatException) {
+                chat = AiTabMaker.repair(chat, answer, e.message ?: "invalid")
+                answer = AiClient.chat(connection, chat)
+                AiTabMaker.songFrom(answer, source, level.takeIf { task != AiTask.STRUMMING })
+            }
+        }
+        result.onSuccess { made ->
+            val saved = withContext(Dispatchers.IO) { repo.save(made) }
+            refresh()
+            _aiJob.value = Job()
+            done(saved)
+        }.onFailure { _aiJob.value = Job(error = it.message) }
+    }
+
+    fun searchSongs(query: String) = viewModelScope.launch {
+        if (query.isBlank()) return@launch
+        _search.value = Job(running = true)
+        _search.value = runCatching { MusicBrainzClient.search(query) }.fold({ Job(result = it) }, { Job(error = it.message) })
+    }
 
     // Metronome screen
 

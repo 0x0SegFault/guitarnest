@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.AlertDialog
@@ -24,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -50,6 +52,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.guitarnest.BuildConfig
 import app.guitarnest.R
 import app.guitarnest.data.SongPrinter
+import app.guitarnest.tab.Song
 import app.guitarnest.tab.SongCodec
 
 private enum class Tab { SONGS, METRONOME, TUNER }
@@ -68,12 +71,17 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
     var openId by rememberSaveable { mutableStateOf<String?>(null) }
     var editing by rememberSaveable { mutableStateOf<String?>(null) } // song id, or "" for a new song
     var about by rememberSaveable { mutableStateOf(false) }
+    var sheet by rememberSaveable { mutableStateOf<String?>(null) } // "ai", "ask", "search"
+    var seed by remember { mutableStateOf<Song?>(null) }
+    val ai by vm.ai.collectAsStateWithLifecycle()
+    val aiJob by vm.aiJob.collectAsStateWithLifecycle()
+    val search by vm.search.collectAsStateWithLifecycle()
     var confirmDelete by remember { mutableStateOf(false) }
     var editorError by remember { mutableStateOf<String?>(null) }
     val snackbar = remember { SnackbarHostState() }
 
     val open = songs.firstOrNull { it.id == openId }
-    val draft = rememberDraft(if (editing.isNullOrEmpty()) null else songs.firstOrNull { it.id == editing })
+    val draft = rememberDraft(if (editing.isNullOrEmpty()) seed else songs.firstOrNull { it.id == editing })
 
     LaunchedEffect(message) { message?.let { snackbar.showSnackbar(it); vm.showMessage(null) } }
 
@@ -124,6 +132,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
                                 .onFailure { editorError = it.message }
                         }) { Text(stringResource(R.string.save)) }
                         open != null && tab == Tab.SONGS -> SongMenu(
+                            onAskAi = { vm.stop(); vm.resetJobs(); sheet = "ask" },
                             onEdit = { vm.stop(); editing = open.id },
                             onPrint = { SongPrinter.print(context, open) },
                             onExport = { exporter.launch(open.title.replace(Regex("[^\\w ]"), "") + ".gnt") },
@@ -131,8 +140,12 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
                         )
                         tab == Tab.SONGS -> {
                             IconButton(onClick = { importer.launch(arrayOf("*/*")) }) { Icon(Icons.Filled.LibraryMusic, stringResource(R.string.import_file)) }
-                            IconButton(onClick = { editing = "" }) { Icon(Icons.Filled.Add, stringResource(R.string.new_song)) }
-                            IconButton(onClick = { about = true }) { Icon(Icons.Outlined.Info, stringResource(R.string.about)) }
+                            NewSongMenu(
+                                onWrite = { seed = null; editing = "" },
+                                onAi = { vm.resetJobs(); sheet = "ask" },
+                                onSearch = { vm.resetJobs(); sheet = "search" },
+                            )
+                            SettingsMenu(onAi = { vm.resetJobs(); sheet = "ai" }, onAbout = { about = true })
                         }
                         else -> IconButton(onClick = { about = true }) { Icon(Icons.Outlined.Info, stringResource(R.string.about)) }
                     }
@@ -153,7 +166,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
         when {
             editing != null -> EditorScreen(draft, editorError, m)
             tab == Tab.SONGS && open != null -> SongScreen(open, playing, log, vm, m)
-            tab == Tab.SONGS -> LibraryScreen(songs, log, { openId = it.id }, { editing = "" }, { importer.launch(arrayOf("*/*")) }, m)
+            tab == Tab.SONGS -> LibraryScreen(songs, log, { openId = it.id }, { seed = null; editing = "" }, { importer.launch(arrayOf("*/*")) }, m)
             tab == Tab.METRONOME -> MetronomeScreen(metronome, playing, vm, m)
             else -> TunerScreen(m)
         }
@@ -169,17 +182,56 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
         )
     }
     if (about) ModalBottomSheet(onDismissRequest = { about = false }) { AboutSheet() }
+    when (sheet) {
+        "ai" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+            AiConnectionSheet(ai, aiJob, vm::testAi, onSave = { vm.saveAi(it); sheet = null }, onClear = vm::clearAi)
+        }
+        "ask" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+            AskAiSheet(if (tab == Tab.SONGS) open else null, ai, aiJob, onSetup = { vm.resetJobs(); sheet = "ai" }) { task, level, request ->
+                vm.askAi(task, level, request, if (tab == Tab.SONGS) open else null) { made -> sheet = null; openId = made.id; tab = Tab.SONGS }
+            }
+        }
+        "search" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+            SearchSheet(search, vm::searchSongs) { info ->
+                seed = Song(title = info.title, artist = info.artist, notes = listOf(info.album, info.year).filter { it.isNotBlank() }.joinToString(", "))
+                sheet = null
+                editing = ""
+            }
+        }
+    }
 }
 
 @Composable
-private fun SongMenu(onEdit: () -> Unit, onPrint: () -> Unit, onExport: () -> Unit, onDelete: () -> Unit) {
+private fun SongMenu(onAskAi: () -> Unit, onEdit: () -> Unit, onPrint: () -> Unit, onExport: () -> Unit, onDelete: () -> Unit) {
     var open by remember { mutableStateOf(false) }
     IconButton(onClick = { open = true }) { Icon(Icons.Filled.MoreVert, stringResource(R.string.more)) }
     DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+        DropdownMenuItem(text = { Text(stringResource(R.string.ask_ai)) }, onClick = { open = false; onAskAi() })
         DropdownMenuItem(text = { Text(stringResource(R.string.edit)) }, onClick = { open = false; onEdit() })
         DropdownMenuItem(text = { Text(stringResource(R.string.print)) }, onClick = { open = false; onPrint() })
         DropdownMenuItem(text = { Text(stringResource(R.string.export_file)) }, onClick = { open = false; onExport() })
         DropdownMenuItem(text = { Text(stringResource(R.string.delete)) }, onClick = { open = false; onDelete() })
+    }
+}
+
+@Composable
+private fun NewSongMenu(onWrite: () -> Unit, onAi: () -> Unit, onSearch: () -> Unit) {
+    var open by remember { mutableStateOf(false) }
+    IconButton(onClick = { open = true }) { Icon(Icons.Filled.Add, stringResource(R.string.new_song)) }
+    DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+        DropdownMenuItem(text = { Text(stringResource(R.string.write_tab)) }, onClick = { open = false; onWrite() })
+        DropdownMenuItem(text = { Text(stringResource(R.string.find_song)) }, onClick = { open = false; onSearch() })
+        DropdownMenuItem(text = { Text(stringResource(R.string.ai_new_tab)) }, onClick = { open = false; onAi() })
+    }
+}
+
+@Composable
+private fun SettingsMenu(onAi: () -> Unit, onAbout: () -> Unit) {
+    var open by remember { mutableStateOf(false) }
+    IconButton(onClick = { open = true }) { Icon(Icons.Filled.Settings, stringResource(R.string.settings)) }
+    DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+        DropdownMenuItem(text = { Text(stringResource(R.string.ai_connection)) }, onClick = { open = false; onAi() })
+        DropdownMenuItem(text = { Text(stringResource(R.string.about)) }, onClick = { open = false; onAbout() })
     }
 }
 

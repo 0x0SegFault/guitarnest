@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HTTPS with system certificates everywhere, with one exception: the player may point the AI
+     connection at a model server in their home network (for example Ollama on
+     http://192.168.1.10:11434/v1). Android cannot limit plain HTTP to private addresses, so the
+     app shows a warning for every http:// address. MusicBrainz is always HTTPS. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
