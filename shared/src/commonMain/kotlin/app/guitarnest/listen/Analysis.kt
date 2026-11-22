@@ -129,7 +129,7 @@ object Analysis {
             val k = pos.roundToInt()
             if (k in 0 until steps && abs(pos - k) < 0.3) hit[k] = true
         }
-        return String(CharArray(steps) { k -> if (!hit[k]) '-' else if (k % 2 == 0) 'D' else 'U' })
+        return CharArray(steps) { k -> if (!hit[k]) '-' else if (k % 2 == 0) 'D' else 'U' }.concatToString()
     }
 
 }

@@ -47,7 +47,9 @@ jobs:
       - name: SwiftLint
         run: cd ios && swiftlint lint --strict --reporter github-actions-logging
       - name: Shared Kotlin framework
-        run: ./gradlew :shared:assembleGuitarNestSharedReleaseXCFramework 2>&1 | tee gradle-ios.log
+        run: |
+          set -o pipefail
+          ./gradlew :shared:assembleGuitarNestSharedReleaseXCFramework 2>&1 | tee gradle-ios.log
       - name: Translations from the Android strings
         run: python3 scripts/ios_strings.py
       - name: Xcode project
