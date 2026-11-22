@@ -11,6 +11,16 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Canvas
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +40,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -65,7 +74,6 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.guitarnest.R
-import app.guitarnest.tuner.Notes
 import app.guitarnest.tuner.Tuning
 import app.guitarnest.tuner.readingOf
 import app.guitarnest.ui.theme.TunerColors
@@ -77,6 +85,34 @@ import kotlin.math.sin
 /** Within this many cents the string counts as in tune (a common tuner tolerance). */
 private const val IN_TUNE_CENTS = 5.0
 private const val CLOSE_CENTS = 15.0
+
+/** What the tuner shows for the current sound. */
+private data class Reading(val note: String, val cents: Double?, val string: Int?)
+
+private fun currentReading(state: TunerState): Reading {
+    val f = state.frequency ?: return Reading("–", null, state.lockedString)
+    val a4 = state.a4.toDouble()
+    val target = state.activeString
+    // Against the selected (or nearest) string when it is within a semitone; else against the nearest note.
+    if (target != null) {
+        val cents = state.tuning.centsOff(target, f, a4)
+        if (abs(cents) <= 100) return Reading(state.tuning.names[target].dropLast(1), cents, target)
+    }
+    val nearest = readingOf(f, a4)
+    return Reading(nearest.name.dropLast(1), nearest.cents, target)
+}
+
+@Composable
+private fun toneOf(cents: Double?): Color {
+    val colors = TunerColors.current
+    val tone = when {
+        cents == null -> MaterialTheme.colorScheme.outline
+        abs(cents) <= IN_TUNE_CENTS -> colors.inTune
+        abs(cents) <= CLOSE_CENTS -> colors.close
+        else -> colors.off
+    }
+    return animateColorAsState(tone, label = "tone").value
+}
 
 @Composable
 fun TunerScreen(modifier: Modifier = Modifier, vm: TunerViewModel = viewModel()) {
@@ -103,6 +139,8 @@ fun TunerScreen(modifier: Modifier = Modifier, vm: TunerViewModel = viewModel())
         onDispose { view.keepScreenOn = false }
     }
 
+    val reading = currentReading(state)
+    val color = toneOf(reading.cents)
     Column(
         modifier.verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -121,14 +159,9 @@ fun TunerScreen(modifier: Modifier = Modifier, vm: TunerViewModel = viewModel())
         } else if (state.micError) {
             Text(stringResource(R.string.mic_error), color = MaterialTheme.colorScheme.error)
         }
-        Readout(state)
-        StringRow(state, vm::toggleString)
+        Gauge(reading, color, state.listening, state.frequency)
+        GuitarStrings(state, reading, color, vm::toggleString)
         ReferencePitch(state.a4, vm::setA4)
-        Text(
-            stringResource(R.string.capo_hint),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
     }
 }
 
@@ -192,61 +225,41 @@ private fun MicPermissionCard(permanentlyDenied: Boolean, onAllow: () -> Unit, o
 }
 
 @Composable
-private fun Readout(state: TunerState) {
-    val a4 = state.a4.toDouble()
-    val f = state.frequency
-    val target = state.activeString
-    // Cents against the selected string when one is locked or found; else against the nearest note.
-    val cents = when {
-        f == null -> null
-        target != null -> state.tuning.centsOff(target, f, a4)
-        else -> readingOf(f, a4).cents
-    }
-    val noteName = when {
-        f == null -> "–"
-        target != null && abs(cents ?: 0.0) <= 100 -> Notes.name(state.tuning.strings[target])
-        else -> readingOf(f, a4).name
-    }
-    val colors = TunerColors.current
-    val tone = when {
-        cents == null -> MaterialTheme.colorScheme.outline
-        abs(cents) <= IN_TUNE_CENTS -> colors.inTune
-        abs(cents) <= CLOSE_CENTS -> colors.close
-        else -> colors.off
-    }
-    val color by animateColorAsState(tone, label = "tone")
+private fun Gauge(reading: Reading, color: Color, listening: Boolean, frequency: Double?) {
+    val cents = reading.cents
     val needle by animateFloatAsState(
         (cents ?: 0.0).coerceIn(-50.0, 50.0).toFloat(),
         animationSpec = spring(dampingRatio = 0.8f, stiffness = 300f),
         label = "needle",
     )
-    val advice = when {
-        cents == null -> stringResource(if (state.listening) R.string.play_a_string else R.string.not_listening)
+    val status = when {
+        cents == null -> stringResource(if (listening) R.string.play_a_string else R.string.not_listening)
         abs(cents) <= IN_TUNE_CENTS -> stringResource(R.string.in_tune)
-        cents < 0 -> stringResource(R.string.tune_up)
-        else -> stringResource(R.string.tune_down)
+        cents < 0 -> stringResource(R.string.too_low)
+        else -> stringResource(R.string.too_high)
     }
-    val description = if (cents == null) advice else pluralStringResource(R.plurals.reading_description, abs(cents.roundToInt()), noteName, cents.roundToInt(), advice)
+    val description = if (cents == null) status
+    else pluralStringResource(R.plurals.reading_description, abs(cents.roundToInt()), reading.note, cents.roundToInt(), status)
 
     Box(
-        Modifier.fillMaxWidth().aspectRatio(1.6f).semantics { contentDescription = description },
+        Modifier.fillMaxWidth().aspectRatio(1.8f).semantics { contentDescription = description },
         contentAlignment = Alignment.BottomCenter,
     ) {
         val track = MaterialTheme.colorScheme.outlineVariant
         val tick = MaterialTheme.colorScheme.onSurfaceVariant
-        val good = colors.inTune
-        Canvas(Modifier.fillMaxWidth().aspectRatio(1.6f)) {
-            val radius = size.width * 0.44f
-            val centre = Offset(size.width / 2, size.height * 0.92f)
+        val good = TunerColors.current.inTune
+        Canvas(Modifier.fillMaxWidth().aspectRatio(1.8f)) {
+            val radius = size.width * 0.42f
+            val centre = Offset(size.width / 2, size.height * 0.98f)
             val sweep = 140f
             val start = 270f - sweep / 2
             val stroke = size.width * 0.03f
+            val arcTopLeft = Offset(centre.x - radius, centre.y - radius)
+            val arcSize = Size(radius * 2, radius * 2)
             fun toAngle(c: Double) = Math.toRadians(270.0 + c / 50.0 * sweep / 2)
-            drawArc(track, start, sweep, false, Offset(centre.x - radius, centre.y - radius),
-                androidx.compose.ui.geometry.Size(radius * 2, radius * 2), style = Stroke(stroke, cap = StrokeCap.Round))
+            drawArc(track, start, sweep, false, arcTopLeft, arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
             val goodSweep = (IN_TUNE_CENTS / 50.0 * sweep / 2).toFloat()
-            drawArc(good, 270f - goodSweep, goodSweep * 2, false, Offset(centre.x - radius, centre.y - radius),
-                androidx.compose.ui.geometry.Size(radius * 2, radius * 2), style = Stroke(stroke, cap = StrokeCap.Round))
+            drawArc(good, 270f - goodSweep, goodSweep * 2, false, arcTopLeft, arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
             for (c in -50..50 step 10) {
                 val a = toAngle(c.toDouble())
                 val inner = radius - stroke * (if (c == 0) 2.6f else 1.6f)
@@ -254,16 +267,18 @@ private fun Readout(state: TunerState) {
                 drawLine(tick, Offset(centre.x + inner * cos(a).toFloat(), centre.y + inner * sin(a).toFloat()),
                     Offset(centre.x + outer * cos(a).toFloat(), centre.y + outer * sin(a).toFloat()), strokeWidth = 2.dp.toPx())
             }
+            // Short pointer near the scale, so it never covers the note name.
             if (cents != null) {
                 val a = toAngle(needle.toDouble())
-                val len = radius * 0.9f
-                drawLine(color, centre, Offset(centre.x + len * cos(a).toFloat(), centre.y + len * sin(a).toFloat()),
-                    strokeWidth = 4.dp.toPx(), cap = StrokeCap.Round)
+                val inner = radius * 0.72f
+                val tip = Offset(centre.x + radius * cos(a).toFloat(), centre.y + radius * sin(a).toFloat())
+                drawLine(color, Offset(centre.x + inner * cos(a).toFloat(), centre.y + inner * sin(a).toFloat()), tip,
+                    strokeWidth = 5.dp.toPx(), cap = StrokeCap.Round)
+                drawCircle(color, radius = stroke * 0.9f, center = tip)
             }
-            drawCircle(color, radius = 8.dp.toPx(), center = centre)
         }
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 36.dp)) {
-            Text(noteName, fontSize = 64.sp, fontWeight = FontWeight.ExtraBold, color = color)
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(reading.note, fontSize = 72.sp, fontWeight = FontWeight.ExtraBold, color = color, lineHeight = 72.sp)
             Text(
                 if (cents == null) " " else "%+d ¢".format(cents.roundToInt()),
                 style = MaterialTheme.typography.titleMedium,
@@ -271,44 +286,65 @@ private fun Readout(state: TunerState) {
             )
         }
     }
-    Text(
-        advice,
-        style = MaterialTheme.typography.titleLarge,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth(),
-        color = color,
-    )
-    if (f != null) {
-        Text(
-            "%.1f Hz".format(f),
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+        Text(status, style = MaterialTheme.typography.titleLarge, color = color)
+        if (frequency != null) {
+            Text(
+                "  ·  %.1f Hz".format(frequency),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 
+/**
+ * The six strings, low E on the left as seen from the player, with their gauge.
+ * The string being tuned lights up in the tuner colour. Tap a string to lock it; tap again to unlock.
+ */
 @Composable
-private fun StringRow(state: TunerState, onToggle: (Int) -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(
-            stringResource(if (state.lockedString == null) R.string.strings_auto else R.string.strings_locked),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            state.tuning.strings.forEachIndexed { i, midi ->
-                val name = Notes.name(midi)
-                val label = stringResource(R.string.string_description, 6 - i, name)
-                FilterChip(
-                    selected = state.activeString == i,
-                    onClick = { onToggle(i) },
-                    label = { Text(name.dropLast(1), fontWeight = FontWeight.Bold) },
-                    modifier = Modifier.semantics {
-                        contentDescription = label
-                    },
-                )
+private fun GuitarStrings(state: TunerState, reading: Reading, color: Color, onToggle: (Int) -> Unit) {
+    val names = state.tuning.names
+    val idle = MaterialTheme.colorScheme.outline
+    val board = MaterialTheme.colorScheme.surfaceContainerHigh
+    val nut = MaterialTheme.colorScheme.outlineVariant
+    val active = reading.string
+    val locked = state.lockedString
+    Row(
+        Modifier.fillMaxWidth().height(180.dp).clip(MaterialTheme.shapes.medium).background(board),
+    ) {
+        names.forEachIndexed { i, name ->
+            val on = i == active && (reading.cents != null || i == locked)
+            val label = stringResource(R.string.string_description, 6 - i, name)
+            Column(
+                Modifier.weight(1f).fillMaxHeight()
+                    .toggleable(value = i == locked, onValueChange = { onToggle(i) }, role = Role.Checkbox)
+                    .semantics { contentDescription = label },
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Box(
+                    Modifier.padding(top = 10.dp).size(40.dp).clip(CircleShape)
+                        .background(if (on) color else Color.Transparent)
+                        .border(2.dp, if (i == locked) color else nut, CircleShape),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        name.dropLast(1),
+                        fontWeight = FontWeight.Bold,
+                        color = if (on) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+                Canvas(Modifier.fillMaxWidth().weight(1f)) {
+                    // Real string gauges run from about 0.25 mm (high E) to 1.15 mm (low E).
+                    val width = (4.5f - i * 0.6f).dp.toPx()
+                    drawLine(nut, Offset(0f, 10.dp.toPx()), Offset(size.width, 10.dp.toPx()), strokeWidth = 4.dp.toPx())
+                    drawLine(
+                        if (on) color else idle,
+                        Offset(size.width / 2, 10.dp.toPx()),
+                        Offset(size.width / 2, size.height),
+                        strokeWidth = if (on) width * 1.6f else width,
+                    )
+                }
             }
         }
     }

@@ -15,18 +15,15 @@
     <string name="play_a_string">Play one string</string>
     <string name="not_listening">The tuner is not listening</string>
     <string name="in_tune">In tune</string>
-    <string name="tune_up">Too low: tighten the string</string>
-    <string name="tune_down">Too high: loosen the string</string>
+    <string name="too_low">Too low</string>
+    <string name="too_high">Too high</string>
     <plurals name="reading_description">
         <item quantity="one">%1$s, %2$d cent. %3$s</item>
         <item quantity="other">%1$s, %2$d cents. %3$s</item>
     </plurals>
-    <string name="strings_auto">Strings: automatic. Tap a string to select it.</string>
-    <string name="strings_locked">String selected. Tap it again for automatic.</string>
     <string name="string_description">String %1$d, %2$s</string>
     <string name="reference_pitch">Reference pitch</string>
     <string name="reset">Reset</string>
-    <string name="capo_hint">Tune without the capo. Put the capo on after tuning, then check the tuning again.</string>
 
     <!-- Microphone permission -->
     <string name="mic_title">The tuner needs the microphone</string>

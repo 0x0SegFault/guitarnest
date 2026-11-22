@@ -12,18 +12,16 @@
     <string name="play_a_string">Toca una cuerda</string>
     <string name="not_listening">El afinador no está escuchando</string>
     <string name="in_tune">Afinada</string>
-    <string name="tune_up">Demasiado baja: tensa la cuerda</string>
-    <string name="tune_down">Demasiado alta: afloja la cuerda</string>
-    <string name="strings_auto">Cuerdas: automático. Toca una cuerda para elegirla.</string>
-    <string name="strings_locked">Cuerda elegida. Tócala otra vez para volver a automático.</string>
+    <string name="too_low">Demasiado bajo</string>
+    <string name="too_high">Demasiado alto</string>
     <plurals name="reading_description">
         <item quantity="one">%1$s, %2$d cent. %3$s</item>
+        <item quantity="many">%1$s, %2$d cents. %3$s</item>
         <item quantity="other">%1$s, %2$d cents. %3$s</item>
     </plurals>
     <string name="string_description">Cuerda %1$d, %2$s</string>
     <string name="reference_pitch">Tono de referencia</string>
     <string name="reset">Restablecer</string>
-    <string name="capo_hint">Afina sin la cejilla. Ponla después y vuelve a comprobar la afinación.</string>
     <string name="mic_title">El afinador necesita el micrófono</string>
     <string name="mic_why">GuitarNest solo escucha mientras el afinador está abierto. El sonido se queda en la memoria del teléfono. No se graba, no se guarda y no se envía.</string>
     <string name="mic_allow">Permitir el micrófono</string>

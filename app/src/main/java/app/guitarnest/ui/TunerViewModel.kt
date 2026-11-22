@@ -4,7 +4,10 @@ import android.app.Application
 import android.content.Context
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import app.guitarnest.BuildConfig
+import app.guitarnest.audio.DemoSignal
 import app.guitarnest.audio.Microphone
 import app.guitarnest.tuner.PitchDetector
 import app.guitarnest.tuner.PitchSmoother
@@ -29,10 +32,11 @@ data class TunerState(
     val activeString: Int? get() = lockedString ?: frequency?.let { tuning.nearestString(it, a4.toDouble()) }
 }
 
-class TunerViewModel(app: Application) : AndroidViewModel(app) {
+class TunerViewModel(app: Application, handle: SavedStateHandle) : AndroidViewModel(app) {
     private val prefs = app.getSharedPreferences("tuner", Context.MODE_PRIVATE)
     private val mic = Microphone(app)
     private val detector = PitchDetector(mic.sampleRate)
+    private val demoHz: Float? = if (BuildConfig.DEBUG) handle.get<Float>("demo_hz") else null
     private val smoother = PitchSmoother()
     private var job: Job? = null
     private var silentFrames = 0
@@ -49,7 +53,10 @@ class TunerViewModel(app: Application) : AndroidViewModel(app) {
         if (job?.isActive == true) return
         _state.update { it.copy(listening = true, micError = false) }
         job = viewModelScope.launch {
-            mic.windows(detector.windowSize, detector.windowSize / 4)
+            val hop = detector.windowSize / 4
+            val source = demoHz?.let { DemoSignal(mic.sampleRate, it.toDouble()).windows(detector.windowSize, hop) }
+                ?: mic.windows(detector.windowSize, hop)
+            source
                 .catch { _state.update { it.copy(listening = false, micError = true) } }
                 .collect { onWindow(it) }
         }

@@ -3,18 +3,25 @@
 [![Build](https://github.com/0x0SegFault/guitarnest/actions/workflows/build.yml/badge.svg)](https://github.com/0x0SegFault/guitarnest/actions/workflows/build.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
-A free and open-source guitar app for Android: tuner first, then practice tools and tabs. Offline, no account, no ads, no trackers. Works without Google services.
+A free and open-source app to learn songs on the guitar: tabs, strumming patterns, metronome and tuner. Offline, no account, no ads, no trackers. Works without Google services.
 
-**Status: early development.** No release yet.
+**Status: early development.** The tuner works. No release yet.
+
+<p>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="24%" alt="Tuner: A string in tune">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="24%" alt="Tuner: G string too low">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="24%" alt="Half step down tuning">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="24%" alt="Dark theme">
+</p>
 
 ## Features
 
-| Now | Planned |
+| Now | Next |
 |---|---|
-| Tuner: 9 tunings (standard, half/whole step down, drop D, drop C, DADGAD, open D, G, E) | Metronome and slow-practice tools ([method](docs/SCIENCE.md#practice-method-planned)) |
-| Automatic string detection, or tap a string | Key, tempo and chords from your own audio files |
-| Reference pitch 415–466 Hz | Draft tabs from audio, with tuning, capo and strumming |
-| English, French, German, Spanish, Italian | Tab editor, import (Guitar Pro, MusicXML) and printing |
+| Tuner: 9 tunings, the string being tuned lights up | Metronome |
+| Tap a string to lock it | Strumming patterns that play with the metronome |
+| Reference pitch 415–466 Hz | Tabs: import (Guitar Pro, MusicXML), play along, slow down, loop, print |
+| English, French, German, Spanish, Italian | Draft tabs from your own audio, with tuning, capo and strumming |
 
 ## Privacy
 

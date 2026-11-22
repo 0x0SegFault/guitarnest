@@ -12,10 +12,8 @@
     <string name="play_a_string">Spiele eine Saite</string>
     <string name="not_listening">Das Stimmgerät hört nicht zu</string>
     <string name="in_tune">Gestimmt</string>
-    <string name="tune_up">Zu tief: Saite spannen</string>
-    <string name="tune_down">Zu hoch: Saite lockern</string>
-    <string name="strings_auto">Saiten: automatisch. Tippe auf eine Saite, um sie zu wählen.</string>
-    <string name="strings_locked">Saite gewählt. Tippe erneut für automatisch.</string>
+    <string name="too_low">Zu tief</string>
+    <string name="too_high">Zu hoch</string>
     <plurals name="reading_description">
         <item quantity="one">%1$s, %2$d Cent. %3$s</item>
         <item quantity="other">%1$s, %2$d Cent. %3$s</item>
@@ -23,7 +21,6 @@
     <string name="string_description">Saite %1$d, %2$s</string>
     <string name="reference_pitch">Kammerton</string>
     <string name="reset">Zurücksetzen</string>
-    <string name="capo_hint">Stimme ohne Kapodaster. Setze ihn danach auf und prüfe die Stimmung noch einmal.</string>
     <string name="mic_title">Das Stimmgerät braucht das Mikrofon</string>
     <string name="mic_why">GuitarNest hört nur zu, solange das Stimmgerät offen ist. Der Ton bleibt im Speicher deines Telefons. Er wird nicht aufgenommen, gespeichert oder gesendet.</string>
     <string name="mic_allow">Mikrofon erlauben</string>

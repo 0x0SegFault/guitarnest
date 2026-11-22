@@ -19,6 +19,8 @@ class TuningTest {
     fun standardAndDropD() {
         assertEquals(listOf("E2", "A2", "D3", "G3", "B3", "E4"), Tuning.STANDARD.names)
         assertEquals("D2", Tuning.byId("drop_d")!!.names[0])
+        assertEquals(listOf("E♭2", "A♭2", "D♭3", "G♭3", "B♭3", "E♭4"), Tuning.byId("half_step_down")!!.names)
+        assertEquals("F♯3", Tuning.byId("open_d")!!.names[3])
     }
 
     @Test

@@ -12,18 +12,16 @@
     <string name="play_a_string">Jouez une corde</string>
     <string name="not_listening">L\'accordeur n\'écoute pas</string>
     <string name="in_tune">Juste</string>
-    <string name="tune_up">Trop bas : tendez la corde</string>
-    <string name="tune_down">Trop haut : détendez la corde</string>
-    <string name="strings_auto">Cordes : automatique. Touchez une corde pour la choisir.</string>
-    <string name="strings_locked">Corde choisie. Touchez-la encore pour revenir en automatique.</string>
+    <string name="too_low">Trop bas</string>
+    <string name="too_high">Trop haut</string>
     <plurals name="reading_description">
         <item quantity="one">%1$s, %2$d cent. %3$s</item>
+        <item quantity="many">%1$s, %2$d cents. %3$s</item>
         <item quantity="other">%1$s, %2$d cents. %3$s</item>
     </plurals>
     <string name="string_description">Corde %1$d, %2$s</string>
     <string name="reference_pitch">Diapason</string>
     <string name="reset">Réinitialiser</string>
-    <string name="capo_hint">Accordez sans le capodastre. Placez-le ensuite, puis vérifiez à nouveau l\'accordage.</string>
     <string name="mic_title">L\'accordeur a besoin du micro</string>
     <string name="mic_why">GuitarNest écoute seulement quand l\'accordeur est ouvert. Le son reste dans la mémoire du téléphone. Il n\'est ni enregistré, ni sauvegardé, ni envoyé.</string>
     <string name="mic_allow">Autoriser le micro</string>

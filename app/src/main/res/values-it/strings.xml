@@ -12,18 +12,16 @@
     <string name="play_a_string">Suona una corda</string>
     <string name="not_listening">L\'accordatore non sta ascoltando</string>
     <string name="in_tune">Accordata</string>
-    <string name="tune_up">Troppo bassa: tendi la corda</string>
-    <string name="tune_down">Troppo alta: allenta la corda</string>
-    <string name="strings_auto">Corde: automatico. Tocca una corda per sceglierla.</string>
-    <string name="strings_locked">Corda scelta. Toccala di nuovo per tornare in automatico.</string>
+    <string name="too_low">Troppo basso</string>
+    <string name="too_high">Troppo alto</string>
     <plurals name="reading_description">
         <item quantity="one">%1$s, %2$d centesimo. %3$s</item>
+        <item quantity="many">%1$s, %2$d centesimi. %3$s</item>
         <item quantity="other">%1$s, %2$d centesimi. %3$s</item>
     </plurals>
     <string name="string_description">Corda %1$d, %2$s</string>
     <string name="reference_pitch">Diapason</string>
     <string name="reset">Ripristina</string>
-    <string name="capo_hint">Accorda senza capotasto. Mettilo dopo e controlla di nuovo l\'accordatura.</string>
     <string name="mic_title">L\'accordatore ha bisogno del microfono</string>
     <string name="mic_why">GuitarNest ascolta solo mentre l\'accordatore è aperto. Il suono resta nella memoria del telefono. Non viene registrato, salvato o inviato.</string>
     <string name="mic_allow">Consenti il microfono</string>

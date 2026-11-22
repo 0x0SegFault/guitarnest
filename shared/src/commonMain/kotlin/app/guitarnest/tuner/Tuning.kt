@@ -3,8 +3,9 @@ package app.guitarnest.tuner
 import kotlin.math.abs
 
 /** Open-string notes as MIDI numbers, lowest string first. */
-data class Tuning(val id: String, val strings: List<Int>) {
-    val names: List<String> get() = strings.map(Notes::name)
+data class Tuning(val id: String, val strings: List<Int>, val flats: Boolean = false) {
+    /** String names as players write them: "E♭" in half step down, not "D♯". */
+    val names: List<String> get() = strings.map { Notes.name(it, flats) }
 
     /** Sounding notes of the open strings with a capo on [fret]. */
     fun withCapo(fret: Int): List<Int> = strings.map { it + fret }
@@ -20,7 +21,8 @@ data class Tuning(val id: String, val strings: List<Int>) {
         (Notes.midiOf(frequency, a4) - strings[string]) * 100
 
     companion object {
-        private fun of(id: String, notes: String) = Tuning(id, notes.split(" ").map { Notes.parse(it)!! })
+        private fun of(id: String, notes: String) =
+            Tuning(id, notes.split(" ").map { Notes.parse(it)!! }, flats = notes.contains('b'))
 
         val STANDARD = of("standard", "E2 A2 D3 G3 B3 E4")
         val PRESETS = listOf(
