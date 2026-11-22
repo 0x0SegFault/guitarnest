@@ -1,54 +1,185 @@
 package app.guitarnest.ui
 
 import android.content.Intent
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.GraphicEq
+import androidx.compose.material.icons.filled.LibraryMusic
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import app.guitarnest.BuildConfig
 import app.guitarnest.R
+import app.guitarnest.data.SongPrinter
+import app.guitarnest.tab.SongCodec
+
+private enum class Tab { SONGS, METRONOME, TUNER }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppRoot() {
+fun AppRoot(vm: SongsViewModel = viewModel()) {
+    val context = LocalContext.current
+    val songs by vm.songs.collectAsStateWithLifecycle()
+    val log by vm.log.collectAsStateWithLifecycle()
+    val playing by vm.playing.collectAsStateWithLifecycle()
+    val metronome by vm.metronome.collectAsStateWithLifecycle()
+    val message by vm.message.collectAsStateWithLifecycle()
+
+    var tab by rememberSaveable { mutableStateOf(Tab.SONGS) }
+    var openId by rememberSaveable { mutableStateOf<String?>(null) }
+    var editing by rememberSaveable { mutableStateOf<String?>(null) } // song id, or "" for a new song
     var about by rememberSaveable { mutableStateOf(false) }
+    var confirmDelete by remember { mutableStateOf(false) }
+    var editorError by remember { mutableStateOf<String?>(null) }
+    val snackbar = remember { SnackbarHostState() }
+
+    val open = songs.firstOrNull { it.id == openId }
+    val draft = rememberDraft(if (editing.isNullOrEmpty()) null else songs.firstOrNull { it.id == editing })
+
+    LaunchedEffect(message) { message?.let { snackbar.showSnackbar(it); vm.showMessage(null) } }
+
+    val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        uri ?: return@rememberLauncherForActivityResult
+        val text = runCatching { context.contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() } }.getOrNull()
+        if (text == null) vm.showMessage(context.getString(R.string.import_failed)) else vm.import(text) { openId = it.id; tab = Tab.SONGS }
+    }
+    val exporter = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+        val song = open ?: return@rememberLauncherForActivityResult
+        uri ?: return@rememberLauncherForActivityResult
+        runCatching { context.contentResolver.openOutputStream(uri)?.use { it.write(SongCodec.encode(song).toByteArray()) } }
+            .onFailure { vm.showMessage(it.message) }
+    }
+
+    BackHandler(enabled = editing != null || openId != null) {
+        when {
+            editing != null -> { editing = null; editorError = null }
+            else -> { vm.stop(); openId = null }
+        }
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbar) },
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
+                title = {
+                    Text(
+                        when {
+                            editing != null -> stringResource(if (editing == "") R.string.new_song else R.string.edit_song)
+                            open != null && tab == Tab.SONGS -> open.title
+                            else -> stringResource(R.string.app_name)
+                        },
+                        maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    )
+                },
+                navigationIcon = {
+                    if (editing != null || (open != null && tab == Tab.SONGS)) {
+                        IconButton(onClick = { if (editing != null) { editing = null; editorError = null } else { vm.stop(); openId = null } }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
+                        }
+                    }
+                },
                 actions = {
-                    IconButton(onClick = { about = true }) {
-                        Icon(Icons.Outlined.Info, contentDescription = stringResource(R.string.about))
+                    when {
+                        editing != null -> TextButton(onClick = {
+                            draft.build().onSuccess { song -> vm.save(song) { saved -> openId = saved.id; editing = null; editorError = null } }
+                                .onFailure { editorError = it.message }
+                        }) { Text(stringResource(R.string.save)) }
+                        open != null && tab == Tab.SONGS -> SongMenu(
+                            onEdit = { vm.stop(); editing = open.id },
+                            onPrint = { SongPrinter.print(context, open) },
+                            onExport = { exporter.launch(open.title.replace(Regex("[^\\w ]"), "") + ".gnt") },
+                            onDelete = { confirmDelete = true },
+                        )
+                        tab == Tab.SONGS -> {
+                            IconButton(onClick = { importer.launch(arrayOf("*/*")) }) { Icon(Icons.Filled.LibraryMusic, stringResource(R.string.import_file)) }
+                            IconButton(onClick = { editing = "" }) { Icon(Icons.Filled.Add, stringResource(R.string.new_song)) }
+                            IconButton(onClick = { about = true }) { Icon(Icons.Outlined.Info, stringResource(R.string.about)) }
+                        }
+                        else -> IconButton(onClick = { about = true }) { Icon(Icons.Outlined.Info, stringResource(R.string.about)) }
                     }
                 },
             )
         },
+        bottomBar = {
+            if (editing == null) {
+                NavigationBar {
+                    NavigationBarItem(tab == Tab.SONGS, { tab = Tab.SONGS }, { Icon(Icons.Filled.LibraryMusic, null) }, label = { Text(stringResource(R.string.songs)) })
+                    NavigationBarItem(tab == Tab.METRONOME, { tab = Tab.METRONOME }, { Icon(Icons.Filled.Timer, null) }, label = { Text(stringResource(R.string.metronome)) })
+                    NavigationBarItem(tab == Tab.TUNER, { vm.stop(); tab = Tab.TUNER }, { Icon(Icons.Filled.GraphicEq, null) }, label = { Text(stringResource(R.string.tuner)) })
+                }
+            }
+        },
     ) { padding ->
-        TunerScreen(Modifier.fillMaxSize().padding(padding))
+        val m = Modifier.fillMaxSize().padding(padding)
+        when {
+            editing != null -> EditorScreen(draft, editorError, m)
+            tab == Tab.SONGS && open != null -> SongScreen(open, playing, log, vm, m)
+            tab == Tab.SONGS -> LibraryScreen(songs, log, { openId = it.id }, { editing = "" }, { importer.launch(arrayOf("*/*")) }, m)
+            tab == Tab.METRONOME -> MetronomeScreen(metronome, playing, vm, m)
+            else -> TunerScreen(m)
+        }
     }
-    if (about) {
-        ModalBottomSheet(onDismissRequest = { about = false }) { AboutSheet() }
+
+    if (confirmDelete && open != null) {
+        AlertDialog(
+            onDismissRequest = { confirmDelete = false },
+            title = { Text(stringResource(R.string.delete_song_title, open.title)) },
+            text = { Text(stringResource(R.string.delete_song_text)) },
+            confirmButton = { TextButton(onClick = { vm.stop(); vm.delete(open.id); openId = null; confirmDelete = false }) { Text(stringResource(R.string.delete)) } },
+            dismissButton = { TextButton(onClick = { confirmDelete = false }) { Text(stringResource(R.string.cancel)) } },
+        )
+    }
+    if (about) ModalBottomSheet(onDismissRequest = { about = false }) { AboutSheet() }
+}
+
+@Composable
+private fun SongMenu(onEdit: () -> Unit, onPrint: () -> Unit, onExport: () -> Unit, onDelete: () -> Unit) {
+    var open by remember { mutableStateOf(false) }
+    IconButton(onClick = { open = true }) { Icon(Icons.Filled.MoreVert, stringResource(R.string.more)) }
+    DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+        DropdownMenuItem(text = { Text(stringResource(R.string.edit)) }, onClick = { open = false; onEdit() })
+        DropdownMenuItem(text = { Text(stringResource(R.string.print)) }, onClick = { open = false; onPrint() })
+        DropdownMenuItem(text = { Text(stringResource(R.string.export_file)) }, onClick = { open = false; onExport() })
+        DropdownMenuItem(text = { Text(stringResource(R.string.delete)) }, onClick = { open = false; onDelete() })
     }
 }
 
@@ -61,6 +192,7 @@ private fun AboutSheet() {
         Text(stringResource(R.string.permissions), style = MaterialTheme.typography.titleMedium)
         Text(stringResource(R.string.permission_mic), style = MaterialTheme.typography.bodyMedium)
         Text(stringResource(R.string.permission_none_else), style = MaterialTheme.typography.bodyMedium)
+        Text(stringResource(R.string.copyright_note), style = MaterialTheme.typography.bodySmall)
         Text(
             stringResource(R.string.version, BuildConfig.VERSION_NAME),
             style = MaterialTheme.typography.bodySmall,

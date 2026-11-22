@@ -25,6 +25,76 @@
     <string name="reference_pitch">Reference pitch</string>
     <string name="reset">Reset</string>
 
+    <!-- Navigation and library -->
+    <string name="songs">Songs</string>
+    <string name="metronome">Metronome</string>
+    <string name="tuner">Tuner</string>
+    <string name="back">Back</string>
+    <string name="more">More</string>
+    <string name="search_library">Search your songs</string>
+    <string name="library_empty">No songs yet. Write a tab, or import a GuitarNest file (.gnt).</string>
+    <string name="new_song">New song</string>
+    <string name="edit_song">Edit song</string>
+    <string name="import_file">Import file</string>
+    <string name="import_failed">Cannot read this file.</string>
+    <string name="export_file">Export file</string>
+    <string name="edit">Edit</string>
+    <string name="print">Print or save as PDF</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete_song_title">Delete %1$s?</string>
+    <string name="delete_song_text">The tab and its practice history are removed from this phone.</string>
+    <string name="level_beginner">Beginner</string>
+    <string name="level_intermediate">Intermediate</string>
+    <string name="level_advanced">Advanced</string>
+    <string name="capo_n">Capo %1$d</string>
+    <string name="no_capo">No capo</string>
+    <string name="practised_today">Practised today</string>
+    <plurals name="practised_days_ago">
+        <item quantity="one">Practised %1$d day ago</item>
+        <item quantity="other">Practised %1$d days ago</item>
+    </plurals>
+
+    <!-- Song -->
+    <string name="tab_source">Tab: %1$s</string>
+    <string name="practice_summary">Sessions: %1$d · Time: %2$d min · Best: %3$d BPM</string>
+    <string name="find_tabs_browser">Search for tabs in the browser</string>
+    <string name="speed_up">Speed up</string>
+    <string name="whole_song">Whole song</string>
+    <string name="loop_section">Loop %1$s</string>
+    <string name="play_along">Play along</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string name="count_in">Count-in</string>
+    <string name="bar_n">Bar %1$d</string>
+
+    <!-- Metronome -->
+    <string name="tap_tempo">Tap tempo</string>
+    <string name="beats_per_bar">Beats per bar</string>
+    <string name="clicks">Clicks</string>
+    <string name="strumming_pattern">Strumming pattern</string>
+    <string name="none">None</string>
+    <string name="speed_trainer">Speed trainer</string>
+    <string name="speed_trainer_detail">%1$d → %2$d BPM · Step: +%3$d · Bars per step: %4$d</string>
+    <string name="target_tempo">Target</string>
+
+    <!-- Editor -->
+    <string name="title">Title</string>
+    <string name="artist">Artist</string>
+    <string name="tab_by">Tab by</string>
+    <string name="level">Level</string>
+    <string name="capo">Capo</string>
+    <string name="tempo_bpm">Tempo</string>
+    <string name="strumming_patterns">Strumming patterns</string>
+    <string name="name">Name</string>
+    <string name="sections">Sections</string>
+    <string name="section_help">Chords: one per beat, "." keeps the chord, "|" between bars. Tab: six lines, high e first.</string>
+    <string name="repeat">Repeat</string>
+    <string name="add_section">Add section</string>
+    <string name="notes">Notes</string>
+    <string name="copyright_note">Tabs in GuitarNest are yours: written by you, imported from files you own, or made from your own recordings. Printing is for personal practice.</string>
+
     <!-- Microphone permission -->
     <string name="mic_title">The tuner needs the microphone</string>
     <string name="mic_why">GuitarNest listens only while the tuner is open. The sound stays in memory on your phone. It is not recorded, saved or sent.</string>

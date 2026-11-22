@@ -1,0 +1,163 @@
+package app.guitarnest.ui
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.Card
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import app.guitarnest.R
+import app.guitarnest.tab.Level
+import app.guitarnest.tab.Section
+import app.guitarnest.tab.Song
+import app.guitarnest.tab.SongCodec
+import app.guitarnest.tab.StrumPattern
+import app.guitarnest.tab.TextTab
+import app.guitarnest.tuner.Tuning
+
+/** Editable copy of a section: the bars are kept as text tab while editing. */
+data class SectionDraft(val name: String, val repeat: Int, val strum: String?, val text: String)
+
+/** The editor's state. [build] turns it into a song, or returns the problems. */
+class SongDraft(initial: Song) {
+    var song by mutableStateOf(initial)
+    val patterns: SnapshotStateList<StrumPattern> = mutableStateListOf<StrumPattern>().apply { addAll(initial.patterns) }
+    val sections: SnapshotStateList<SectionDraft> = mutableStateListOf<SectionDraft>().apply {
+        addAll(initial.sections.map { SectionDraft(it.name, it.repeat, it.strum, TextTab.sectionText(it, initial.beatsPerBar)) })
+    }
+
+    fun build(): Result<Song> {
+        val built = sections.map { d ->
+            val bars = TextTab.parseSection(d.text, song.beatsPerBar).getOrElse { return Result.failure(Exception("${d.name}: ${it.message}")) }
+            Section(d.name.ifBlank { "Section" }, bars, d.repeat.coerceIn(1, 16), d.strum)
+        }
+        val result = song.copy(patterns = patterns.toList(), sections = built)
+        val problems = SongCodec.validate(result)
+        return if (problems.isEmpty()) Result.success(result) else Result.failure(Exception(problems.first()))
+    }
+}
+
+@Composable
+fun rememberDraft(song: Song?): SongDraft = remember(song?.id) { SongDraft(song ?: Song(title = "")) }
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun EditorScreen(draft: SongDraft, error: String?, modifier: Modifier = Modifier) {
+    val s = draft.song
+    Column(modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        if (error != null) Text(error, color = MaterialTheme.colorScheme.error)
+        Field(R.string.title, s.title) { draft.song = s.copy(title = it) }
+        Field(R.string.artist, s.artist) { draft.song = s.copy(artist = it) }
+        Field(R.string.tab_by, s.source) { draft.song = s.copy(source = it) }
+
+        Label(R.string.level)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Level.entries.forEach { l -> FilterChip(selected = s.level == l, onClick = { draft.song = s.copy(level = l) }, label = { Text(levelLabel(l)) }) }
+        }
+        Label(R.string.tuning)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Tuning.PRESETS.forEach { t ->
+                FilterChip(selected = s.tuning == t.id, onClick = { draft.song = s.copy(tuning = t.id) }, label = { Text(t.names.joinToString("") { it.dropLast(1) }) })
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Number(R.string.capo, s.capo, Modifier.weight(1f)) { draft.song = s.copy(capo = it) }
+            Number(R.string.tempo_bpm, s.tempo, Modifier.weight(1f)) { draft.song = s.copy(tempo = it) }
+            Number(R.string.beats_per_bar, s.beatsPerBar, Modifier.weight(1f)) { draft.song = s.copy(beatsPerBar = it) }
+        }
+
+        Label(R.string.strumming_patterns)
+        draft.patterns.forEachIndexed { i, p ->
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(p.name, { draft.patterns[i] = p.copy(name = it) }, Modifier.width(110.dp), singleLine = true, label = { Text(stringResource(R.string.name)) })
+                OutlinedTextField(
+                    p.steps, { v -> draft.patterns[i] = p.copy(steps = v.uppercase().replace('X', 'x').filter { it in "DUx-" }) },
+                    Modifier.weight(1f), singleLine = true, label = { Text("D U x -") }, textStyle = mono,
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
+                )
+                IconButton(onClick = { draft.patterns.removeAt(i) }) { Icon(Icons.Outlined.Delete, stringResource(R.string.delete)) }
+            }
+        }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            PRESET_PATTERNS.filter { pp -> draft.patterns.none { it.id == pp.id } }.forEach { pp ->
+                OutlinedButton(onClick = { draft.patterns += pp }) { Text("+ ${pp.name}") }
+            }
+        }
+
+        Label(R.string.sections)
+        Text(stringResource(R.string.section_help), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        draft.sections.forEachIndexed { i, d ->
+            Card {
+                Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        OutlinedTextField(d.name, { draft.sections[i] = d.copy(name = it) }, Modifier.weight(1f), singleLine = true, label = { Text(stringResource(R.string.name)) })
+                        Number(R.string.repeat, d.repeat, Modifier.width(90.dp)) { draft.sections[i] = d.copy(repeat = it) }
+                        IconButton(onClick = { draft.sections.removeAt(i) }) { Icon(Icons.Outlined.Delete, stringResource(R.string.delete)) }
+                    }
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        FilterChip(selected = d.strum == null, onClick = { draft.sections[i] = d.copy(strum = null) }, label = { Text(stringResource(R.string.none)) })
+                        draft.patterns.forEach { p -> FilterChip(selected = d.strum == p.id, onClick = { draft.sections[i] = d.copy(strum = p.id) }, label = { Text(p.name) }) }
+                    }
+                    OutlinedTextField(d.text, { draft.sections[i] = d.copy(text = it) }, Modifier.fillMaxWidth(), textStyle = mono, minLines = 3,
+                        isError = TextTab.parseSection(d.text, s.beatsPerBar).isFailure,
+                        supportingText = TextTab.parseSection(d.text, s.beatsPerBar).exceptionOrNull()?.message?.let { { Text(it) } })
+                }
+            }
+        }
+        OutlinedButton(onClick = { draft.sections += SectionDraft("Section ${draft.sections.size + 1}", 1, draft.patterns.firstOrNull()?.id, "| G | C | D | G |") }) {
+            Text(stringResource(R.string.add_section))
+        }
+        Field(R.string.notes, s.notes, singleLine = false) { draft.song = s.copy(notes = it) }
+    }
+}
+
+private val mono = TextStyle(fontFamily = FontFamily.Monospace, fontSize = 13.sp)
+
+@Composable
+private fun Label(id: Int) = Text(stringResource(id), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+@Composable
+private fun Field(label: Int, value: String, singleLine: Boolean = true, onChange: (String) -> Unit) {
+    OutlinedTextField(value, onChange, Modifier.fillMaxWidth(), singleLine = singleLine, label = { Text(stringResource(label)) },
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences))
+}
+
+@Composable
+private fun Number(label: Int, value: Int, modifier: Modifier, onChange: (Int) -> Unit) {
+    OutlinedTextField(
+        value.toString(), { v -> v.filter(Char::isDigit).take(3).toIntOrNull()?.let(onChange) ?: onChange(0) }, modifier,
+        singleLine = true, label = { Text(stringResource(label), maxLines = 1) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+    )
+}
