@@ -130,4 +130,3 @@ struct MyReportsView: View {
         }
     }
 }
-
