@@ -210,4 +210,18 @@
     <string name="report_share">Share as text</string>
     <string name="report_sent">Thank you: the report was sent.</string>
     <string name="crash_banner">GuitarNest stopped unexpectedly last time. You can send a report: nothing is sent unless you choose to.</string>
+    <string name="report_preview">This creates the following issue:</string>
+    <string name="my_reports">My reports</string>
+    <string name="my_reports_help">Reports sent from this phone. To show their status, GuitarNest sends only a random follow-up code, when you open this list.</string>
+    <string name="my_reports_empty">No reports sent yet.</string>
+    <string name="status_sent">Sent</string>
+    <string name="status_received">Received</string>
+    <string name="status_published">Published</string>
+    <string name="status_closed">Closed</string>
+    <string name="status_declined">Not planned</string>
+    <string name="status_offline">No connection</string>
+    <string name="status_open_public">Open the public issue</string>
+    <string name="auto_crash">Send crash reports automatically</string>
+    <string name="auto_crash_help">Anonymised: error types and code lines, app and Android version. No phone model, no messages, no songs.</string>
+    <string name="crash_sent_automatically">A crash report was sent (anonymised).</string>
 </resources>

@@ -198,4 +198,18 @@
     <string name="report_share">Partager le texte</string>
     <string name="report_sent">Merci : le rapport a été envoyé.</string>
     <string name="crash_banner">GuitarNest s\'est arrêté de façon inattendue la dernière fois. Vous pouvez envoyer un rapport : rien n\'est envoyé sans votre choix.</string>
+    <string name="report_preview">Cela crée le ticket suivant :</string>
+    <string name="my_reports">Mes rapports</string>
+    <string name="my_reports_help">Rapports envoyés depuis ce téléphone. Pour afficher leur état, GuitarNest envoie seulement un code de suivi aléatoire, quand vous ouvrez cette liste.</string>
+    <string name="my_reports_empty">Aucun rapport envoyé.</string>
+    <string name="status_sent">Envoyé</string>
+    <string name="status_received">Reçu</string>
+    <string name="status_published">Publié</string>
+    <string name="status_closed">Fermé</string>
+    <string name="status_declined">Non prévu</string>
+    <string name="status_offline">Pas de connexion</string>
+    <string name="status_open_public">Ouvrir le ticket public</string>
+    <string name="auto_crash">Envoyer automatiquement les rapports de plantage</string>
+    <string name="auto_crash_help">Anonymisés : types d\'erreur et lignes de code, version de l\'app et d\'Android. Pas de modèle de téléphone, pas de message, pas de morceau.</string>
+    <string name="crash_sent_automatically">Un rapport de plantage a été envoyé (anonymisé).</string>
 </resources>

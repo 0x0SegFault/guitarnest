@@ -54,5 +54,17 @@ GuitarNest app ──GET /challenge, POST /report──▶ this function ──�
 ### 3. Turn it on in the apps
 Set `SERVICE_URL` in `shared/src/commonMain/kotlin/app/guitarnest/report/Reports.kt` to the function URL (Android and iPhone use it), then release a new version. The app then offers "Send anonymously" in Settings → Report a problem or idea, and after a crash.
 
+## Triage and follow-up
+
+The app keeps a random follow-up code for each report; the issue holds only its hash. In the app,
+"My reports" asks `GET /status?code=…` and shows: Sent, Received, Published (with the public link),
+Closed or Declined.
+
+- A good report: read it, remove anything personal, then `reports/publish.sh <number>`. It creates the public
+  issue in `0x0SegFault/guitarnest` (without the device line unless `--keep-device`), adds
+  "Public issue: <link>" to the private issue and closes it.
+- Not planned: close the private issue as "not planned" (`gh issue close <n> -R 0x0SegFault/guitarnest-reports --reason "not planned"`).
+- Fixed without publishing: close it as completed.
+
 ## Update
 Run the tests (`npm test`), package again (step 2), and upload the new `function.zip`.

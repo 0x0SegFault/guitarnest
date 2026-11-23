@@ -55,10 +55,16 @@ function clean(value, max) {
 }
 
 /** @returns {{report?: object, error?: string}} */
+// A follow-up code is chosen by the app (32 hex characters) and kept on the phone. Only its SHA-256 is
+// written in the issue, so the code cannot be guessed from the repository, and nobody can tell which phone sent it.
+const FOLLOW_UP = /^[0-9a-f]{32}$/;
+
 function validate(input) {
   if (!input || typeof input !== 'object') return { error: 'invalid' };
   if (!Object.hasOwn(KINDS, input.kind)) return { error: 'kind' };
+  if (input.followUp !== undefined && !FOLLOW_UP.test(String(input.followUp))) return { error: 'followUp' };
   const report = {
+    followUp: input.followUp ? String(input.followUp) : null,
     kind: input.kind,
     title: clean(input.title, LIMITS.title),
     details: clean(input.details, LIMITS.details),
@@ -79,12 +85,25 @@ function toIssue(report) {
     `App version: ${report.version || 'not given'}`,
     `Device: ${report.device || 'not given'}`,
     '',
-    '_Sent with the anonymous form. The sender cannot read replies here._',
+    '_Sent anonymously. The sender sees only the status (received, published with its public link, closed), not comments here._',
   ];
+  if (report.followUp) lines.push(`<!-- follow-up: ${followUpHash(report.followUp)} -->`);
   return { title: `${prefix}: ${report.title}`, body: lines.join('\n'), labels: KINDS[report.kind] };
 }
 
-module.exports = { validate, toIssue, LIMITS };
+function followUpHash(code) {
+  return require('node:crypto').createHash('sha256').update(`guitarnest-follow-up:${code}`).digest('hex');
+}
+
+/** Status for the app: received, published (with the public link the maintainer added) or closed. */
+function statusOf(issue) {
+  const link = /Public issue: (https:\/\/github\.com\/[^\s)]+\/issues\/\d+)/.exec(issue.body || '');
+  if (link) return { status: 'published', public: link[1] };
+  if (issue.state === 'closed') return { status: issue.state_reason === 'not_planned' ? 'declined' : 'closed' };
+  return { status: 'received' };
+}
+
+module.exports = { validate, toIssue, LIMITS, followUpHash, statusOf, FOLLOW_UP };
 
 } };
 __modules['github.js'] = { loaded: false, module: { exports: {} }, fn: (module, exports) => {
@@ -111,7 +130,23 @@ async function createIssue({ token, repo, issue, fetchImpl = globalThis.fetch })
   return { ok: response.ok, status: response.status };
 }
 
-module.exports = { createIssue };
+/** The intake issue with this follow-up hash, or null (search in the private repository only). */
+async function findByFollowUp({ token, repo, hash, fetchImpl = globalThis.fetch }) {
+  const q = encodeURIComponent(`repo:${repo} is:issue "follow-up: ${hash}" in:body`);
+  const response = await fetchImpl(`https://api.github.com/search/issues?q=${q}&per_page=1`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'User-Agent': 'guitarnest-reports',
+    },
+  });
+  if (!response.ok) return { ok: false, status: response.status };
+  const data = await response.json();
+  return { ok: true, issue: (data.items || [])[0] || null };
+}
+
+module.exports = { createIssue, findByFollowUp };
 
 } };
 __modules['page.js'] = { loaded: false, module: { exports: {} }, fn: (module, exports) => {
@@ -246,8 +281,8 @@ __modules['handler.js'] = { loaded: false, module: { exports: {} }, fn: (module,
 // user agent or cookies. Nothing is logged.
 
 const { createChallenge, verifySolution } = __require('./pow');
-const { validate, toIssue } = __require('./report');
-const { createIssue } = __require('./github');
+const { validate, toIssue, followUpHash, statusOf, FOLLOW_UP } = __require('./report');
+const { createIssue, findByFollowUp } = __require('./github');
 const { formPage, formScript } = __require('./page');
 
 const MAX_BODY = 20000;
@@ -294,6 +329,14 @@ async function handle(event, context, deps = {}) {
 
   if (method === 'GET' && name === 'form.js') return reply(200, 'text/javascript; charset=utf-8', formScript);
   if (method === 'GET' && name === 'challenge') return json(200, createChallenge(env.POW_KEY));
+  if (method === 'GET' && name === 'status') {
+    // The app asks with its follow-up code; the answer says only received / published (+ public link) / closed.
+    const code = String((event.queryStringParameters || {}).code || '');
+    if (!FOLLOW_UP.test(code)) return json(400, { error: 'code' });
+    const found = await findByFollowUp({ token: env.GITHUB_TOKEN, repo: env.GITHUB_REPO, hash: followUpHash(code), fetchImpl: deps.fetch });
+    if (!found.ok) return json(502, { error: 'upstream', github: found.status });
+    return found.issue ? json(200, statusOf(found.issue)) : json(404, { status: 'unknown' });
+  }
   if (method === 'POST' && name === 'report') {
     const input = readBody(event);
     if (!input) return json(400, { error: 'invalid' });

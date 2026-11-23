@@ -77,6 +77,11 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
     var seed by remember { mutableStateOf<Song?>(null) }
     // The last crash, kept on this phone only; the player decides whether to report it.
     var crash by remember { mutableStateOf(CrashLog.read(context)) }
+    // If the player turned on automatic crash reports, send the last crash (anonymised) once, at start.
+    LaunchedEffect(Unit) {
+        val last = crash ?: return@LaunchedEffect
+        if (vm.sendCrashAutomatically(last)) crash = null
+    }
     val ai by vm.ai.collectAsStateWithLifecycle()
     val aiJob by vm.aiJob.collectAsStateWithLifecycle()
     val search by vm.search.collectAsStateWithLifecycle()
@@ -154,7 +159,8 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
                                 onAi = { vm.resetJobs(); sheet = "ask" },
                                 onSearch = { vm.resetJobs(); sheet = "search" },
                             )
-                            SettingsMenu(onAi = { vm.resetJobs(); sheet = "ai" }, onBackup = { sheet = "backup" }, onReport = { sheet = "report" }, onAbout = { about = true })
+                            SettingsMenu(onAi = { vm.resetJobs(); sheet = "ai" }, onBackup = { sheet = "backup" }, onReport = { sheet = "report" },
+                                onMyReports = { sheet = "my_reports" }, onAbout = { about = true })
                         }
                         else -> IconButton(onClick = { about = true }) { Icon(Icons.Outlined.Info, stringResource(R.string.about)) }
                     }
@@ -210,6 +216,9 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
         "report" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             ReportSheet(crash) { message -> sheet = null; crash = CrashLog.read(context); message?.let(vm::showMessage) }
         }
+        "my_reports" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+            MyReportsSheet()
+        }
         "search" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             SearchSheet(search, vm::searchSongs) { info ->
                 seed = Song(title = info.title, artist = info.artist, notes = listOf(info.album, info.year).filter { it.isNotBlank() }.joinToString(", "))
@@ -259,13 +268,14 @@ private fun NewSongMenu(onListen: () -> Unit, onWrite: () -> Unit, onAi: () -> U
 }
 
 @Composable
-private fun SettingsMenu(onAi: () -> Unit, onBackup: () -> Unit, onReport: () -> Unit, onAbout: () -> Unit) {
+private fun SettingsMenu(onAi: () -> Unit, onBackup: () -> Unit, onReport: () -> Unit, onMyReports: () -> Unit, onAbout: () -> Unit) {
     var open by remember { mutableStateOf(false) }
     IconButton(onClick = { open = true }) { Icon(Icons.Filled.Settings, stringResource(R.string.settings)) }
     DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
         DropdownMenuItem(text = { Text(stringResource(R.string.ai_connection)) }, onClick = { open = false; onAi() })
         DropdownMenuItem(text = { Text(stringResource(R.string.backup_title)) }, onClick = { open = false; onBackup() })
         DropdownMenuItem(text = { Text(stringResource(R.string.report_title)) }, onClick = { open = false; onReport() })
+        DropdownMenuItem(text = { Text(stringResource(R.string.my_reports)) }, onClick = { open = false; onMyReports() })
         DropdownMenuItem(text = { Text(stringResource(R.string.about)) }, onClick = { open = false; onAbout() })
     }
 }

@@ -21,7 +21,55 @@ object Reports {
     data class Proof(val algorithm: String, val challenge: String, val number: Int, val salt: String, val signature: String)
 
     @Serializable
-    data class Report(val kind: String, val title: String, val details: String, val version: String, val device: String, val proof: Proof? = null)
+    data class Report(
+        val kind: String, val title: String, val details: String, val version: String, val device: String,
+        val proof: Proof? = null,
+        /** Random code kept on the phone; the service stores only its hash, and answers /status for it. */
+        val followUp: String? = null,
+    )
+
+    /** A report sent from this phone, kept here so the player can follow it. */
+    @Serializable
+    data class Sent(val code: String, val kind: String, val title: String, val day: Long)
+
+    /** The service's answer to /status: received, published (with [public] link), closed, declined, or unknown (not indexed yet). */
+    @Serializable
+    data class Status(val status: String = "unknown", val public: String? = null)
+
+    fun encodeSent(list: List<Sent>): String = json.encodeToString(kotlinx.serialization.builtins.ListSerializer(Sent.serializer()), list)
+    fun decodeSent(text: String): List<Sent> =
+        runCatching { json.decodeFromString(kotlinx.serialization.builtins.ListSerializer(Sent.serializer()), text) }.getOrDefault(emptyList())
+    fun parseStatus(body: String): Status = runCatching { json.decodeFromString(Status.serializer(), body) }.getOrDefault(Status())
+
+    /** The issue exactly as the service will create it (same text as reports/report.js), to show before sending. */
+    fun preview(kind: String, title: String, details: String, version: String, device: String): String {
+        val prefix = if (kind == "bug") "Bug" else "Idea"
+        return "$prefix: ${title.trim().take(120)}\n\n${details.trim().take(5000)}\n\n---\nApp version: ${version.ifBlank { "not given" }}\n" +
+            "Device: ${device.ifBlank { "not given" }}\n\n$FOOTER"
+    }
+
+    /** Same footer as reports/report.js. */
+    const val FOOTER = "_Sent anonymously. The sender sees only the status (received, published with its public link, closed), not comments here._"
+
+    /**
+     * A crash report without personal content: the first line (app and system version), error types and
+     * code lines only. Error messages are removed, because they can contain song titles or other text.
+     */
+    fun anonymizeCrash(trace: String): String = trace.lines().mapIndexedNotNull { i, raw ->
+        val line = raw.trimEnd()
+        when {
+            i == 0 && line.startsWith("GuitarNest") -> line
+            line.trimStart().startsWith("at ") -> "    " + line.trimStart()
+            line.trimStart().startsWith("...") -> "    " + line.trimStart()
+            line.startsWith("Caused by:") -> "Caused by: " + line.removePrefix("Caused by:").trim().substringBefore(':').trim()
+            Regex("^[a-zA-Z_][\\w.$]*(Exception|Error|Throwable)\\b.*").matches(line) -> line.substringBefore(':').trim()
+            else -> null
+        }
+    }.take(40).joinToString("\n")
+
+    /** Title for an automatic crash report: the error type only. */
+    fun crashTitle(trace: String): String =
+        "Crash: " + (anonymizeCrash(trace).lines().firstOrNull { it.endsWith("Exception") || it.endsWith("Error") }?.substringAfterLast('.') ?: "app stopped")
 
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
 
@@ -36,8 +84,8 @@ object Reports {
     }
 
     /** The JSON body for POST /report. [details] may include a crash log; it is cut to the service limit. */
-    fun body(kind: String, title: String, details: String, version: String, device: String, proof: Proof): String =
-        json.encodeToString(Report.serializer(), Report(kind, title.take(120), details.take(5000), version.take(40), device.take(120), proof))
+    fun body(kind: String, title: String, details: String, version: String, device: String, proof: Proof, followUp: String? = null): String =
+        json.encodeToString(Report.serializer(), Report(kind, title.take(120), details.take(5000), version.take(40), device.take(120), proof, followUp))
 
     /** A GitHub "new issue" link with the text filled in (the player needs a GitHub account; the issue is public). */
     fun githubUrl(kind: String, title: String, details: String, version: String, device: String): String {

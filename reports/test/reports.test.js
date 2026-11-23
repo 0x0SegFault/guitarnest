@@ -103,3 +103,31 @@ test('deployment problems are named: missing settings and the GitHub status (nev
   assert.deepEqual(JSON.parse(denied.body), { error: 'upstream', github: 404 });
   assert.ok(!denied.body.includes('t"'));
 });
+
+test('follow-up: only a hash goes in the issue; status shows received, published with link, or closed', async () => {
+  const { followUpHash, statusOf } = require('../report');
+  const code = '0123456789abcdef0123456789abcdef';
+  const issues = [];
+  const fetch = async (url, init) => {
+    if (init && init.method === 'POST') { issues.push(JSON.parse(init.body)); return { ok: true, status: 201 }; }
+    const hit = issues.find((i) => decodeURIComponent(url).includes(followUpHash(code)) && i.body.includes(followUpHash(code)));
+    return { ok: true, status: 200, json: async () => ({ items: hit ? [{ state: 'open', body: hit.body }] : [] }) };
+  };
+  const challenge = JSON.parse((await handle({ httpMethod: 'GET', path: '/challenge' }, {}, { env })).body);
+  const body = JSON.stringify({ kind: 'bug', title: 'App closes', details: 'It closes when I save.', followUp: code, proof: solve(challenge) });
+  assert.equal((await handle({ httpMethod: 'POST', path: '/report', body }, {}, { env, fetch })).statusCode, 200);
+  assert.ok(issues[0].body.includes(followUpHash(code)) && !issues[0].body.includes(code));
+  const status = await handle({ httpMethod: 'GET', path: '/status', queryStringParameters: { code } }, {}, { env, fetch });
+  assert.deepEqual(JSON.parse(status.body), { status: 'received' });
+  assert.equal((await handle({ httpMethod: 'GET', path: '/status', queryStringParameters: { code: 'nope' } }, {}, { env, fetch })).statusCode, 400);
+  assert.deepEqual(statusOf({ state: 'closed', body: 'x\nPublic issue: https://github.com/o/r/issues/7' }), { status: 'published', public: 'https://github.com/o/r/issues/7' });
+  assert.deepEqual(statusOf({ state: 'closed', state_reason: 'not_planned', body: '' }), { status: 'declined' });
+});
+
+test('the app preview and the issue have the same text', () => {
+  const fs = require('node:fs');
+  const kotlin = fs.readFileSync(require('node:path').join(__dirname, '../../shared/src/commonMain/kotlin/app/guitarnest/report/Reports.kt'), 'utf8');
+  const footer = /const val FOOTER = "(.*)"/.exec(kotlin)[1];
+  const { body } = toIssue({ kind: 'bug', title: 'Closes', details: 'When I save.', version: '0.1.1', device: '' });
+  assert.equal(body, `When I save.\n\n---\nApp version: 0.1.1\nDevice: not given\n\n${footer}`);
+});

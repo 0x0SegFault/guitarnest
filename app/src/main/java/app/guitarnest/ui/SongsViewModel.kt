@@ -9,7 +9,12 @@ import app.guitarnest.ai.AiTask
 import app.guitarnest.ai.ChatMessage
 import app.guitarnest.ai.ChatRequest
 import app.guitarnest.ai.SongInfo
+import app.guitarnest.BuildConfig
 import app.guitarnest.audio.ClickPlayer
+import app.guitarnest.feedback.CrashLog
+import app.guitarnest.feedback.ReportStore
+import app.guitarnest.net.ReportClient
+import app.guitarnest.report.Reports
 import app.guitarnest.R
 import app.guitarnest.data.AiConnection
 import app.guitarnest.data.BackupContent
@@ -125,6 +130,22 @@ class SongsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun showMessage(text: String?) { _message.value = text }
+
+    /** Sends the last crash, anonymised (error types and code lines, app and Android version, no phone model), if the player allowed it. */
+    suspend fun sendCrashAutomatically(trace: String): Boolean {
+        val app = getApplication<Application>()
+        val store = ReportStore(app)
+        if (!store.autoCrash || Reports.SERVICE_URL == null) return false
+        val code = ReportStore.newCode()
+        val title = Reports.crashTitle(trace)
+        return runCatching {
+            ReportClient.send("bug", title, "Automatic crash report (anonymised):\n" + Reports.anonymizeCrash(trace), BuildConfig.VERSION_NAME, CrashLog.systemText(), code)
+        }.onSuccess {
+            store.add(Reports.Sent(code, "bug", title, java.time.LocalDate.now().toEpochDay()))
+            CrashLog.clear(app)
+            _message.value = app.getString(R.string.crash_sent_automatically)
+        }.isSuccess
+    }
 
     // Backups: songs and practice history, encrypted with the player's password.
 

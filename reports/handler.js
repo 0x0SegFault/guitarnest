@@ -10,8 +10,8 @@
 // user agent or cookies. Nothing is logged.
 
 const { createChallenge, verifySolution } = require('./pow');
-const { validate, toIssue } = require('./report');
-const { createIssue } = require('./github');
+const { validate, toIssue, followUpHash, statusOf, FOLLOW_UP } = require('./report');
+const { createIssue, findByFollowUp } = require('./github');
 const { formPage, formScript } = require('./page');
 
 const MAX_BODY = 20000;
@@ -58,6 +58,14 @@ async function handle(event, context, deps = {}) {
 
   if (method === 'GET' && name === 'form.js') return reply(200, 'text/javascript; charset=utf-8', formScript);
   if (method === 'GET' && name === 'challenge') return json(200, createChallenge(env.POW_KEY));
+  if (method === 'GET' && name === 'status') {
+    // The app asks with its follow-up code; the answer says only received / published (+ public link) / closed.
+    const code = String((event.queryStringParameters || {}).code || '');
+    if (!FOLLOW_UP.test(code)) return json(400, { error: 'code' });
+    const found = await findByFollowUp({ token: env.GITHUB_TOKEN, repo: env.GITHUB_REPO, hash: followUpHash(code), fetchImpl: deps.fetch });
+    if (!found.ok) return json(502, { error: 'upstream', github: found.status });
+    return found.issue ? json(200, statusOf(found.issue)) : json(404, { status: 'unknown' });
+  }
   if (method === 'POST' && name === 'report') {
     const input = readBody(event);
     if (!input) return json(400, { error: 'invalid' });

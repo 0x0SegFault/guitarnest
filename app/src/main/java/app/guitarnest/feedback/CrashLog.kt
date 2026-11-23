@@ -34,4 +34,7 @@ object CrashLog {
 
     /** App version and device, shown to the player before it is added to a report. */
     fun deviceText(): String = "${Build.MANUFACTURER} ${Build.MODEL}, Android ${Build.VERSION.RELEASE}"
+
+    /** For automatic crash reports: the system version only, no phone model. */
+    fun systemText(): String = "Android ${Build.VERSION.RELEASE}"
 }

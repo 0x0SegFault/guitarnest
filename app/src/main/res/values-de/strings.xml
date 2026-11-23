@@ -195,4 +195,18 @@
     <string name="report_share">Als Text teilen</string>
     <string name="report_sent">Danke: Die Meldung wurde gesendet.</string>
     <string name="crash_banner">GuitarNest wurde letztes Mal unerwartet beendet. Du kannst eine Meldung senden: Nichts wird ohne deine Wahl gesendet.</string>
+    <string name="report_preview">Damit wird folgendes Issue erstellt:</string>
+    <string name="my_reports">Meine Meldungen</string>
+    <string name="my_reports_help">Von diesem Telefon gesendete Meldungen. Für den Status sendet GuitarNest nur einen zufälligen Folgecode, wenn du diese Liste öffnest.</string>
+    <string name="my_reports_empty">Noch keine Meldungen gesendet.</string>
+    <string name="status_sent">Gesendet</string>
+    <string name="status_received">Erhalten</string>
+    <string name="status_published">Veröffentlicht</string>
+    <string name="status_closed">Geschlossen</string>
+    <string name="status_declined">Nicht geplant</string>
+    <string name="status_offline">Keine Verbindung</string>
+    <string name="status_open_public">Öffentliches Issue öffnen</string>
+    <string name="auto_crash">Absturzberichte automatisch senden</string>
+    <string name="auto_crash_help">Anonymisiert: Fehlertypen und Codezeilen, App- und Android-Version. Kein Telefonmodell, keine Meldungstexte, keine Songs.</string>
+    <string name="crash_sent_automatically">Ein Absturzbericht wurde gesendet (anonymisiert).</string>
 </resources>

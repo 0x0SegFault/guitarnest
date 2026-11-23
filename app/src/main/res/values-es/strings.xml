@@ -198,4 +198,18 @@
     <string name="report_share">Compartir como texto</string>
     <string name="report_sent">Gracias: el informe se ha enviado.</string>
     <string name="crash_banner">GuitarNest se cerró de forma inesperada la última vez. Puedes enviar un informe: no se envía nada sin que lo elijas.</string>
+    <string name="report_preview">Esto crea la siguiente incidencia:</string>
+    <string name="my_reports">Mis informes</string>
+    <string name="my_reports_help">Informes enviados desde este teléfono. Para mostrar su estado, GuitarNest envía solo un código de seguimiento aleatorio, al abrir esta lista.</string>
+    <string name="my_reports_empty">Aún no has enviado informes.</string>
+    <string name="status_sent">Enviado</string>
+    <string name="status_received">Recibido</string>
+    <string name="status_published">Publicado</string>
+    <string name="status_closed">Cerrado</string>
+    <string name="status_declined">No previsto</string>
+    <string name="status_offline">Sin conexión</string>
+    <string name="status_open_public">Abrir la incidencia pública</string>
+    <string name="auto_crash">Enviar informes de cierre automáticamente</string>
+    <string name="auto_crash_help">Anonimizados: tipos de error y líneas de código, versión de la app y de Android. Sin modelo de teléfono, sin mensajes, sin canciones.</string>
+    <string name="crash_sent_automatically">Se envió un informe de cierre (anonimizado).</string>
 </resources>
