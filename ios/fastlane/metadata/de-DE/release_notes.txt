@@ -1,1 +1,1 @@
-Akkorddiagramme mit Barrés, Zupf- und Flamenco-Muster, aktueller und nächster Akkord, Töne im Stimmgerät, MIDI-Import, Anmeldung mit OpenRouter, anonyme Meldungen mit Status.
+Open-Source-Danksagungen: alle genutzten Projekte, Dienste und Methoden mit Lizenzen (Info und Berechtigungen). Meldungen nach Tabulatur aus Audio bleiben sichtbar.

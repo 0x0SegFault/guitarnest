@@ -1,1 +1,1 @@
-Diagrammi degli accordi con barré, arpeggi e ritmi flamenco, accordo attuale e successivo, suoni dell'accordatore, import MIDI, accesso con OpenRouter, segnalazioni anonime con stato.
+Crediti open source: ogni progetto, servizio e metodo usato, con licenze (Informazioni e permessi). I messaggi dopo Tablatura da audio restano visibili.

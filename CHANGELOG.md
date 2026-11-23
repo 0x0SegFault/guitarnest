@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 (2026-11-23)
+
+- Open-source credits in the app (About and permissions), in CREDITS.md and in the README: every library, service, tool, method and music source, with its licence.
+- Messages after Tab from audio (for example an AI error) now show when the new song opens.
+- Ready, not yet active: find the title of a recording with AcoustID (Chromaprint fingerprint, computed on the phone). It needs an AcoustID app key.
+
 ## 0.1.1 (2026-11-23)
 
 - Chord diagrams computed for every chord (open and barre shapes up the neck); tap a diagram for another voicing, saved in the song.

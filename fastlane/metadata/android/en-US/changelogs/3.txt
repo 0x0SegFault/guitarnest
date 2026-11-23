@@ -1,0 +1,1 @@
+Open-source credits: every project, service and method used, with licences (About and permissions). Messages after Tab from audio now stay visible.

@@ -1,1 +1,1 @@
-Diagramas de acordes con cejilla, punteo y ritmos flamencos, acorde actual y siguiente, sonidos del afinador, importación MIDI, inicio con OpenRouter, informes anónimos con seguimiento.
+Créditos de código abierto: cada proyecto, servicio y método usado, con licencias (Información y permisos). Los mensajes tras Tablatura desde audio quedan visibles.
