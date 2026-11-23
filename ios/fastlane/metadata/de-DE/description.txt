@@ -19,4 +19,6 @@ Datenschutz
 • Keine Song-Datenbank, keine Downloads: Die Tabs kommen von dir
 • Verschlüsselte Sicherungen, wo du willst
 
+Gebaut mit freier Software: Basic Pitch (Spotify, Apache-2.0), Kotlin, SwiftUI, MusicBrainz und mehr. Vollständige Liste in der App (Info und Berechtigungen → Open-Source-Danksagungen) und in CREDITS.md.
+
 Diese App wird mit KI-Unterstützung entwickelt. Der Maintainer prüft und testet den gesamten Code.

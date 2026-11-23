@@ -76,6 +76,16 @@ Releases and stores: [docs/RELEASING.md](docs/RELEASING.md), [docs/STORES.md](do
 
 Bug reports, translations and code are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Credits
+
+GuitarNest uses free software, open data and published research. The main parts:
+- [Basic Pitch](https://github.com/spotify/basic-pitch) (Spotify, Apache-2.0): the note detection model.
+- [Kotlin Multiplatform](https://kotlinlang.org), [Jetpack Compose](https://developer.android.com/compose) and SwiftUI: the apps.
+- [MusicBrainz](https://musicbrainz.org) (CC0 data): song search.
+- [Nunito](https://github.com/googlefonts/nunito) (OFL-1.1): the font.
+
+[CREDITS.md](CREDITS.md) gives the full list with licences. The app shows the same list in About and permissions → Open-source credits.
+
 ## AI-assisted
 
 This project is developed with AI assistance. The maintainer reviews, tests and is responsible for all code.

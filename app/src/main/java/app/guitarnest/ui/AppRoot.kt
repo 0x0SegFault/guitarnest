@@ -200,7 +200,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
             dismissButton = { TextButton(onClick = { confirmDelete = false }) { Text(stringResource(R.string.cancel)) } },
         )
     }
-    if (about) ModalBottomSheet(onDismissRequest = { about = false }) { AboutSheet() }
+    if (about) ModalBottomSheet(onDismissRequest = { about = false }) { AboutSheet(onCredits = { about = false; sheet = "credits" }) }
     when (sheet) {
         "ai" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             AiConnectionSheet(ai, aiJob, vm::testAi, onSave = { vm.saveAi(it); sheet = null }, onClear = vm::clearAi, onOpenRouter = vm::signInOpenRouter)
@@ -215,6 +215,9 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
         }
         "report" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             ReportSheet(crash) { message -> sheet = null; crash = CrashLog.read(context); message?.let(vm::showMessage) }
+        }
+        "credits" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+            CreditsSheet()
         }
         "my_reports" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             MyReportsSheet()
@@ -281,7 +284,7 @@ private fun SettingsMenu(onAi: () -> Unit, onBackup: () -> Unit, onReport: () ->
 }
 
 @Composable
-private fun AboutSheet() {
+private fun AboutSheet(onCredits: () -> Unit) {
     val context = LocalContext.current
     Column(Modifier.padding(start = 24.dp, end = 24.dp, bottom = 32.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(stringResource(R.string.about), style = MaterialTheme.typography.titleLarge)
@@ -296,6 +299,7 @@ private fun AboutSheet() {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        TextButton(onClick = onCredits) { Text(stringResource(R.string.credits_title)) }
         TextButton(onClick = {
             runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, OPEN_MUSIC_URL.toUri())) }
         }) { Text(stringResource(R.string.open_music)) }

@@ -212,4 +212,11 @@
     <string name="auto_crash">Envoyer automatiquement les rapports de plantage</string>
     <string name="auto_crash_help">Anonymisés : types d\'erreur et lignes de code, version de l\'app et d\'Android. Pas de modèle de téléphone, pas de message, pas de morceau.</string>
     <string name="crash_sent_automatically">Un rapport de plantage a été envoyé (anonymisé).</string>
+    <string name="credits_title">Crédits open source</string>
+    <string name="credits_intro">GuitarNest repose sur le travail de nombreuses personnes. Merci. GuitarNest est un logiciel libre (GPL-3.0 ou ultérieure).</string>
+    <string name="credits_in_app">Dans l\'app</string>
+    <string name="credits_services">Services en ligne (seulement quand vous utilisez la fonction)</string>
+    <string name="credits_tools">Outils de construction et de test (pas dans l\'app)</string>
+    <string name="credits_methods">Méthodes et formats</string>
+    <string name="credits_music">Sources de musique libre</string>
 </resources>

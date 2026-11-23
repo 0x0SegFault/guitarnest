@@ -1,5 +1,7 @@
 package app.guitarnest.bridge
 
+import app.guitarnest.about.CreditSection
+import app.guitarnest.about.Credits
 import app.guitarnest.ai.AiTabMaker
 import app.guitarnest.ai.AiTask
 import app.guitarnest.ai.ApiStyle
@@ -170,6 +172,9 @@ object Bridge {
     fun pluck(frequency: Double, sampleRate: Int): FloatArray = ToneSynth.pluck(frequency, sampleRate)
     fun fork(frequency: Double, sampleRate: Int): FloatArray = ToneSynth.fork(frequency, sampleRate)
     fun frequencyOf(midi: Int, a4: Double): Double = Notes.frequencyOf(midi, a4)
+
+    // Credits
+    fun creditSections(): List<CreditSection> = Credits.SECTIONS
 
     // Reports
     fun reportServiceUrl(): String? = Reports.SERVICE_URL

@@ -209,4 +209,11 @@
     <string name="auto_crash">Absturzberichte automatisch senden</string>
     <string name="auto_crash_help">Anonymisiert: Fehlertypen und Codezeilen, App- und Android-Version. Kein Telefonmodell, keine Meldungstexte, keine Songs.</string>
     <string name="crash_sent_automatically">Ein Absturzbericht wurde gesendet (anonymisiert).</string>
+    <string name="credits_title">Open-Source-Danksagungen</string>
+    <string name="credits_intro">GuitarNest beruht auf der Arbeit vieler Menschen. Danke. GuitarNest selbst ist freie Software (GPL-3.0 oder später).</string>
+    <string name="credits_in_app">In der App</string>
+    <string name="credits_services">Online-Dienste (nur wenn du die Funktion nutzt)</string>
+    <string name="credits_tools">Werkzeuge zum Bauen und Testen (nicht in der App)</string>
+    <string name="credits_methods">Methoden und Formate</string>
+    <string name="credits_music">Quellen freier Musik</string>
 </resources>

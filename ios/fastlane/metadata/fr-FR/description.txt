@@ -19,4 +19,6 @@ Vie privée
 • Pas de base de morceaux, pas de téléchargement : les tablatures viennent de vous
 • Sauvegardes chiffrées, où vous voulez
 
+Construit avec des logiciels libres : Basic Pitch (Spotify, Apache-2.0), Kotlin, SwiftUI, MusicBrainz et d'autres. Liste complète dans l'app (À propos et autorisations → Crédits open source) et dans CREDITS.md.
+
 Cette app est développée avec l'aide de l'IA. Le mainteneur relit et teste tout le code.

@@ -25,4 +25,6 @@ Collega il tuo modello: un account cloud (Anthropic, OpenAI, Mistral, OpenRouter
 <li>Backup cifrati, dove vuoi</li>
 </ul>
 
+Creato con software libero: Basic Pitch (Spotify, Apache-2.0), Kotlin, Jetpack Compose, MusicBrainz e altro. Elenco completo nell'app (Informazioni e permessi → Crediti open source) e in CREDITS.md.
+
 Questa app è sviluppata con l'aiuto dell'IA. Il manutentore controlla e prova tutto il codice.

@@ -25,4 +25,6 @@ Conecta tu modelo: una cuenta en la nube (Anthropic, OpenAI, Mistral, OpenRouter
 <li>Copias cifradas, donde quieras</li>
 </ul>
 
+Hecho con software libre: Basic Pitch (Spotify, Apache-2.0), Kotlin, Jetpack Compose, MusicBrainz y más. Lista completa en la app (Información y permisos → Créditos de código abierto) y en CREDITS.md.
+
 Esta app se desarrolla con ayuda de IA. El mantenedor revisa y prueba todo el código.
