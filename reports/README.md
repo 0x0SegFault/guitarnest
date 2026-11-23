@@ -3,10 +3,8 @@
 A small Scaleway Serverless Function (Paris) that lets users report a problem or suggest a feature **without an account or an email**. Reports become issues in a **private** GitHub repository, where the maintainer reads them before anything is made public.
 
 ```
-App (no internet permission) ──opens──▶ browser ──▶ form page (this function)
-                                                     │  anti-spam puzzle solved in the browser
-                                                     ▼
-                                        issue in the private repo 0x0SegFault/guitarnest-reports
+GuitarNest app ──GET /challenge, POST /report──▶ this function ──▶ issue in the private repo 0x0SegFault/guitarnest-reports
+(or a browser ──▶ form page at / ──▶ same)        anti-spam puzzle solved on the phone (or in the browser)
 ```
 
 ## Privacy
@@ -53,8 +51,8 @@ App (no internet permission) ──opens──▶ browser ──▶ form page (t
 5. Deploy, open the function URL in a browser, send a test report, and check the private repository.
 6. Optional: Billing → set a budget alert (the free tier covers 1 million requests per month).
 
-### 3. Turn it on in the app
-Set `ANONYMOUS_FORM_URL` in `app/src/main/java/app/guitarnest/feedback/Feedback.kt` to the function URL, then release a new version. The app then offers "Anonymous form" in Settings → About and after a crash.
+### 3. Turn it on in the apps
+Set `SERVICE_URL` in `shared/src/commonMain/kotlin/app/guitarnest/report/Reports.kt` to the function URL (Android and iPhone use it), then release a new version. The app then offers "Send anonymously" in Settings → Report a problem or idea, and after a crash.
 
 ## Update
 Run the tests (`npm test`), package again (step 2), and upload the new `function.zip`.

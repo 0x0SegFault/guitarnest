@@ -54,3 +54,4 @@ __pycache__/
 ios/GuitarNest/Resources/*.lproj/
 ios/*.xcodeproj/
 ios/GuitarNest/Info.plist
+reports/function.zip
