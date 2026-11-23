@@ -48,15 +48,19 @@ struct MetronomeView: View {
                 if let pattern {
                     StrumRow(steps: pattern.steps, perBeat: Int(pattern.perBeat), active: position.map { $0.step * Int(pattern.perBeat) / 4 }, big: true)
                 }
-                choice(L10n.t("beats_per_bar"), options: [2, 3, 4, 5, 6, 7].map { ("\($0)", $0) }, selected: $beatsPerBar)
+                choice(L10n.t("beats_per_bar"), options: [2, 3, 4, 5, 6, 7, 12].map { ("\($0)", $0) }, selected: $beatsPerBar)
                 choice(L10n.t("clicks"), options: [("♩", 1), ("♪♪", 2), ("3", 3), ("♬♬", 4)], selected: $subdivisions)
                 VStack(alignment: .leading) {
                     Text(L10n.t("strumming_pattern")).font(.caption.bold()).foregroundStyle(.secondary)
                     Picker(L10n.t("strumming_pattern"), selection: $patternId) {
                         Text(L10n.t("none")).tag("")
-                        ForEach(Bridge.shared.presetPatterns(), id: \.id) { Text($0.name).tag($0.id) }
+                        ForEach(Bridge.shared.presetPatterns().filter { Bridge.shared.patternKind(pattern: $0) == "strum" }, id: \.id) { Text($0.name).tag($0.id) }
                     }
                     .pickerStyle(.menu)
+                    // A 12-beat flamenco compás sets 12 beats per bar, so its accents land on the right beats.
+                    .onChange(of: patternId) { _, _ in
+                        if let p = pattern, Bridge.shared.patternBeats(pattern: p) == 12 { beatsPerBar = 12 } else if beatsPerBar == 12 { beatsPerBar = 4 }
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Toggle(isOn: $trainer) {

@@ -34,6 +34,7 @@ struct SongView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {
                         header(song)
+                        chordStrip(song)
                         ForEach(Array(song.sections.enumerated()), id: \.offset) { s, section in
                             HStack(spacing: 8) {
                                 Text(section.name).font(.headline)
@@ -59,6 +60,7 @@ struct SongView: View {
                     if let key { withAnimation { proxy.scrollTo(key, anchor: .center) } }
                 }
             }
+            if let mine, !order.isEmpty { nowPlaying(song, order, mine) }
             controls(song, mine)
         }
         .navigationTitle(song.title)
@@ -101,6 +103,59 @@ struct SongView: View {
             }
             Divider()
         }
+    }
+
+    /// Diagrams of every chord in the song. Tap one for another way to play it; the song remembers it.
+    @ViewBuilder private func chordStrip(_ song: Song) -> some View {
+        let chords = Bridge.shared.chordsInSong(song: song)
+        if !chords.isEmpty {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L10n.t("chords_tap_hint")).font(.caption).foregroundStyle(.secondary)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 14) {
+                        ForEach(chords, id: \.self) { name in
+                            Button { model.save(Bridge.shared.nextShape(song: song, chord: name)) } label: {
+                                ChordDiagramView(name: name, shape: Bridge.shared.shapeFor(song: song, chord: name), width: 64, showText: true)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// While playing: the chord now (big; with a picking pattern the string to pick lights up) and the next chord.
+    private func nowPlaying(_ song: Song, _ order: [PlayedBar], _ position: MetronomePlayer.Position) -> some View {
+        let index = max(0, position.bar - 1) % order.count
+        let beat = Int32(position.beat)
+        let now = Bridge.shared.chordAt(order: order, index: Int32(index), beat: beat)
+        let next = Bridge.shared.nextChord(order: order, index: Int32(index), beat: beat)
+        let bar = order[index]
+        let pattern = song.pattern(id: bar.strum ?? "")
+        let shape = now.flatMap { Bridge.shared.shapeFor(song: song, chord: $0) }
+        let patternStep = pattern.map { position.step * Int($0.perBeat) / 4 } ?? 0
+        var pick: Int?
+        if let pattern, position.bar >= 1, Bridge.shared.patternKind(pattern: pattern) == "pick" {
+            let value = Int(Bridge.shared.pickString(pattern: pattern, step: Int32(patternStep), shape: shape))
+            pick = value >= 0 ? value : nil
+        }
+        return HStack(spacing: 20) {
+            if let now { ChordDiagramView(name: now, shape: shape, width: 104, highlight: pick, active: true) }
+            if let next {
+                VStack(spacing: 2) {
+                    Text(L10n.t("next_chord")).font(.caption2).foregroundStyle(.secondary)
+                    ChordDiagramView(name: next, shape: Bridge.shared.shapeFor(song: song, chord: next), width: 62)
+                }
+            }
+            if let pattern {
+                StrumRow(steps: pattern.steps, perBeat: Int(pattern.perBeat), active: position.bar >= 1 ? patternStep : nil)
+            }
+            Spacer()
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 6)
+        .background(Palette.card)
     }
 
     private func facts(_ song: Song) -> String {
@@ -181,16 +236,7 @@ struct SongView: View {
     }
 
     private func printSong(_ song: Song) {
-        let formatter = UISimpleTextPrintFormatter(text: Bridge.shared.printText(song: song))
-        formatter.font = .monospacedSystemFont(ofSize: 7.5, weight: .regular)
-        formatter.perPageContentInsets = UIEdgeInsets(top: 36, left: 36, bottom: 36, right: 36)
-        let controller = UIPrintInteractionController.shared
-        let info = UIPrintInfo(dictionary: nil)
-        info.jobName = song.title
-        info.outputType = .grayscale
-        controller.printInfo = info
-        controller.printFormatter = formatter
-        controller.present(animated: true)
+        SongPrinter.print(song)
     }
 
     private func export(_ song: Song) -> URL? {

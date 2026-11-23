@@ -42,15 +42,30 @@ struct StrumRow: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(steps.map { $0 == "D" ? "down" : $0 == "U" ? "up" : $0 == "x" ? "mute" : "rest" }.joined(separator: " "))
+        .accessibilityLabel(steps.map(Self.spoken).joined(separator: " "))
     }
 
+    private static func spoken(_ stroke: Character) -> String {
+        switch stroke {
+        case "D": return "down"
+        case "U": return "up"
+        case "x": return "mute"
+        case "R": return "rasgueado"
+        case "B": return "bass"
+        case "b": return "alternate bass"
+        case "-": return "rest"
+        default: return "string \(stroke)"
+        }
+    }
+
+    /// Strumming: arrows, R (rasgueado), × (muted). Picking: B (bass), b (alternate bass), string numbers.
     @ViewBuilder private func symbol(_ stroke: Character) -> some View {
         switch stroke {
         case "D": Image(systemName: "arrow.down")
         case "U": Image(systemName: "arrow.up")
         case "x": Text("×")
-        default: Text("·")
+        case "-": Text("·")
+        default: Text(String(stroke)).foregroundStyle(stroke == "R" ? Palette.inTune : Color.primary)
         }
     }
 }

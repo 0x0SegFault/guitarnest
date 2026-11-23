@@ -14,7 +14,12 @@ import app.guitarnest.listen.BasicPitch
 import app.guitarnest.practice.ClickTrack
 import app.guitarnest.practice.PRESET_PATTERNS
 import app.guitarnest.practice.SpeedTrainer
+import app.guitarnest.report.Reports
+import app.guitarnest.tab.ChordShape
+import app.guitarnest.tab.ChordShapes
 import app.guitarnest.tab.ExampleSong
+import app.guitarnest.tab.PlayAlong
+import app.guitarnest.tab.PlayedBar
 import app.guitarnest.tab.Level
 import app.guitarnest.tab.MidiImport
 import app.guitarnest.tab.MusicXmlImport
@@ -26,6 +31,7 @@ import app.guitarnest.tab.TextTab
 import app.guitarnest.tuner.NoteReading
 import app.guitarnest.tuner.Notes
 import app.guitarnest.tuner.PitchDetector
+import app.guitarnest.tuner.ToneSynth
 import app.guitarnest.tuner.Tuning
 import app.guitarnest.tuner.TunerTracker
 import app.guitarnest.tuner.readingOf
@@ -49,6 +55,7 @@ object Bridge {
     fun levelIndex(level: Level): Int = level.ordinal
 
     fun pattern(id: String, name: String, steps: String, perBeat: Int): StrumPattern = StrumPattern(id, name, steps, perBeat)
+
 
     // "repeat" is a Swift keyword: Swift reads and makes it through these.
     fun sectionRepeat(section: Section): Int = section.repeat
@@ -141,6 +148,40 @@ object Bridge {
 
     @Throws(Exception::class)
     fun basicPitch(model: ByteArray): BasicPitch = BasicPitch(model)
+
+    // Chord diagrams and play along
+    fun chordsInSong(song: Song): List<String> = PlayAlong.chordsInSong(song)
+    fun shapeFor(song: Song, chord: String): ChordShape? = ChordShapes.shapeFor(song, chord)
+    fun nextShape(song: Song, chord: String): Song = PlayAlong.nextShape(song, chord)
+    fun chordAt(order: List<PlayedBar>, index: Int, beat: Int): String? = PlayAlong.chordAt(order, index, beat)
+    fun nextChord(order: List<PlayedBar>, index: Int, beat: Int): String? = PlayAlong.nextChord(order, index, beat)
+    /** String index to pick (0 = low E), or -1 for none. */
+    fun pickString(pattern: StrumPattern, step: Int, shape: ChordShape?): Int = pattern.pickString(step, shape) ?: -1
+    fun shapeFrets(shape: ChordShape): List<Int> = shape.frets
+    fun shapeFirstFret(shape: ChordShape): Int = shape.firstFret
+    /** Barre as [fret, from string, to string], or empty. */
+    fun shapeBarre(shape: ChordShape): List<Int> = shape.barre?.let { listOf(it.first, it.second, it.third) } ?: emptyList()
+    fun shapeText(shape: ChordShape): String = shape.toString()
+    fun patternKind(pattern: StrumPattern): String = pattern.kind
+    fun patternBeats(pattern: StrumPattern): Int = pattern.beats
+    fun pattern(id: String, name: String, steps: String, perBeat: Int, kind: String): StrumPattern = StrumPattern(id, name, steps, perBeat, kind)
+
+    // Tuner reference sounds
+    fun pluck(frequency: Double, sampleRate: Int): FloatArray = ToneSynth.pluck(frequency, sampleRate)
+    fun fork(frequency: Double, sampleRate: Int): FloatArray = ToneSynth.fork(frequency, sampleRate)
+    fun frequencyOf(midi: Int, a4: Double): Double = Notes.frequencyOf(midi, a4)
+
+    // Reports
+    fun reportServiceUrl(): String? = Reports.SERVICE_URL
+    @Throws(Exception::class)
+    fun reportChallenge(body: String): Reports.Challenge = Reports.parseChallenge(body)
+    fun reportSolve(challenge: Reports.Challenge): Reports.Proof? = Reports.solve(challenge)
+    fun reportBody(kind: String, title: String, details: String, version: String, device: String, proof: Reports.Proof): String =
+        Reports.body(kind, title, details, version, device, proof)
+    fun reportGithubUrl(kind: String, title: String, details: String, version: String, device: String): String =
+        Reports.githubUrl(kind, title, details, version, device)
+    fun reportShareText(kind: String, title: String, details: String, version: String, device: String): String =
+        Reports.shareText(kind, title, details, version, device)
 
     /** Audio (mono, 22050 Hz) to a draft song. [progress] gets (windows done, total). */
     @Throws(Exception::class)

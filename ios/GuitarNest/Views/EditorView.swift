@@ -23,7 +23,14 @@ struct EditorView: View {
     @State private var notes = ""
     @State private var error: String?
 
-    struct PatternDraft: Identifiable { let id: String; var name: String; var steps: String; var perBeat: Int }
+    struct PatternDraft: Identifiable {
+        let id: String
+        var name: String
+        var steps: String
+        var perBeat: Int
+        var kind: String = "strum"
+        var picking: Bool { kind == "pick" }
+    }
     struct Draft: Identifiable { let id = UUID(); var name: String; var repeats: Int; var strum: String?; var text: String }
 
     var body: some View {
@@ -45,20 +52,31 @@ struct EditorView: View {
             }
             Section(L10n.t("strumming_patterns")) {
                 ForEach($patterns) { $p in
-                    HStack {
-                        TextField(L10n.t("name"), text: $p.name).frame(maxWidth: 110)
-                        TextField("D U x -", text: $p.steps)
-                            .font(.system(.body, design: .monospaced))
-                            .textInputAutocapitalization(.characters)
-                            .onChange(of: p.steps) { _, value in
-                                let clean = String(value.uppercased().replacingOccurrences(of: "X", with: "x").filter { "DUx-".contains($0) })
-                                if clean != value { p.steps = clean }
-                            }
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            TextField(L10n.t("name"), text: $p.name).frame(maxWidth: 110)
+                            TextField(p.picking ? "B b 1-6 -" : "D U R x -", text: $p.steps)
+                                .font(.system(.body, design: .monospaced))
+                                .textInputAutocapitalization(p.picking ? .never : .characters)
+                                .onChange(of: p.steps) { _, value in
+                                    let clean = Self.cleanSteps(value, picking: p.picking)
+                                    if clean != value { p.steps = clean }
+                                }
+                        }
+                        Picker("", selection: $p.kind) {
+                            Text(L10n.t("pattern_strum")).tag("strum")
+                            Text(L10n.t("pattern_pick")).tag("pick")
+                        }
+                        .pickerStyle(.segmented)
+                        .onChange(of: p.kind) { _, _ in p.steps = Self.cleanSteps(p.steps, picking: p.picking) }
+                        Text(L10n.t(p.picking ? "pattern_help_pick" : "pattern_help_strum")).font(.caption).foregroundStyle(.secondary)
                     }
                 }
                 .onDelete { patterns.remove(atOffsets: $0) }
                 ForEach(Bridge.shared.presetPatterns().filter { preset in !patterns.contains { $0.id == preset.id } }, id: \.id) { preset in
-                    Button("+ \(preset.name)") { patterns.append(PatternDraft(id: preset.id, name: preset.name, steps: preset.steps, perBeat: Int(preset.perBeat))) }
+                    Button("+ \(preset.name)") {
+                        patterns.append(PatternDraft(id: preset.id, name: preset.name, steps: preset.steps, perBeat: Int(preset.perBeat), kind: Bridge.shared.patternKind(pattern: preset)))
+                    }
                 }
             }
             Section {
@@ -92,6 +110,12 @@ struct EditorView: View {
         .onAppear(perform: load)
     }
 
+    /// Strumming: D U R x -; picking: B b 1-6 -.
+    static func cleanSteps(_ value: String, picking: Bool) -> String {
+        if picking { return String(value.filter { "Bb123456-".contains($0) }) }
+        return String(value.uppercased().replacingOccurrences(of: "X", with: "x").filter { "DURx-".contains($0) })
+    }
+
     private func load() {
         guard !loaded else { return }
         loaded = true
@@ -104,7 +128,7 @@ struct EditorView: View {
         capo = Int(song.capo)
         tempo = Int(song.tempo)
         beatsPerBar = Int(song.beatsPerBar)
-        patterns = song.patterns.map { PatternDraft(id: $0.id, name: $0.name, steps: $0.steps, perBeat: Int($0.perBeat)) }
+        patterns = song.patterns.map { PatternDraft(id: $0.id, name: $0.name, steps: $0.steps, perBeat: Int($0.perBeat), kind: Bridge.shared.patternKind(pattern: $0)) }
         sections = Bridge.shared.drafts(song: song).map { Draft(name: $0.name, repeats: Int(Bridge.shared.draftRepeat(draft: $0)), strum: $0.strum, text: $0.text) }
         notes = song.notes
     }
@@ -114,7 +138,7 @@ struct EditorView: View {
         let result = Bridge.shared.build(
             base: base, title: title, artist: artist, source: source, level: Bridge.shared.level(index: Int32(level)), tuning: tuning,
             capo: Int32(capo), tempo: Int32(tempo), beatsPerBar: Int32(beatsPerBar),
-            patterns: patterns.map { Bridge.shared.pattern(id: $0.id, name: $0.name, steps: $0.steps, perBeat: Int32($0.perBeat)) },
+            patterns: patterns.map { Bridge.shared.pattern(id: $0.id, name: $0.name, steps: $0.steps, perBeat: Int32($0.perBeat), kind: $0.kind) },
             sections: sections.map { Bridge.shared.draft(name: $0.name, repeats: Int32($0.repeats), strum: $0.strum, text: $0.text) },
             notes: notes
         )

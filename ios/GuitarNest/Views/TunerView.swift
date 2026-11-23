@@ -6,6 +6,7 @@ struct TunerView: View {
     @AppStorage("tuner.tuning") private var tuningId = "standard"
     @AppStorage("tuner.a4") private var a4 = 440
     @State private var locked: Int?
+    @State private var tones = TonePlayer()
 
     private var tuning: Tuning { Bridge.shared.tuningById(id: tuningId) ?? Bridge.shared.tuningPresets()[0] }
 
@@ -31,9 +32,12 @@ struct TunerView: View {
                     if let f = engine.frequency { Text(String(format: "· %.1f Hz", f)).foregroundStyle(.secondary) }
                 }
                 strings(reading, color)
+                Text(L10n.t("strings_hint")).font(.caption).foregroundStyle(.secondary)
                 HStack {
                     Text(L10n.t("reference_pitch"))
                     Spacer()
+                    Button { tones.fork(a4: Double(a4)) } label: { Image(systemName: "speaker.wave.2.fill") }
+                        .accessibilityLabel(L10n.t("play_reference", a4))
                     Stepper("A4 = \(a4) Hz", value: $a4, in: 415...466).fixedSize()
                 }
             }
@@ -75,6 +79,8 @@ struct TunerView: View {
             ForEach(Array(tuning.names.enumerated()), id: \.offset) { i, name in
                 let on = reading.string == i && (reading.cents != nil || locked == i)
                 Button {
+                    // Tap: hear the note and lock the string; tap again for automatic.
+                    if locked != i { tones.pluck(midi: Convert.strings(tuning)[i], a4: Double(a4)) }
                     locked = locked == i ? nil : i
                 } label: {
                     VStack(spacing: 0) {
