@@ -32,7 +32,7 @@
     <string name="back">Back</string>
     <string name="more">More</string>
     <string name="search_library">Search your songs</string>
-    <string name="library_empty">No songs yet. Write a tab, or import a GuitarNest file (.gnt) or MusicXML (.musicxml, .mxl).</string>
+    <string name="library_empty">No songs yet. Write a tab, make one from audio, or import a GuitarNest, MusicXML or MIDI file.</string>
     <string name="new_song">New song</string>
     <string name="edit_song">Edit song</string>
     <string name="import_file">Import file</string>
@@ -186,4 +186,5 @@
     <string name="openrouter_help">OpenRouter gives one account for many models (Claude, GPT, Gemini, Llama, Mistral…). Pay-as-you-go. GuitarNest gets a key you can delete at any time on openrouter.ai.</string>
     <string name="ai_or_manual">Or enter an address and key</string>
     <string name="openrouter_signed_in">Signed in with OpenRouter. Model: Auto (you can change it).</string>
+    <string name="open_music">Free music to import</string>
 </resources>

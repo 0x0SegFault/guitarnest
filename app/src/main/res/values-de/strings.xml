@@ -39,7 +39,7 @@
     <string name="back">Zurück</string>
     <string name="more">Mehr</string>
     <string name="search_library">Deine Songs durchsuchen</string>
-    <string name="library_empty">Noch keine Songs. Schreibe eine Tabulatur oder importiere eine GuitarNest-Datei (.gnt) oder MusicXML (.musicxml, .mxl).</string>
+    <string name="library_empty">Noch keine Songs. Schreibe eine Tabulatur, erstelle eine aus Audio oder importiere eine GuitarNest-, MusicXML- oder MIDI-Datei.</string>
     <string name="new_song">Neuer Song</string>
     <string name="edit_song">Song bearbeiten</string>
     <string name="import_file">Datei importieren</string>
@@ -171,4 +171,5 @@
     <string name="openrouter_help">OpenRouter bietet ein Konto für viele Modelle (Claude, GPT, Gemini, Llama, Mistral…). Bezahlung nach Nutzung. GuitarNest erhält einen Schlüssel, den du jederzeit auf openrouter.ai löschen kannst.</string>
     <string name="ai_or_manual">Oder Adresse und Schlüssel eingeben</string>
     <string name="openrouter_signed_in">Mit OpenRouter angemeldet. Modell: Auto (änderbar).</string>
+    <string name="open_music">Freie Musik zum Importieren</string>
 </resources>

@@ -16,6 +16,7 @@ import app.guitarnest.practice.PRESET_PATTERNS
 import app.guitarnest.practice.SpeedTrainer
 import app.guitarnest.tab.ExampleSong
 import app.guitarnest.tab.Level
+import app.guitarnest.tab.MidiImport
 import app.guitarnest.tab.MusicXmlImport
 import app.guitarnest.tab.Section
 import app.guitarnest.tab.Song
@@ -75,6 +76,11 @@ object Bridge {
         val problems = SongCodec.validate(song)
         return if (problems.isEmpty()) BuildResult(song, null) else BuildResult(null, problems.first())
     }
+
+    /** A file's bytes: MIDI, or a .gnt / MusicXML text. */
+    @Throws(Exception::class)
+    fun importBytes(bytes: ByteArray, name: String, source: String): Song =
+        if (MidiImport.isMidi(bytes)) MidiImport.import(bytes, name, source) else importText(bytes.decodeToString(), source)
 
     /** A .gnt or MusicXML text (compressed .mxl files are unpacked by the platform first). */
     @Throws(Exception::class)

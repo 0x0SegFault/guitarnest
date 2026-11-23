@@ -67,8 +67,7 @@ final class AppModel: ObservableObject {
         defer { if access { url.stopAccessingSecurityScopedResource() } }
         let data = try Data(contentsOf: url)
         if data.starts(with: [0x50, 0x4B]) { throw AppError(L10n.t("ios_mxl_not_supported")) }
-        guard let text = String(data: data, encoding: .utf8) else { throw AppError(L10n.t("import_failed")) }
-        var song = try Bridge.shared.importText(text: text, source: "Imported file")
+        var song = try Bridge.shared.importBytes(bytes: Convert.bytes(data), name: url.deletingPathExtension().lastPathComponent, source: "Imported file")
         if !song.id.isEmpty && self.song(id: song.id) != nil { song = Bridge.shared.withId(song: song, id: "") }
         return save(song)
     }

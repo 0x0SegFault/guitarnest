@@ -48,7 +48,7 @@ struct LibraryView: View {
                 .accessibilityLabel(L10n.t("settings"))
             }
         }
-        .fileImporter(isPresented: $importing, allowedContentTypes: [.json, .xml, .data, .item]) { result in
+        .fileImporter(isPresented: $importing, allowedContentTypes: [.json, .xml, .midi, .data, .item]) { result in
             guard case .success(let url) = result else { return }
             do {
                 let song = try model.importFile(url)

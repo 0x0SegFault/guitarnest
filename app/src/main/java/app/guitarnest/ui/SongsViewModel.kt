@@ -119,8 +119,8 @@ class SongsViewModel(app: Application) : AndroidViewModel(app) {
         refresh()
     }
 
-    fun import(bytes: ByteArray, done: (Song) -> Unit) = viewModelScope.launch {
-        val result = withContext(Dispatchers.IO) { runCatching { repo.import(bytes) } }
+    fun import(bytes: ByteArray, name: String, done: (Song) -> Unit) = viewModelScope.launch {
+        val result = withContext(Dispatchers.IO) { runCatching { repo.import(bytes, name) } }
         result.onSuccess { refresh(); done(it) }.onFailure { _message.value = it.message }
     }
 

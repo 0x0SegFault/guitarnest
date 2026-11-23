@@ -89,7 +89,8 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
     val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri ?: return@rememberLauncherForActivityResult
         val bytes = runCatching { context.contentResolver.openInputStream(uri)?.use { it.readBytes() } }.getOrNull()
-        if (bytes == null) vm.showMessage(context.getString(R.string.import_failed)) else vm.import(bytes) { openId = it.id; tab = Tab.SONGS }
+        val name = uri.lastPathSegment?.substringAfterLast('/')?.substringBeforeLast('.') ?: ""
+        if (bytes == null) vm.showMessage(context.getString(R.string.import_failed)) else vm.import(bytes, name) { openId = it.id; tab = Tab.SONGS }
     }
     val exporter = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
         val song = open ?: return@rememberLauncherForActivityResult
@@ -263,6 +264,9 @@ private fun AboutSheet() {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         TextButton(onClick = {
+            runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, OPEN_MUSIC_URL.toUri())) }
+        }) { Text(stringResource(R.string.open_music)) }
+        TextButton(onClick = {
             // Some de-Googled phones have no browser.
             runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, SOURCE_URL.toUri())) }
         }) { Text(stringResource(R.string.source_code)) }
@@ -270,3 +274,4 @@ private fun AboutSheet() {
 }
 
 private const val SOURCE_URL = "https://github.com/0x0SegFault/guitarnest"
+private const val OPEN_MUSIC_URL = "https://github.com/0x0SegFault/guitarnest/blob/main/docs/OPEN_MUSIC.md"

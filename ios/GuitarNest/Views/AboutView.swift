@@ -14,6 +14,7 @@ struct AboutView: View {
                 Text(L10n.t("copyright_note")).font(.caption)
                 Text("Basic Pitch model © Spotify AB, Apache-2.0.").font(.caption)
                 Text(L10n.t("version", Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")).font(.caption)
+                if let url = URL(string: "https://github.com/0x0SegFault/guitarnest/blob/main/docs/OPEN_MUSIC.md") { Link(L10n.t("open_music"), destination: url) }
                 if let url = URL(string: "https://github.com/0x0SegFault/guitarnest") { Link(L10n.t("source_code"), destination: url) }
             }
         }

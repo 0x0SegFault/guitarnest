@@ -3,6 +3,7 @@ package app.guitarnest.data
 import android.content.Context
 import android.util.AtomicFile
 import app.guitarnest.tab.Song
+import app.guitarnest.tab.MidiImport
 import app.guitarnest.tab.MusicXmlImport
 import app.guitarnest.tab.SongCodec
 import app.guitarnest.tab.TabFormatException
@@ -39,11 +40,12 @@ class SongRepository(context: Context) {
     }
 
     /**
-     * Imports a .gnt, MusicXML (.musicxml, .xml) or compressed MusicXML (.mxl) file.
+     * Imports a .gnt, MusicXML (.musicxml, .xml), compressed MusicXML (.mxl) or MIDI (.mid) file.
      * A song with the same id is kept as a copy, not overwritten.
      */
-    fun import(bytes: ByteArray): Song {
+    fun import(bytes: ByteArray, name: String = ""): Song {
         val song = when {
+            MidiImport.isMidi(bytes) -> MidiImport.import(bytes, name, IMPORTED)
             bytes.size > 4 && bytes[0] == 'P'.code.toByte() && bytes[1] == 'K'.code.toByte() -> MusicXmlImport.import(unzipMusicXml(bytes), IMPORTED)
             bytes.decodeToString().trimStart().startsWith("<") -> MusicXmlImport.import(bytes.decodeToString(), IMPORTED)
             else -> SongCodec.decode(bytes.decodeToString())
