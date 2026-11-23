@@ -10,7 +10,7 @@ struct LibraryView: View {
     @State private var sheet: Sheet?
 
     enum Sheet: String, Identifiable {
-        case ai, ask, search, backup, report, about
+        case ai, ask, search, backup, report, myReports, about
         var id: String { rawValue }
     }
 
@@ -44,6 +44,7 @@ struct LibraryView: View {
                     Button(L10n.t("ai_connection")) { sheet = .ai }
                     Button(L10n.t("backup_title")) { sheet = .backup }
                     Button(L10n.t("report_title")) { sheet = .report }
+                    Button(L10n.t("my_reports")) { sheet = .myReports }
                     Button(L10n.t("about")) { sheet = .about }
                 } label: { Image(systemName: "gearshape") }
                 .accessibilityLabel(L10n.t("settings"))
@@ -69,6 +70,7 @@ struct LibraryView: View {
                 }
                 case .backup: BackupView()
                 case .report: ReportView()
+                case .myReports: MyReportsView()
                 case .about: AboutView()
                 }
             }

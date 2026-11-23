@@ -176,8 +176,14 @@ object Bridge {
     @Throws(Exception::class)
     fun reportChallenge(body: String): Reports.Challenge = Reports.parseChallenge(body)
     fun reportSolve(challenge: Reports.Challenge): Reports.Proof? = Reports.solve(challenge)
-    fun reportBody(kind: String, title: String, details: String, version: String, device: String, proof: Reports.Proof): String =
-        Reports.body(kind, title, details, version, device, proof)
+    fun reportBody(kind: String, title: String, details: String, version: String, device: String, proof: Reports.Proof, followUp: String): String =
+        Reports.body(kind, title, details, version, device, proof, followUp)
+    fun reportPreview(kind: String, title: String, details: String, version: String, device: String): String =
+        Reports.preview(kind, title, details, version, device)
+    fun reportSent(code: String, kind: String, title: String, day: Long): Reports.Sent = Reports.Sent(code, kind, title, day)
+    fun reportEncodeSent(list: List<Reports.Sent>): String = Reports.encodeSent(list)
+    fun reportDecodeSent(text: String): List<Reports.Sent> = Reports.decodeSent(text)
+    fun reportParseStatus(body: String): Reports.Status = Reports.parseStatus(body)
     fun reportGithubUrl(kind: String, title: String, details: String, version: String, device: String): String =
         Reports.githubUrl(kind, title, details, version, device)
     fun reportShareText(kind: String, title: String, details: String, version: String, device: String): String =

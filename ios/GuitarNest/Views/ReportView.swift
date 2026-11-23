@@ -31,6 +31,10 @@ struct ReportView: View {
             TextField(L10n.t("report_details"), text: $details, axis: .vertical).lineLimit(4...10)
             Toggle(L10n.t("report_with_device", "GuitarNest \(version) · \(UIDevice.current.model), iOS \(UIDevice.current.systemVersion)"), isOn: $withDevice)
                 .font(.caption)
+            Section(L10n.t("report_preview")) {
+                Text(Bridge.shared.reportPreview(kind: kind, title: title, details: details, version: version, device: device))
+                    .font(.system(size: 11, design: .monospaced))
+            }
             Text(L10n.t(serviceUrl == nil ? "report_not_ready" : "report_privacy")).font(.caption).foregroundStyle(.secondary)
             if let error { Text(error).foregroundStyle(Palette.off) }
             if serviceUrl != nil {
@@ -62,7 +66,8 @@ struct ReportView: View {
         guard let base = serviceUrl else { return }
         sending = true
         error = nil
-        let body = (kind, title, details, version, device)
+        let body = (kind, title.trimmingCharacters(in: .whitespaces), details, version, device)
+        let code = ReportStore.newCode()
         Task {
             do {
                 let (challengeData, _) = try await URLSession.shared.data(from: URL(string: base + "/challenge")!)
@@ -72,9 +77,11 @@ struct ReportView: View {
                 var request = URLRequest(url: URL(string: base + "/report")!)
                 request.httpMethod = "POST"
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.httpBody = Data(Bridge.shared.reportBody(kind: body.0, title: body.1, details: body.2, version: body.3, device: body.4, proof: proof).utf8)
+                let json = Bridge.shared.reportBody(kind: body.0, title: body.1, details: body.2, version: body.3, device: body.4, proof: proof, followUp: code)
+                request.httpBody = Data(json.utf8)
                 let (_, response) = try await URLSession.shared.data(for: request)
                 guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw AppError("The report service did not accept the report.") }
+                ReportStore.add(code: code, kind: body.0, title: body.1)
                 model.message = L10n.t("report_sent")
                 dismiss()
             } catch {
@@ -84,3 +91,43 @@ struct ReportView: View {
         }
     }
 }
+
+/// Reports sent from this iPhone with their status. The status is asked only while this list is open.
+struct MyReportsView: View {
+    @State private var sent = ReportStore.sent()
+    @State private var status: [String: Reports.Status] = [:]
+
+    var body: some View {
+        List {
+            Text(L10n.t("my_reports_help")).font(.caption).foregroundStyle(.secondary)
+            if sent.isEmpty { Text(L10n.t("my_reports_empty")) }
+            ForEach(sent, id: \.code) { report in
+                VStack(alignment: .leading, spacing: 4) {
+                    Text((report.kind == "bug" ? "🐞 " : "💡 ") + report.title).font(.headline)
+                    Text(label(status[report.code]?.status)).font(.caption).foregroundStyle(.secondary)
+                    if let link = status[report.code]?.public, let url = URL(string: link) {
+                        Link(L10n.t("status_open_public"), destination: url).font(.caption)
+                    }
+                }
+            }
+        }
+        .navigationTitle(L10n.t("my_reports"))
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            for report in sent { status[report.code] = await ReportStore.status(report.code) }
+        }
+    }
+
+    private func label(_ status: String?) -> String {
+        switch status {
+        case nil: return L10n.t("working")
+        case "received": return L10n.t("status_received")
+        case "published": return L10n.t("status_published")
+        case "closed": return L10n.t("status_closed")
+        case "declined": return L10n.t("status_declined")
+        case "offline": return L10n.t("status_offline")
+        default: return L10n.t("status_sent")
+        }
+    }
+}
+
