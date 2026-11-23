@@ -175,4 +175,11 @@
     <string name="ai_or_manual">Ou saisissez une adresse et une clé</string>
     <string name="openrouter_signed_in">Connecté avec OpenRouter. Modèle : Auto (modifiable).</string>
     <string name="open_music">Musique libre à importer</string>
+    <string name="chords_tap_hint">Accords. Touchez un diagramme pour une autre position.</string>
+    <string name="next_chord">Suivant</string>
+    <string name="pattern_strum">Rythmique</string>
+    <string name="pattern_pick">Arpège (doigts)</string>
+    <string name="pattern_help_strum">D bas, U haut, R rasgueado, x étouffé, - silence</string>
+    <string name="pattern_help_pick">B basse, b basse alternée, 1–6 corde (1 = mi aigu), - silence</string>
+    <string name="chords_in_song">Accords</string>
 </resources>

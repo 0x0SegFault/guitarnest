@@ -36,6 +36,8 @@ data class Song(
     val patterns: List<StrumPattern> = emptyList(),
     val sections: List<Section> = emptyList(),
     val notes: String = "",
+    /** The player's chosen chord diagrams: chord name to shape, for example "G" to "320003" (see [ChordShape]). */
+    val shapes: Map<String, String> = emptyMap(),
 ) {
     fun tuningNotes(): Tuning? = Tuning.byId(tuning) ?: run {
         val parts = tuning.trim().split(Regex("\\s+"))
@@ -60,17 +62,41 @@ data class PlayedBar(val section: Int, val bar: Int, val pass: Int, val content:
 }
 
 /**
- * A strumming pattern. [steps] has one character per subdivision:
- * D = down, U = up, x = muted strum, - = no stroke (hand still moves).
+ * A strumming or fingerpicking pattern, one character per subdivision.
+ * Strumming ([kind] "strum"): D = down, U = up, R = rasgueado (flamenco fan of the fingers), x = muted strum, - = no stroke.
+ * Fingerpicking ([kind] "pick"): B = bass string of the chord, b = alternate bass, 1-6 = string (1 = high E), - = rest.
  */
 @Serializable
 data class StrumPattern(
     val id: String,
     val name: String = id,
     val steps: String,
-    /** Subdivisions per beat: 2 = eighth notes, 4 = sixteenth notes. */
+    /** Subdivisions per beat: 1 = quarter notes, 2 = eighth notes, 4 = sixteenth notes. */
     val perBeat: Int = 2,
+    val kind: String = STRUM,
 ) {
+    val picking: Boolean get() = kind == PICK
+
+    /** Beats one round of the pattern takes (12 for a flamenco compás). */
+    val beats: Int get() = (steps.length / perBeat.coerceAtLeast(1)).coerceAtLeast(1)
+
+    /** String index (0 = low E) to pluck at [step] for a chord [shape], or null for a rest. */
+    fun pickString(step: Int, shape: ChordShape?): Int? {
+        val c = strokeAt(step)
+        val bass = shape?.frets?.indexOfFirst { it >= 0 }?.takeIf { it >= 0 } ?: 0
+        return when (c) {
+            'B' -> bass
+            // Alternate bass: from the 6th or 5th string the thumb goes to the 4th; else the next higher string.
+            'b' -> if (bass <= 1) 2 else (bass + 1).coerceAtMost(5)
+            in '1'..'6' -> 6 - (c - '0')
+            else -> null
+        }
+    }
+
+    companion object {
+        const val STRUM = "strum"
+        const val PICK = "pick"
+    }
     /** Stroke at a subdivision; the pattern repeats over the bar. */
     fun strokeAt(step: Int): Char = if (steps.isEmpty()) '-' else steps[step.mod(steps.length)]
 

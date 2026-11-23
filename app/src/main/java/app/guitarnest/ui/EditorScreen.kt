@@ -99,14 +99,25 @@ fun EditorScreen(draft: SongDraft, error: String?, modifier: Modifier = Modifier
 
         Label(R.string.strumming_patterns)
         draft.patterns.forEachIndexed { i, p ->
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(p.name, { draft.patterns[i] = p.copy(name = it) }, Modifier.width(110.dp), singleLine = true, label = { Text(stringResource(R.string.name)) })
-                OutlinedTextField(
-                    p.steps, { v -> draft.patterns[i] = p.copy(steps = v.uppercase().replace('X', 'x').filter { it in "DUx-" }) },
-                    Modifier.weight(1f), singleLine = true, label = { Text("D U x -") }, textStyle = mono,
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
-                )
-                IconButton(onClick = { draft.patterns.removeAt(i) }) { Icon(Icons.Outlined.Delete, stringResource(R.string.delete)) }
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(p.name, { draft.patterns[i] = p.copy(name = it) }, Modifier.width(110.dp), singleLine = true, label = { Text(stringResource(R.string.name)) })
+                    val allowed = if (p.picking) "Bb123456-" else "DURx-"
+                    OutlinedTextField(
+                        p.steps, { v -> draft.patterns[i] = p.copy(steps = (if (p.picking) v else v.uppercase().replace('X', 'x')).filter { it in allowed }) },
+                        Modifier.weight(1f), singleLine = true, label = { Text(if (p.picking) "B b 1-6 -" else "D U R x -") }, textStyle = mono,
+                        keyboardOptions = KeyboardOptions(capitalization = if (p.picking) KeyboardCapitalization.None else KeyboardCapitalization.Characters),
+                    )
+                    IconButton(onClick = { draft.patterns.removeAt(i) }) { Icon(Icons.Outlined.Delete, stringResource(R.string.delete)) }
+                }
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    FilterChip(selected = !p.picking, onClick = { draft.patterns[i] = p.copy(kind = StrumPattern.STRUM, steps = p.steps.filter { it in "DURx-" }) },
+                        label = { Text(stringResource(R.string.pattern_strum)) })
+                    FilterChip(selected = p.picking, onClick = { draft.patterns[i] = p.copy(kind = StrumPattern.PICK, steps = p.steps.filter { it in "Bb123456-" }) },
+                        label = { Text(stringResource(R.string.pattern_pick)) })
+                }
+                Text(stringResource(if (p.picking) R.string.pattern_help_pick else R.string.pattern_help_strum),
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {

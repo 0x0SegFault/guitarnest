@@ -1,6 +1,8 @@
 package app.guitarnest.ui
 
 import android.content.Intent
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.DropdownMenu
@@ -42,6 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import app.guitarnest.R
 import app.guitarnest.data.PracticeEntry
+import app.guitarnest.tab.ChordShapes
+import app.guitarnest.tab.PlayAlong
+import app.guitarnest.tab.PlayedBar
 import app.guitarnest.tab.Song
 import java.net.URLEncoder
 
@@ -65,6 +70,7 @@ fun SongScreen(song: Song, playing: Playing?, log: List<PracticeEntry>, vm: Song
     Column(modifier) {
         Column(Modifier.weight(1f).verticalScroll(scroll).padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Header(song, log)
+            ChordStrip(song) { vm.save(PlayAlong.nextShape(song, it)) }
             song.sections.forEachIndexed { s, section ->
                 val pattern = song.pattern(section.strum)
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -85,6 +91,7 @@ fun SongScreen(song: Song, playing: Playing?, log: List<PracticeEntry>, vm: Song
             if (song.notes.isNotBlank()) Text(song.notes, style = MaterialTheme.typography.bodyMedium)
             FindOnline(song)
         }
+        if (mine != null && order.isNotEmpty()) NowPlaying(song, order, mine)
         Controls(song, mine, options, onTempo = { tempoPercent = it }, onLoop = { loop = it }, onTrainer = { trainer = it },
             onPlay = { vm.startSong(song, options) }, onStop = vm::stop)
     }
@@ -129,6 +136,47 @@ private fun FindOnline(song: Song) {
     androidx.compose.material3.TextButton(onClick = {
         runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, "https://duckduckgo.com/?q=$query".toUri())) }
     }) { Text(stringResource(R.string.find_tabs_browser)) }
+}
+
+/** Diagrams of every chord in the song. Tap one to see another way to play it; the song remembers it. */
+@Composable
+private fun ChordStrip(song: Song, onNext: (String) -> Unit) {
+    val chords = PlayAlong.chordsInSong(song)
+    if (chords.isEmpty()) return
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(stringResource(R.string.chords_tap_hint), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            chords.forEach { name ->
+                val shape = ChordShapes.shapeFor(song, name)
+                Box(Modifier.clickable { onNext(name) }.padding(4.dp)) {
+                    ChordDiagram(name, shape, 64.dp, note = shape?.toString())
+                }
+            }
+        }
+    }
+}
+
+/** While playing: the chord now (big; with a picking pattern the string to pick lights up) and the next chord. */
+@Composable
+private fun NowPlaying(song: Song, order: List<PlayedBar>, playing: Playing) {
+    val index = playing.bar.coerceAtLeast(0) % order.size
+    val bar = order[index]
+    val now = PlayAlong.chordAt(order, index, playing.beat)
+    val next = PlayAlong.nextChord(order, index, playing.beat)
+    val pattern = song.pattern(bar.strum)
+    val shape = now?.let { ChordShapes.shapeFor(song, it) }
+    val pick = if (pattern?.picking == true && playing.bar >= 0) pattern.pickString(patternStep(pattern, playing.step), shape) else null
+    Surface(tonalElevation = 1.dp) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+            if (now != null) ChordDiagram(now, shape, 104.dp, highlight = pick, active = true)
+            if (next != null) Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(stringResource(R.string.next_chord), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                ChordDiagram(next, ChordShapes.shapeFor(song, next), 62.dp)
+            }
+            if (pattern != null) StrumRow(pattern, active = if (playing.bar >= 0) patternStep(pattern, playing.step) else null)
+        }
+    }
 }
 
 @Composable

@@ -175,4 +175,11 @@
     <string name="ai_or_manual">Oppure inserisci indirizzo e chiave</string>
     <string name="openrouter_signed_in">Accesso con OpenRouter eseguito. Modello: Auto (modificabile).</string>
     <string name="open_music">Musica libera da importare</string>
+    <string name="chords_tap_hint">Accordi. Tocca un diagramma per un\'altra posizione.</string>
+    <string name="next_chord">Prossimo</string>
+    <string name="pattern_strum">Ritmica</string>
+    <string name="pattern_pick">Arpeggio (fingerpicking)</string>
+    <string name="pattern_help_strum">D giù, U su, R rasgueado, x stoppato, - pausa</string>
+    <string name="pattern_help_pick">B basso, b basso alternato, 1–6 corda (1 = mi cantino), - pausa</string>
+    <string name="chords_in_song">Accordi</string>
 </resources>

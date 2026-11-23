@@ -135,7 +135,10 @@ object TextTab {
         val tuning = song.tuningNotes()?.names?.joinToString(" ") { it.dropLast(1) } ?: song.tuning
         add("Tuning: $tuning   Capo: ${if (song.capo == 0) "none" else song.capo}   Tempo: ${song.tempo} BPM   ${song.beatsPerBar}/4")
         if (song.source.isNotBlank()) add("Tab: ${song.source}")
-        song.patterns.forEach { add("Strumming ${it.name}: ${strumText(it)}") }
+        song.patterns.forEach { add((if (it.picking) "Picking" else "Strumming") + " ${it.name}: ${strumText(it)}") }
+        // Chord shapes, lowest string first (x = not played). Computed by GuitarNest, free to use.
+        val chords = PlayAlong.chordsInSong(song).mapNotNull { name -> ChordShapes.shapeFor(song, name)?.let { "$name $it" } }
+        if (chords.isNotEmpty()) chords.chunked(6).forEachIndexed { i, row -> add((if (i == 0) "Chords: " else "        ") + row.joinToString("   ")) }
         add("")
         val barWidth = 1 + song.beatsPerBar * STEPS_PER_BEAT * CELL + 1
         val barsPerLine = ((width - 2) / barWidth).coerceAtLeast(1)
@@ -162,6 +165,6 @@ object TextTab {
 
     /** "D - D U - U D U" with arrows for display. */
     fun strumText(pattern: StrumPattern): String = pattern.steps.map {
-        when (it) { 'D' -> "↓"; 'U' -> "↑"; 'x' -> "×"; else -> "·" }
+        when (it) { 'D' -> "↓"; 'U' -> "↑"; 'x' -> "×"; '-' -> "·"; else -> it.toString() }
     }.joinToString(" ")
 }

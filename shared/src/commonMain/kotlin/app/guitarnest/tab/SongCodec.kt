@@ -34,8 +34,13 @@ object SongCodec {
         if (song.beatsPerBar !in 1..12) add("Beats per bar must be 1 to 12")
         song.patterns.forEach { p ->
             if (p.perBeat !in 1..4) add("Pattern ${p.id}: 1 to 4 steps per beat")
-            if (p.steps.any { it !in "DUx-" }) add("Pattern ${p.id}: use only D, U, x and -")
+            when (p.kind) {
+                StrumPattern.STRUM -> if (p.steps.any { it !in "DURx-" }) add("Pattern ${p.id}: use only D, U, R, x and -")
+                StrumPattern.PICK -> if (p.steps.any { it !in "Bb123456-" }) add("Pattern ${p.id}: use only B, b, 1-6 and -")
+                else -> add("Pattern ${p.id}: kind must be strum or pick")
+            }
         }
+        song.shapes.forEach { (chord, shape) -> if (ChordShape.parse(shape) == null) add("Chord $chord: shape $shape is not valid") }
         val ids = song.patterns.map { it.id }.toSet()
         song.sections.forEach { s ->
             if (s.strum != null && s.strum !in ids) add("Section ${s.name}: unknown pattern ${s.strum}")

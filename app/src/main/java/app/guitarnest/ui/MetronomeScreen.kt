@@ -92,7 +92,7 @@ fun MetronomeScreen(settings: MetronomeSettings, playing: Playing?, vm: SongsVie
         settings.pattern?.let { p -> StrumRow(p, active = mine?.let { patternStep(p, it.step) }, big = true) }
         Label(R.string.beats_per_bar)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            listOf(2, 3, 4, 5, 6, 7).forEach { n ->
+            listOf(2, 3, 4, 5, 6, 7, 12).forEach { n ->
                 FilterChip(selected = settings.beatsPerBar == n, onClick = { vm.updateMetronome { it.copy(beatsPerBar = n) } }, label = { Text("$n") })
             }
         }
@@ -107,8 +107,11 @@ fun MetronomeScreen(settings: MetronomeSettings, playing: Playing?, vm: SongsVie
         Label(R.string.strumming_pattern)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             FilterChip(selected = settings.pattern == null, onClick = { vm.updateMetronome { it.copy(pattern = null) } }, label = { Text(stringResource(R.string.none)) })
-            PRESET_PATTERNS.forEach { p ->
-                FilterChip(selected = settings.pattern?.id == p.id, onClick = { vm.updateMetronome { it.copy(pattern = p) } }, label = { Text(p.name) })
+            // A 12-beat flamenco compás sets 12 beats per bar, so its accents land on the right beats.
+            PRESET_PATTERNS.filter { !it.picking }.forEach { p ->
+                FilterChip(selected = settings.pattern?.id == p.id, onClick = {
+                    vm.updateMetronome { it.copy(pattern = p, beatsPerBar = if (p.beats == 12) 12 else if (it.beatsPerBar == 12) 4 else it.beatsPerBar) }
+                }, label = { Text(p.name) })
             }
         }
 

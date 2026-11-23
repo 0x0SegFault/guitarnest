@@ -187,4 +187,11 @@
     <string name="ai_or_manual">Or enter an address and key</string>
     <string name="openrouter_signed_in">Signed in with OpenRouter. Model: Auto (you can change it).</string>
     <string name="open_music">Free music to import</string>
+    <string name="chords_tap_hint">Chords. Tap a diagram for another way to play it.</string>
+    <string name="next_chord">Next</string>
+    <string name="pattern_strum">Strumming</string>
+    <string name="pattern_pick">Fingerpicking</string>
+    <string name="pattern_help_strum">D down, U up, R rasgueado, x muted, - rest</string>
+    <string name="pattern_help_pick">B bass, b alternate bass, 1–6 string (1 = high E), - rest</string>
+    <string name="chords_in_song">Chords</string>
 </resources>

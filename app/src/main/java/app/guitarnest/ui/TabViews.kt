@@ -29,11 +29,14 @@ import app.guitarnest.tab.Bar
 import app.guitarnest.tab.StrumPattern
 import app.guitarnest.tab.TextTab
 
-/** Strumming arrows; the [active] step is highlighted while playing. */
+/**
+ * A pattern, one cell per step; the [active] step is highlighted while playing.
+ * Strumming: arrows (R = rasgueado, × = muted). Picking: B (bass), b (alternate bass), string numbers.
+ */
 @Composable
 fun StrumRow(pattern: StrumPattern, modifier: Modifier = Modifier, active: Int? = null, big: Boolean = false) {
     val description = pattern.name + ": " + pattern.steps.map {
-        when (it) { 'D' -> "down"; 'U' -> "up"; 'x' -> "mute"; else -> "rest" }
+        when (it) { 'D' -> "down"; 'U' -> "up"; 'x' -> "mute"; 'R' -> "rasgueado"; 'B' -> "bass"; 'b' -> "alternate bass"; '-' -> "rest"; else -> "string $it" }
     }.joinToString(" ")
     Row(modifier.semantics { contentDescription = description }, horizontalArrangement = Arrangement.spacedBy(if (big) 6.dp else 2.dp)) {
         pattern.steps.forEachIndexed { i, c ->
@@ -55,7 +58,12 @@ fun StrumRow(pattern: StrumPattern, modifier: Modifier = Modifier, active: Int? 
                         if (c == 'D') Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward, null,
                         tint = tint, modifier = Modifier.size(if (big) 26.dp else 15.dp),
                     )
-                    else -> Text(if (c == 'x') "×" else "·", fontSize = if (big) 22.sp else 13.sp, fontWeight = FontWeight.Bold, color = tint)
+                    else -> Text(
+                        when (c) { 'x' -> "×"; '-' -> "·"; else -> c.toString() },
+                        fontSize = if (big) 20.sp else 12.sp,
+                        fontWeight = if (onBeat || c == 'R') FontWeight.ExtraBold else FontWeight.Bold,
+                        color = if (c == 'R' && !on) MaterialTheme.colorScheme.tertiary else tint,
+                    )
                 }
             }
         }

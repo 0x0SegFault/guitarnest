@@ -85,7 +85,7 @@ data class SpeedTrainer(val start: Int, val target: Int, val step: Int = 5, val 
     }
 }
 
-/** Common strumming patterns (generic rhythms, not from any song). */
+/** Common strumming and fingerpicking patterns (generic rhythms, not from any song). */
 val PRESET_PATTERNS = listOf(
     app.guitarnest.tab.StrumPattern("downs", "Downstrokes", "D-D-D-D-"),
     app.guitarnest.tab.StrumPattern("folk", "Folk", "D-DU-UDU"),
@@ -93,6 +93,16 @@ val PRESET_PATTERNS = listOf(
     app.guitarnest.tab.StrumPattern("eighths", "Eighths", "DUDUDUDU"),
     app.guitarnest.tab.StrumPattern("waltz", "Waltz (3/4)", "D-DUDU"),
     app.guitarnest.tab.StrumPattern("sixteenths", "Sixteenths", "D-DUD-DUD-DUD-DU", perBeat = 4),
+    // Flamenco. R = rasgueado; the 12-beat compás accents beats 3, 6, 8, 10 and 12 (soleá) or starts on 12 (bulerías).
+    app.guitarnest.tab.StrumPattern("rumba", "Rumba (flamenco)", "DUxUDUxU"),
+    app.guitarnest.tab.StrumPattern("tangos", "Tangos (flamenco)", "--D-DUR-"),
+    app.guitarnest.tab.StrumPattern("rasgueado", "Rasgueado", "R-DUR-DU"),
+    app.guitarnest.tab.StrumPattern("solea", "Soleá (12-beat compás)", "DDRDDRDRDRDR", perBeat = 1),
+    app.guitarnest.tab.StrumPattern("bulerias", "Bulerías (12-beat compás)", "RDDRDDRDRDRD", perBeat = 1),
+    // Fingerpicking. B = bass string of the chord, b = alternate bass, 1-6 = string (1 = high E).
+    app.guitarnest.tab.StrumPattern("arpeggio", "Arpeggio", "B3212321", kind = app.guitarnest.tab.StrumPattern.PICK),
+    app.guitarnest.tab.StrumPattern("travis", "Travis picking", "B1b2B1b2", kind = app.guitarnest.tab.StrumPattern.PICK),
+    app.guitarnest.tab.StrumPattern("waltz_pick", "Waltz picking (3/4)", "B32123", kind = app.guitarnest.tab.StrumPattern.PICK),
 )
 
 const val MIN_BPM = 30

@@ -172,4 +172,11 @@
     <string name="ai_or_manual">Oder Adresse und Schlüssel eingeben</string>
     <string name="openrouter_signed_in">Mit OpenRouter angemeldet. Modell: Auto (änderbar).</string>
     <string name="open_music">Freie Musik zum Importieren</string>
+    <string name="chords_tap_hint">Akkorde. Tippe auf ein Diagramm für eine andere Griffweise.</string>
+    <string name="next_chord">Nächster</string>
+    <string name="pattern_strum">Schlagmuster</string>
+    <string name="pattern_pick">Zupfmuster</string>
+    <string name="pattern_help_strum">D ab, U auf, R Rasgueado, x gedämpft, - Pause</string>
+    <string name="pattern_help_pick">B Bass, b Wechselbass, 1–6 Saite (1 = hohe E-Saite), - Pause</string>
+    <string name="chords_in_song">Akkorde</string>
 </resources>

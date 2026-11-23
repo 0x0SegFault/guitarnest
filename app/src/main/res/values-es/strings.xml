@@ -175,4 +175,11 @@
     <string name="ai_or_manual">O escribe una dirección y una clave</string>
     <string name="openrouter_signed_in">Sesión iniciada con OpenRouter. Modelo: Auto (puedes cambiarlo).</string>
     <string name="open_music">Música libre para importar</string>
+    <string name="chords_tap_hint">Acordes. Toca un diagrama para otra forma de tocarlo.</string>
+    <string name="next_chord">Siguiente</string>
+    <string name="pattern_strum">Rasgueo</string>
+    <string name="pattern_pick">Punteo (fingerpicking)</string>
+    <string name="pattern_help_strum">D abajo, U arriba, R rasgueado, x apagado, - silencio</string>
+    <string name="pattern_help_pick">B bajo, b bajo alterno, 1–6 cuerda (1 = mi agudo), - silencio</string>
+    <string name="chords_in_song">Acordes</string>
 </resources>
