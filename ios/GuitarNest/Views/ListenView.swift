@@ -98,16 +98,23 @@ struct ListenView: View {
 
     private var lookUp: Bool { identify && Bridge.shared.acoustIdAvailable() }
 
-    /// AcoustID lookup when the title is empty. Returns the title and artist, or a problem to show.
-    private static func findTitle(_ audio: [Float]) async -> (String, String, String?) {
+    /// Result of an AcoustID lookup: the title and artist, or a problem to show.
+    private struct Found {
+        var title = ""
+        var artist = ""
+        var problem: String?
+    }
+
+    /// AcoustID lookup when the title is empty.
+    private static func findTitle(_ audio: [Float]) async -> Found {
         guard let form = Bridge.shared.acoustIdForm(audio: Convert.floats(audio), sampleRate: Int32(AudioInput.rate)) else {
-            return ("", "", L10n.t("identify_too_short"))
+            return Found(problem: L10n.t("identify_too_short"))
         }
         do {
-            guard let best = try await AIClient.identify(form: form).first else { return ("", "", L10n.t("identify_none")) }
-            return (best.title, best.artist, nil)
+            guard let best = try await AIClient.identify(form: form).first else { return Found(problem: L10n.t("identify_none")) }
+            return Found(title: best.title, artist: best.artist)
         } catch {
-            return ("", "", error.localizedDescription)
+            return Found(problem: error.localizedDescription)
         }
     }
 
@@ -131,7 +138,7 @@ struct ListenView: View {
                 if findIt {
                     await MainActor.run { step = L10n.t("step_identifying") }
                     let found = await ListenView.findTitle(audio)
-                    if found.2 == nil { name = found.0; artist = found.1 } else { problem = found.2 }
+                    if let reason = found.problem { problem = reason } else { name = found.title; artist = found.artist }
                     await MainActor.run { step = L10n.t("step_listening") }
                 }
                 guard let url = Bundle.main.url(forResource: "basic-pitch", withExtension: "gnm") else { throw AppError("Model missing") }
