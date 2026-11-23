@@ -9,6 +9,7 @@ The same list is in the apps: Settings → About → Open-source credits. Guitar
 | Project | Used for | Licence |
 |---|---|---|
 | [Basic Pitch](https://github.com/spotify/basic-pitch) | Note model that finds the notes in audio (converted to run in GuitarNest's own interpreter) | Apache-2.0, Spotify AB |
+| [Chromaprint](https://github.com/acoustid/chromaprint) | Audio fingerprint for song identification (algorithm ported to Kotlin) | MIT (ported files; the full library is LGPL-2.1), Lukáš Lalinský |
 | [Kotlin and Kotlin Multiplatform](https://kotlinlang.org) | Language of the app and of the code shared with iPhone | Apache-2.0, JetBrains |
 | [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) | Reads and writes songs, backups and AI answers (JSON) | Apache-2.0, JetBrains |
 | [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) | Background work (listening, network) | Apache-2.0, JetBrains |
@@ -24,6 +25,7 @@ The same list is in the apps: Settings → About → Open-source credits. Guitar
 | Project | Used for | Licence |
 |---|---|---|
 | [MusicBrainz](https://musicbrainz.org) | Song search (title, artist, album); only your search words are sent | Data CC0, MetaBrainz Foundation |
+| [AcoustID](https://acoustid.org) | Finds the song title from a sound fingerprint, only if you turn on Find the title; the audio is never sent | Data CC BY-SA 3.0, AcoustID OÜ (Estonia, EU) |
 | [Your AI provider](https://openrouter.ai) | Only if you connect one: Anthropic, OpenAI, Mistral, OpenRouter, LiteLLM, Ollama, LM Studio or any OpenAI-compatible server | Their own terms |
 | [Scaleway](https://www.scaleway.com) | Hosts the anonymous report service (Paris, EU) | Service |
 | [GitHub](https://github.com) | Source code, releases, issues | Service |

@@ -179,7 +179,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
     ) { padding ->
         val m = Modifier.fillMaxSize().padding(padding)
         when {
-            listening -> ListenScreen(onMade = { id -> vm.refresh(); listening = false; tab = Tab.SONGS; openId = id }, modifier = m)
+            listening -> ListenScreen(onMade = { id, notice -> vm.refresh(); listening = false; tab = Tab.SONGS; openId = id; notice?.let(vm::showMessage) }, modifier = m)
             editing != null -> EditorScreen(draft, editorError, m)
             tab == Tab.SONGS && open != null -> SongScreen(open, playing, log, vm, m)
             tab == Tab.SONGS -> Column(m) {

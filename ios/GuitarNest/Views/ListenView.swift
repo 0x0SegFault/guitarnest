@@ -15,6 +15,7 @@ struct ListenView: View {
     @State private var step: String?
     @State private var progress: Double = 0
     @State private var error: String?
+    @AppStorage("identify") private var identify = false
 
     private let aiReady = AIConnection.load().configured
 
@@ -26,6 +27,14 @@ struct ListenView: View {
                 Picker(L10n.t("level"), selection: $level) { ForEach(0..<3, id: \.self) { Text(levelName($0)).tag($0) } }
                     .pickerStyle(.segmented)
                 Toggle(L10n.t(aiReady ? "improve_ai" : "improve_ai_off"), isOn: $refine).disabled(!aiReady)
+                if Bridge.shared.acoustIdAvailable() {
+                    Toggle(isOn: $identify) {
+                        VStack(alignment: .leading) {
+                            Text(L10n.t("identify"))
+                            Text(L10n.t("identify_note")).font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                }
             }
             if let step {
                 Section {
@@ -60,12 +69,13 @@ struct ListenView: View {
         .navigationBarTitleDisplayMode(.inline)
         .fileImporter(isPresented: $picking, allowedContentTypes: [.audio]) { result in
             guard case .success(let url) = result else { return }
-            if title.isEmpty { title = url.deletingPathExtension().lastPathComponent }
+            let fileName = url.deletingPathExtension().lastPathComponent
+            if title.isEmpty && !lookUp { title = fileName }
             step = L10n.t("step_reading")
             Task.detached {
                 do {
                     let audio = try AudioInput.decode(url)
-                    await MainActor.run { make(audio) }
+                    await MainActor.run { make(audio, fallback: fileName) }
                 } catch {
                     await MainActor.run { step = nil; self.error = error.localizedDescription }
                 }
@@ -86,7 +96,22 @@ struct ListenView: View {
         }
     }
 
-    private func make(_ audio: [Float]) {
+    private var lookUp: Bool { identify && Bridge.shared.acoustIdAvailable() }
+
+    /// AcoustID lookup when the title is empty. Returns the title and artist, or a problem to show.
+    private static func findTitle(_ audio: [Float]) async -> (String, String, String?) {
+        guard let form = Bridge.shared.acoustIdForm(audio: Convert.floats(audio), sampleRate: Int32(AudioInput.rate)) else {
+            return ("", "", L10n.t("identify_too_short"))
+        }
+        do {
+            guard let best = try await AIClient.identify(form: form).first else { return ("", "", L10n.t("identify_none")) }
+            return (best.title, best.artist, nil)
+        } catch {
+            return ("", "", error.localizedDescription)
+        }
+    }
+
+    private func make(_ audio: [Float], fallback: String = "") {
         guard audio.count >= Int(AudioInput.rate) * 3 else {
             error = L10n.t("listen_too_short")
             step = nil
@@ -95,10 +120,20 @@ struct ListenView: View {
         step = L10n.t("step_listening")
         progress = 0
         let levelValue = Bridge.shared.level(index: Int32(level))
-        let name = title
+        let typed = title.trimmingCharacters(in: .whitespaces)
+        let findIt = typed.isEmpty && lookUp
         let useAI = refine && aiReady
         Task.detached(priority: .userInitiated) {
             do {
+                var name = typed.isEmpty ? fallback : typed
+                var artist = ""
+                var problem: String?
+                if findIt {
+                    await MainActor.run { step = L10n.t("step_identifying") }
+                    let found = await ListenView.findTitle(audio)
+                    if found.2 == nil { name = found.0; artist = found.1 } else { problem = found.2 }
+                    await MainActor.run { step = L10n.t("step_listening") }
+                }
                 guard let url = Bundle.main.url(forResource: "basic-pitch", withExtension: "gnm") else { throw AppError("Model missing") }
                 let pitch = try Bridge.shared.basicPitch(model: Convert.bytes(try Data(contentsOf: url)))
                 let draft = try Bridge.shared.listen(model: pitch, audio: Convert.floats(audio), level: levelValue, title: name) { done, total in
@@ -110,20 +145,21 @@ struct ListenView: View {
                     return
                 }
                 var song = draft
-                var aiProblem: String?
                 if useAI {
                     await MainActor.run { step = L10n.t("step_asking") }
                     do {
                         song = try await AIClient.makeSong(AIConnection.load(), taskIndex: 3, level: levelValue, request: "", song: draft)
                     } catch {
-                        aiProblem = error.localizedDescription
+                        problem = L10n.t("listen_ai_failed", error.localizedDescription)
                     }
                 }
+                if !artist.isEmpty { song = Bridge.shared.named(song: song, title: song.title, artist: artist) }
                 let finished = song
+                let notice = problem
                 await MainActor.run {
                     let saved = model.save(finished)
                     step = nil
-                    if let aiProblem { model.message = L10n.t("listen_ai_failed", aiProblem) }
+                    if let notice { model.message = notice }
                     path.removeLast()
                     path.append(.song(saved.id))
                 }

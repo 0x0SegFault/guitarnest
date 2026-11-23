@@ -5,6 +5,7 @@ import android.media.AudioManager
 import android.media.projection.MediaProjection
 import android.net.Uri
 import android.os.Build
+import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import app.guitarnest.ai.AiTask
@@ -12,8 +13,10 @@ import app.guitarnest.audio.AudioFile
 import app.guitarnest.audio.Recorder
 import app.guitarnest.data.AiSettings
 import app.guitarnest.data.SongRepository
+import app.guitarnest.listen.AcoustId
 import app.guitarnest.listen.Arranger
 import app.guitarnest.listen.BasicPitch
+import app.guitarnest.net.AcoustIdClient
 import app.guitarnest.net.AiClient
 import app.guitarnest.net.makeSong
 import app.guitarnest.tab.Level
@@ -31,7 +34,7 @@ import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
 
-enum class Step { READING, LISTENING, ARRANGING, ASKING_AI }
+enum class Step { READING, LISTENING, IDENTIFYING, ARRANGING, ASKING_AI }
 
 sealed interface ListenState {
     data object Idle : ListenState
@@ -57,6 +60,13 @@ class ListenViewModel(app: Application) : AndroidViewModel(app) {
     private val _made = MutableStateFlow<Song?>(null)
     val made: StateFlow<Song?> = _made.asStateFlow()
 
+    private val prefs = app.getSharedPreferences("listen", android.content.Context.MODE_PRIVATE)
+
+    /** "Find the title": off by default, because it sends a fingerprint to AcoustID. */
+    var identify: Boolean
+        get() = AcoustId.available && prefs.getBoolean("identify", false)
+        set(value) { prefs.edit { putBoolean("identify", value) } }
+
     /** True when the AI connection is set, so the screen can offer "Improve with my AI". */
     fun aiConfigured() = ai.load().configured
 
@@ -65,12 +75,12 @@ class ListenViewModel(app: Application) : AndroidViewModel(app) {
         _made.value = null
     }
 
-    fun fromFile(uri: Uri, title: String, level: Level, refine: Boolean) = viewModelScope.launch {
+    fun fromFile(uri: Uri, title: String, fileName: String, level: Level, refine: Boolean) = viewModelScope.launch {
         _state.value = ListenState.Working(Step.READING, 0f)
         val audio = runCatching {
             withContext(Dispatchers.IO) { AudioFile.decode(getApplication(), uri) { p -> _state.value = ListenState.Working(Step.READING, p) } }
         }.getOrElse { _state.value = ListenState.Failed(it.message ?: "Error"); return@launch }
-        make(audio, title, level, refine)
+        make(audio, title, level, refine, fallbackTitle = fileName)
     }
 
     fun startMicrophone() = startRecorder(fromApps = false) {
@@ -112,7 +122,7 @@ class ListenViewModel(app: Application) : AndroidViewModel(app) {
         _state.value = ListenState.Idle
     }
 
-    private suspend fun make(audio: FloatArray, title: String, level: Level, refine: Boolean) {
+    private suspend fun make(audio: FloatArray, title: String, level: Level, refine: Boolean, fallbackTitle: String = "") {
         try {
             val notes = withContext(Dispatchers.Default) {
                 val padded = model.padded(audio)
@@ -135,18 +145,31 @@ class ListenViewModel(app: Application) : AndroidViewModel(app) {
                 _state.value = ListenState.Failed(getApplication<Application>().getString(app.guitarnest.R.string.listen_no_notes))
                 return
             }
+            var problem: String? = null
+            var name = title.trim()
+            var artist = ""
+            if (name.isEmpty() && identify) {
+                _state.value = ListenState.Working(Step.IDENTIFYING, 0f)
+                val fp = withContext(Dispatchers.Default) { AcoustId.fingerprint(audio, BasicPitch.SAMPLE_RATE) }
+                val ctx = getApplication<Application>()
+                if (fp == null) problem = ctx.getString(app.guitarnest.R.string.identify_too_short)
+                else runCatching { AcoustIdClient.identify(fp.first, fp.second) }
+                    .onSuccess { found -> found.firstOrNull()?.let { name = it.title; artist = it.artist } ?: run { problem = ctx.getString(app.guitarnest.R.string.identify_none) } }
+                    .onFailure { problem = it.message }
+            }
             _state.value = ListenState.Working(Step.ARRANGING, 0f)
-            var song = withContext(Dispatchers.Default) { Arranger.makeSong(notes, level, title.ifBlank { "Recording" }) }
-            var aiProblem: String? = null
+            var song = withContext(Dispatchers.Default) {
+                Arranger.makeSong(notes, level, name.ifBlank { fallbackTitle.ifBlank { "Recording" } }).copy(artist = artist)
+            }
             val connection = ai.load()
             if (refine && connection.configured) {
                 _state.value = ListenState.Working(Step.ASKING_AI, 0f)
                 runCatching { AiClient.makeSong(connection, AiTask.REFINE, level, "", song) }
-                    .onSuccess { refined -> song = refined.copy(title = song.title, notes = refined.notes.ifBlank { song.notes }) }
-                    .onFailure { aiProblem = it.message }
+                    .onSuccess { refined -> song = refined.copy(title = song.title, artist = song.artist.ifBlank { refined.artist }, notes = refined.notes.ifBlank { song.notes }) }
+                    .onFailure { problem = getApplication<Application>().getString(app.guitarnest.R.string.listen_ai_failed, it.message) }
             }
             val saved = withContext(Dispatchers.IO) { repo.save(song) }
-            _state.value = if (aiProblem != null) ListenState.Failed(getApplication<Application>().getString(app.guitarnest.R.string.listen_ai_failed, aiProblem)) else ListenState.Idle
+            _state.value = problem?.let { ListenState.Failed(it) } ?: ListenState.Idle
             _made.value = saved
         } catch (e: Exception) {
             _state.value = ListenState.Failed(e.message ?: e.javaClass.simpleName)

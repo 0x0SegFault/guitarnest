@@ -86,4 +86,16 @@ enum AIClient {
         }
         throw AppError("MusicBrainz is busy. Try again in a minute.")
     }
+
+    /// Song identification with AcoustID. Sent: a fingerprint of the sound and its length, never the audio.
+    static func identify(form: String) async throws -> [SongInfo] {
+        guard let url = URL(string: Bridge.shared.acoustIdUrl()) else { return [] }
+        var http = URLRequest(url: url, timeoutInterval: 20)
+        http.httpMethod = "POST"
+        http.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        http.setValue(Bridge.shared.searchUserAgent(), forHTTPHeaderField: "User-Agent")
+        http.httpBody = Data(form.utf8)
+        let (data, _) = try await URLSession.shared.data(for: http)
+        return try Bridge.shared.acoustIdParse(body: String(bytes: data, encoding: .utf8) ?? "")
+    }
 }

@@ -44,6 +44,7 @@ iPhone (from the CI simulator):
 - **Tuner**: 9 tunings; the string being tuned lights up; tap a string to hear its note; reference A4 as a tuning fork.
 - **Your own AI** (optional): connect a cloud account (Anthropic, OpenAI, Mistral, OpenRouter), your gateway (LiteLLM) or a local model (Ollama, LM Studio). It improves drafts, arranges a tab for your level or adds strumming patterns. Only the tab and your request are sent, to the address you choose; never audio.
 - **Song search** in MusicBrainz (open data) to start a new tab.
+- **Find the title** of a recording with AcoustID (optional, off by default). Only a fingerprint of the sound is sent.
 - **Report a problem or idea** anonymously (EU-hosted, no IP stored), on GitHub, or as text.
 - **Encrypted backups**: one password-protected file with all songs and practice history, where you want it. Android and iPhone use the same format.
 - **AI toolkit** for your computer ([ai/](ai/README.md)): the same analysis from the command line, with a skill file for AI agents.
@@ -82,6 +83,7 @@ GuitarNest uses free software, open data and published research. The main parts:
 - [Basic Pitch](https://github.com/spotify/basic-pitch) (Spotify, Apache-2.0): the note detection model.
 - [Kotlin Multiplatform](https://kotlinlang.org), [Jetpack Compose](https://developer.android.com/compose) and SwiftUI: the apps.
 - [MusicBrainz](https://musicbrainz.org) (CC0 data): song search.
+- [Chromaprint](https://github.com/acoustid/chromaprint) (MIT) and [AcoustID](https://acoustid.org): song identification.
 - [Nunito](https://github.com/googlefonts/nunito) (OFL-1.1): the font.
 
 [CREDITS.md](CREDITS.md) gives the full list with licences. The app shows the same list in About and permissions → Open-source credits.

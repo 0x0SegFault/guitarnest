@@ -26,7 +26,7 @@ This page is for maintainers. Store rules change: check each item in the store's
 | Ads | No ads |
 | Content rating | Questionnaire: music tool, no user-generated content shared, no chat |
 | Target audience | 13+ |
-| Data safety | The developer collects nothing. Audio is processed on the device and not stored. When the user asks, the app sends the selected song and request to the AI service the user configured, and search words to MusicBrainz. Check Google's current rules for user-initiated transfers to a third party the user chooses, and declare them if required. |
+| Data safety | The developer collects nothing. Audio is processed on the device and not stored. When the user asks, the app sends the selected song and request to the AI service the user configured, search words to MusicBrainz, and, if the user turns on "Find the title", a sound fingerprint to AcoustID. Check Google's current rules for user-initiated transfers to a third party the user chooses, and declare them if required. |
 | Foreground service permissions | `FOREGROUND_SERVICE_MEDIA_PROJECTION`: "Tab from audio, From another app": records the sound of apps that allow capture, started by the user, with a notification. Play asks for a short video of the feature. |
 | Microphone (`RECORD_AUDIO`) | Tuner and recording the user's playing, only while the screen is open. |
 

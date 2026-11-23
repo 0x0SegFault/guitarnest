@@ -56,7 +56,7 @@ import app.guitarnest.tab.Level
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ListenScreen(onMade: (String) -> Unit, modifier: Modifier = Modifier, vm: ListenViewModel = viewModel()) {
+fun ListenScreen(onMade: (String, String?) -> Unit, modifier: Modifier = Modifier, vm: ListenViewModel = viewModel()) {
     val context = LocalContext.current
     val state by vm.state.collectAsStateWithLifecycle()
     val made by vm.made.collectAsStateWithLifecycle()
@@ -64,14 +64,16 @@ fun ListenScreen(onMade: (String) -> Unit, modifier: Modifier = Modifier, vm: Li
     var level by rememberSaveable { mutableStateOf(Level.INTERMEDIATE) }
     val aiReady = androidx.compose.runtime.remember { vm.aiConfigured() }
     var refine by rememberSaveable { mutableStateOf(aiReady) }
+    var identify by rememberSaveable { mutableStateOf(vm.identify) }
     var pending by rememberSaveable { mutableStateOf<String?>(null) } // "mic" or "apps" while asking for the microphone
 
-    LaunchedEffect(made) { made?.let { onMade(it.id); vm.reset() } }
+    LaunchedEffect(made) { made?.let { onMade(it.id, (state as? ListenState.Failed)?.message); vm.reset() } }
 
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         uri ?: return@rememberLauncherForActivityResult
-        if (title.isBlank()) title = displayName(context, uri)
-        vm.fromFile(uri, title, level, refine)
+        val fileName = displayName(context, uri)
+        if (title.isBlank() && !identify) title = fileName
+        vm.fromFile(uri, title, fileName, level, refine)
     }
     val projection = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         val data = result.data
@@ -102,6 +104,13 @@ fun ListenScreen(onMade: (String) -> Unit, modifier: Modifier = Modifier, vm: Li
             Text(stringResource(if (aiReady) R.string.improve_ai else R.string.improve_ai_off), Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
             Switch(checked = refine && aiReady, onCheckedChange = { refine = it }, enabled = aiReady)
         }
+        if (vm.identify || app.guitarnest.listen.AcoustId.available) Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.identify), style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.identify_note), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Switch(checked = identify, onCheckedChange = { identify = it; vm.identify = it })
+        }
 
         when (val s = state) {
             is ListenState.Recording -> Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
@@ -120,10 +129,11 @@ fun ListenScreen(onMade: (String) -> Unit, modifier: Modifier = Modifier, vm: Li
                 Text(stringResource(when (s.step) {
                     Step.READING -> R.string.step_reading
                     Step.LISTENING -> R.string.step_listening
+                    Step.IDENTIFYING -> R.string.step_identifying
                     Step.ARRANGING -> R.string.step_arranging
                     Step.ASKING_AI -> R.string.step_asking
                 }), style = MaterialTheme.typography.titleMedium)
-                if (s.step == Step.ARRANGING || s.step == Step.ASKING_AI) LinearProgressIndicator(Modifier.fillMaxWidth())
+                if (s.step == Step.ARRANGING || s.step == Step.ASKING_AI || s.step == Step.IDENTIFYING) LinearProgressIndicator(Modifier.fillMaxWidth())
                 else LinearProgressIndicator(progress = { s.progress }, modifier = Modifier.fillMaxWidth())
             }
             else -> {

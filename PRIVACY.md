@@ -17,6 +17,7 @@ No other permissions. CI fails if a new permission appears.
 | Action | Sent | To |
 |---|---|---|
 | Find a song | Your search words and the app name | [MusicBrainz](https://musicbrainz.org) (open music database, MetaBrainz Foundation). See their [privacy policy](https://metabrainz.org/privacy). |
+| Find the title of a recording (off by default) | A fingerprint of the sound (a list of numbers, not the audio), its length and the app key | [AcoustID](https://acoustid.org) (AcoustID OÜ, Estonia, EU). See their [web service terms](https://acoustid.org/webservice). |
 | Ask AI / Make a tab with AI | The song you selected (as a GuitarNest tab), the level and your request | The address you set in Settings → AI connection: your own computer, your own server, or the cloud service you chose. Their privacy policy applies. |
 | Report a problem or idea (anonymous) | Kind, title and text you write; if you leave them on: app version, device model and system version, the last crash | GuitarNest's report service at Scaleway (Paris, EU). It never reads request headers, so it does not see or store your IP address; nothing is logged. The report becomes an issue in a private repository read by the maintainer. |
 | Sign in with OpenRouter | Nothing from GuitarNest; you sign in on openrouter.ai, which returns a key to the app | OpenRouter. Their privacy policy applies. The key is stored encrypted on your phone; you can delete it on openrouter.ai. |

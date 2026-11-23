@@ -107,7 +107,7 @@
     <string name="about_privacy">GuitarNest has no account, no ads and no trackers. Your songs stay on this phone.</string>
     <string name="permissions">Permissions</string>
     <string name="permission_mic">Microphone: to hear your guitar in the tuner and to record for Tab from audio. Used only while the tuner is open or while you record. Nothing is saved.</string>
-    <string name="permission_none_else">Internet: only when you search for a song (MusicBrainz) or use your own AI connection. The app sends nothing on its own.</string>
+    <string name="permission_none_else">Internet: only when you search for a song (MusicBrainz), find a title (AcoustID, if turned on) or use your own AI connection. The app sends nothing on its own.</string>
     <string name="version">Version %1$s</string>
     <string name="source_code">Source code</string>
     <string name="settings">Settings</string>
@@ -231,4 +231,9 @@
     <string name="credits_tools">Build and test tools (not in the app)</string>
     <string name="credits_methods">Methods and formats</string>
     <string name="credits_music">Free music sources</string>
+    <string name="identify">Find the title</string>
+    <string name="identify_note">AcoustID gets a fingerprint of the sound, not the audio. Only when the title is empty.</string>
+    <string name="step_identifying">Finding the title…</string>
+    <string name="identify_none">Title not found. Type it in the song editor.</string>
+    <string name="identify_too_short">Title not found: the audio must be 10 s or longer.</string>
 </resources>

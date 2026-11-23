@@ -31,7 +31,7 @@
     <string name="about_privacy">GuitarNest n\'a ni compte, ni publicité, ni traceur. Vos morceaux restent sur ce téléphone.</string>
     <string name="permissions">Autorisations</string>
     <string name="permission_mic">Micro : pour entendre votre guitare dans l\'accordeur et enregistrer pour la tablature depuis l\'audio. Utilisé seulement quand l\'accordeur est ouvert ou pendant l\'enregistrement. Rien n\'est sauvegardé.</string>
-    <string name="permission_none_else">Internet : seulement quand vous cherchez un morceau (MusicBrainz) ou utilisez votre propre connexion IA. L\'app n\'envoie rien d\'elle-même.</string>
+    <string name="permission_none_else">Internet : seulement quand vous cherchez un morceau (MusicBrainz), trouvez un titre (AcoustID, si activé) ou utilisez votre propre connexion IA. L\'app n\'envoie rien d\'elle-même.</string>
     <string name="version">Version %1$s</string>
     <string name="source_code">Code source</string>
     <string name="songs">Morceaux</string>
@@ -219,4 +219,9 @@
     <string name="credits_tools">Outils de construction et de test (pas dans l\'app)</string>
     <string name="credits_methods">Méthodes et formats</string>
     <string name="credits_music">Sources de musique libre</string>
+    <string name="identify">Trouver le titre</string>
+    <string name="identify_note">AcoustID reçoit une empreinte du son, pas l\'audio. Seulement si le titre est vide.</string>
+    <string name="step_identifying">Recherche du titre…</string>
+    <string name="identify_none">Titre non trouvé. Saisissez-le dans l\'éditeur.</string>
+    <string name="identify_too_short">Titre non trouvé : l\'audio doit durer 10 s ou plus.</string>
 </resources>

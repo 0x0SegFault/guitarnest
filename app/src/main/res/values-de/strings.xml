@@ -30,7 +30,7 @@
     <string name="about_privacy">GuitarNest hat kein Konto, keine Werbung und keine Tracker. Deine Songs bleiben auf diesem Telefon.</string>
     <string name="permissions">Berechtigungen</string>
     <string name="permission_mic">Mikrofon: um deine Gitarre im Stimmgerät zu hören und für Tabulatur aus Audio aufzunehmen. Nur genutzt, solange das Stimmgerät offen ist oder du aufnimmst. Nichts wird gespeichert.</string>
-    <string name="permission_none_else">Internet: nur wenn du einen Song suchst (MusicBrainz) oder deine eigene KI-Verbindung nutzt. Die App sendet nichts von selbst.</string>
+    <string name="permission_none_else">Internet: nur wenn du einen Song suchst (MusicBrainz), einen Titel findest (AcoustID, wenn aktiviert) oder deine eigene KI-Verbindung nutzt. Die App sendet nichts von selbst.</string>
     <string name="version">Version %1$s</string>
     <string name="source_code">Quellcode</string>
     <string name="songs">Songs</string>
@@ -216,4 +216,9 @@
     <string name="credits_tools">Werkzeuge zum Bauen und Testen (nicht in der App)</string>
     <string name="credits_methods">Methoden und Formate</string>
     <string name="credits_music">Quellen freier Musik</string>
+    <string name="identify">Titel finden</string>
+    <string name="identify_note">AcoustID erhält einen Fingerabdruck des Klangs, nicht das Audio. Nur wenn der Titel leer ist.</string>
+    <string name="step_identifying">Titel wird gesucht…</string>
+    <string name="identify_none">Titel nicht gefunden. Gib ihn im Editor ein.</string>
+    <string name="identify_too_short">Titel nicht gefunden: Das Audio muss 10 s oder länger sein.</string>
 </resources>

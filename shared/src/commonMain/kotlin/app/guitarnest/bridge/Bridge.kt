@@ -11,6 +11,7 @@ import app.guitarnest.ai.SongInfo
 import app.guitarnest.ai.SongSearch
 import app.guitarnest.data.BackupContent
 import app.guitarnest.data.PracticeEntry
+import app.guitarnest.listen.AcoustId
 import app.guitarnest.listen.Arranger
 import app.guitarnest.listen.BasicPitch
 import app.guitarnest.practice.ClickTrack
@@ -175,6 +176,16 @@ object Bridge {
 
     // Credits
     fun creditSections(): List<CreditSection> = Credits.SECTIONS
+
+    // Song identification (AcoustID)
+    fun acoustIdAvailable(): Boolean = AcoustId.available
+    fun acoustIdUrl(): String = AcoustId.URL
+    /** Form body to POST, or null when the audio is shorter than 10 s. */
+    fun acoustIdForm(audio: FloatArray, sampleRate: Int): String? =
+        AcoustId.fingerprint(audio, sampleRate)?.let { (fp, seconds) -> AcoustId.form(fp, seconds) }
+    @Throws(IllegalStateException::class, kotlinx.serialization.SerializationException::class)
+    fun acoustIdParse(body: String): List<SongInfo> = AcoustId.parse(body)
+    fun named(song: Song, title: String, artist: String): Song = song.copy(title = title, artist = artist)
 
     // Reports
     fun reportServiceUrl(): String? = Reports.SERVICE_URL

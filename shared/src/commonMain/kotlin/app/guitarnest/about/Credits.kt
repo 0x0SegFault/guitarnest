@@ -13,6 +13,7 @@ object Credits {
     val SECTIONS = listOf(
         CreditSection("credits_in_app", listOf(
             Credit("Basic Pitch", "Note model that finds the notes in audio (converted to run in GuitarNest's own interpreter)", "Apache-2.0, Spotify AB", "https://github.com/spotify/basic-pitch"),
+            Credit("Chromaprint", "Audio fingerprint for song identification (algorithm ported to Kotlin)", "MIT (ported files; the full library is LGPL-2.1), Lukáš Lalinský", "https://github.com/acoustid/chromaprint"),
             Credit("Kotlin and Kotlin Multiplatform", "Language of the app and of the code shared with iPhone", "Apache-2.0, JetBrains", "https://kotlinlang.org"),
             Credit("kotlinx.serialization", "Reads and writes songs, backups and AI answers (JSON)", "Apache-2.0, JetBrains", "https://github.com/Kotlin/kotlinx.serialization"),
             Credit("kotlinx.coroutines", "Background work (listening, network)", "Apache-2.0, JetBrains", "https://github.com/Kotlin/kotlinx.coroutines"),
@@ -25,6 +26,7 @@ object Credits {
         )),
         CreditSection("credits_services", listOf(
             Credit("MusicBrainz", "Song search (title, artist, album); only your search words are sent", "Data CC0, MetaBrainz Foundation", "https://musicbrainz.org"),
+            Credit("AcoustID", "Finds the song title from a sound fingerprint, only if you turn on Find the title; the audio is never sent", "Data CC BY-SA 3.0, AcoustID OÜ (Estonia, EU)", "https://acoustid.org"),
             Credit("Your AI provider", "Only if you connect one: Anthropic, OpenAI, Mistral, OpenRouter, LiteLLM, Ollama, LM Studio or any OpenAI-compatible server", "Their own terms", "https://openrouter.ai"),
             Credit("Scaleway", "Hosts the anonymous report service (Paris, EU)", "Service", "https://www.scaleway.com"),
             Credit("GitHub", "Source code, releases, issues", "Service", "https://github.com"),

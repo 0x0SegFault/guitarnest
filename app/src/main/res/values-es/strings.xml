@@ -31,7 +31,7 @@
     <string name="about_privacy">GuitarNest no tiene cuenta, ni anuncios, ni rastreadores. Tus canciones se quedan en este teléfono.</string>
     <string name="permissions">Permisos</string>
     <string name="permission_mic">Micrófono: para oír tu guitarra en el afinador y grabar para Tablatura desde audio. Solo se usa con el afinador abierto o mientras grabas. No se guarda nada.</string>
-    <string name="permission_none_else">Internet: solo cuando buscas una canción (MusicBrainz) o usas tu propia conexión IA. La app no envía nada por su cuenta.</string>
+    <string name="permission_none_else">Internet: solo cuando buscas una canción (MusicBrainz), buscas un título (AcoustID, si está activado) o usas tu propia conexión IA. La app no envía nada por su cuenta.</string>
     <string name="version">Versión %1$s</string>
     <string name="source_code">Código fuente</string>
     <string name="songs">Canciones</string>
@@ -219,4 +219,9 @@
     <string name="credits_tools">Herramientas de compilación y prueba (no en la app)</string>
     <string name="credits_methods">Métodos y formatos</string>
     <string name="credits_music">Fuentes de música libre</string>
+    <string name="identify">Buscar el título</string>
+    <string name="identify_note">AcoustID recibe una huella del sonido, no el audio. Solo si el título está vacío.</string>
+    <string name="step_identifying">Buscando el título…</string>
+    <string name="identify_none">Título no encontrado. Escríbelo en el editor.</string>
+    <string name="identify_too_short">Título no encontrado: el audio debe durar 10 s o más.</string>
 </resources>
