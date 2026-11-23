@@ -181,4 +181,18 @@
     <string name="chords_in_song">Akkorde</string>
     <string name="play_reference">A4 spielen (%1$d Hz)</string>
     <string name="strings_hint">Tippe auf eine Saite, um ihren Ton zu hören und sie zu wählen. Erneut tippen für automatisch.</string>
+    <string name="report_title">Problem oder Idee melden</string>
+    <string name="report_problem">Problem</string>
+    <string name="report_idea">Idee</string>
+    <string name="report_short">Kurzer Titel</string>
+    <string name="report_details">Was ist passiert, oder was würde dir helfen? Schritte, um es erneut zu sehen.</string>
+    <string name="report_with_device">App-Version und Gerät hinzufügen: %1$s</string>
+    <string name="report_with_crash">Absturzdetails hinzufügen (unten)</string>
+    <string name="report_privacy">Anonym an den Meldedienst von GuitarNest in Paris (Scaleway) gesendet. Er speichert deine IP-Adresse nicht. Der Maintainer liest es, bevor etwas öffentlich wird.</string>
+    <string name="report_not_ready">Der anonyme Meldedienst ist noch nicht bereit. Nutze GitHub (Konto nötig; öffentlich) oder teile den Text per E-Mail oder Messenger.</string>
+    <string name="report_send">Anonym senden</string>
+    <string name="report_github">Auf GitHub öffnen</string>
+    <string name="report_share">Als Text teilen</string>
+    <string name="report_sent">Danke: Die Meldung wurde gesendet.</string>
+    <string name="crash_banner">GuitarNest wurde letztes Mal unerwartet beendet. Du kannst eine Meldung senden: Nichts wird ohne deine Wahl gesendet.</string>
 </resources>

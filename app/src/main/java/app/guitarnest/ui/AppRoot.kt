@@ -52,6 +52,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.guitarnest.BuildConfig
 import app.guitarnest.R
 import app.guitarnest.data.SongPrinter
+import app.guitarnest.feedback.CrashLog
 import app.guitarnest.tab.Song
 import app.guitarnest.tab.SongCodec
 
@@ -74,6 +75,8 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
     var about by rememberSaveable { mutableStateOf(false) }
     var sheet by rememberSaveable { mutableStateOf<String?>(null) } // "ai", "ask", "search"
     var seed by remember { mutableStateOf<Song?>(null) }
+    // The last crash, kept on this phone only; the player decides whether to report it.
+    var crash by remember { mutableStateOf(CrashLog.read(context)) }
     val ai by vm.ai.collectAsStateWithLifecycle()
     val aiJob by vm.aiJob.collectAsStateWithLifecycle()
     val search by vm.search.collectAsStateWithLifecycle()
@@ -151,7 +154,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
                                 onAi = { vm.resetJobs(); sheet = "ask" },
                                 onSearch = { vm.resetJobs(); sheet = "search" },
                             )
-                            SettingsMenu(onAi = { vm.resetJobs(); sheet = "ai" }, onBackup = { sheet = "backup" }, onAbout = { about = true })
+                            SettingsMenu(onAi = { vm.resetJobs(); sheet = "ai" }, onBackup = { sheet = "backup" }, onReport = { sheet = "report" }, onAbout = { about = true })
                         }
                         else -> IconButton(onClick = { about = true }) { Icon(Icons.Outlined.Info, stringResource(R.string.about)) }
                     }
@@ -173,7 +176,10 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
             listening -> ListenScreen(onMade = { id -> vm.refresh(); listening = false; tab = Tab.SONGS; openId = id }, modifier = m)
             editing != null -> EditorScreen(draft, editorError, m)
             tab == Tab.SONGS && open != null -> SongScreen(open, playing, log, vm, m)
-            tab == Tab.SONGS -> LibraryScreen(songs, log, { openId = it.id }, { seed = null; editing = "" }, { importer.launch(arrayOf("*/*")) }, m)
+            tab == Tab.SONGS -> Column(m) {
+                if (crash != null) CrashBanner(onReport = { sheet = "report" }, onDismiss = { CrashLog.clear(context); crash = null })
+                LibraryScreen(songs, log, { openId = it.id }, { seed = null; editing = "" }, { importer.launch(arrayOf("*/*")) }, Modifier.weight(1f))
+            }
             tab == Tab.METRONOME -> MetronomeScreen(metronome, playing, vm, m)
             else -> TunerScreen(m)
         }
@@ -201,6 +207,9 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
         "backup" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             BackupSheet(vm) { sheet = null }
         }
+        "report" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+            ReportSheet(crash) { message -> sheet = null; crash = CrashLog.read(context); message?.let(vm::showMessage) }
+        }
         "search" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             SearchSheet(search, vm::searchSongs) { info ->
                 seed = Song(title = info.title, artist = info.artist, notes = listOf(info.album, info.year).filter { it.isNotBlank() }.joinToString(", "))
@@ -225,6 +234,19 @@ private fun SongMenu(onAskAi: () -> Unit, onEdit: () -> Unit, onPrint: () -> Uni
 }
 
 @Composable
+private fun CrashBanner(onReport: () -> Unit, onDismiss: () -> Unit) {
+    androidx.compose.material3.Card(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(stringResource(R.string.crash_banner), style = MaterialTheme.typography.bodyMedium)
+            androidx.compose.foundation.layout.Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                TextButton(onClick = onReport) { Text(stringResource(R.string.report_title)) }
+                TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
+            }
+        }
+    }
+}
+
+@Composable
 private fun NewSongMenu(onListen: () -> Unit, onWrite: () -> Unit, onAi: () -> Unit, onSearch: () -> Unit) {
     var open by remember { mutableStateOf(false) }
     IconButton(onClick = { open = true }) { Icon(Icons.Filled.Add, stringResource(R.string.new_song)) }
@@ -237,12 +259,13 @@ private fun NewSongMenu(onListen: () -> Unit, onWrite: () -> Unit, onAi: () -> U
 }
 
 @Composable
-private fun SettingsMenu(onAi: () -> Unit, onBackup: () -> Unit, onAbout: () -> Unit) {
+private fun SettingsMenu(onAi: () -> Unit, onBackup: () -> Unit, onReport: () -> Unit, onAbout: () -> Unit) {
     var open by remember { mutableStateOf(false) }
     IconButton(onClick = { open = true }) { Icon(Icons.Filled.Settings, stringResource(R.string.settings)) }
     DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
         DropdownMenuItem(text = { Text(stringResource(R.string.ai_connection)) }, onClick = { open = false; onAi() })
         DropdownMenuItem(text = { Text(stringResource(R.string.backup_title)) }, onClick = { open = false; onBackup() })
+        DropdownMenuItem(text = { Text(stringResource(R.string.report_title)) }, onClick = { open = false; onReport() })
         DropdownMenuItem(text = { Text(stringResource(R.string.about)) }, onClick = { open = false; onAbout() })
     }
 }

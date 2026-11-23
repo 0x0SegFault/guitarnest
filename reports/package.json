@@ -1,0 +1,10 @@
+{
+  "name": "guitarnest-reports",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Anonymous bug reports and feature ideas for GuitarNest, as a Scaleway Serverless Function",
+  "license": "GPL-3.0-or-later",
+  "main": "handler.js",
+  "engines": { "node": ">=18" },
+  "scripts": { "test": "node --test test/" }
+}

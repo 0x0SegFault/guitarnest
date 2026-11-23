@@ -1,0 +1,28 @@
+name: Anonymous reports function
+
+on:
+  push:
+    branches: [main]
+    paths: ["reports/**", ".github/workflows/reports.yml"]
+  pull_request:
+    paths: ["reports/**", ".github/workflows/reports.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tests (no dependencies)
+        run: cd reports && npm test
+      - name: Syntax check
+        run: cd reports && for f in *.js; do node --check "$f"; done

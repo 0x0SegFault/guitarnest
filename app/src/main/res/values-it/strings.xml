@@ -184,4 +184,18 @@
     <string name="chords_in_song">Accordi</string>
     <string name="play_reference">Suona La4 (%1$d Hz)</string>
     <string name="strings_hint">Tocca una corda per sentire la sua nota e sceglierla. Tocca di nuovo per l\'automatico.</string>
+    <string name="report_title">Segnala un problema o un\'idea</string>
+    <string name="report_problem">Problema</string>
+    <string name="report_idea">Idea</string>
+    <string name="report_short">Titolo breve</string>
+    <string name="report_details">Cosa è successo, o cosa ti aiuterebbe? Passi per rivederlo.</string>
+    <string name="report_with_device">Aggiungi versione e dispositivo: %1$s</string>
+    <string name="report_with_crash">Aggiungi i dettagli dell\'arresto (sotto)</string>
+    <string name="report_privacy">Inviato in modo anonimo al servizio di segnalazioni di GuitarNest a Parigi (Scaleway). Non conserva il tuo indirizzo IP. Il manutentore lo legge prima di pubblicare qualsiasi cosa.</string>
+    <string name="report_not_ready">Il servizio di segnalazioni anonime non è ancora pronto. Usa GitHub (serve un account; pubblico) o condividi il testo via e-mail o messaggi.</string>
+    <string name="report_send">Invia in modo anonimo</string>
+    <string name="report_github">Apri su GitHub</string>
+    <string name="report_share">Condividi come testo</string>
+    <string name="report_sent">Grazie: la segnalazione è stata inviata.</string>
+    <string name="crash_banner">GuitarNest si è chiuso in modo inatteso l\'ultima volta. Puoi inviare una segnalazione: non viene inviato nulla senza la tua scelta.</string>
 </resources>

@@ -184,4 +184,18 @@
     <string name="chords_in_song">Accords</string>
     <string name="play_reference">Jouer le la (%1$d Hz)</string>
     <string name="strings_hint">Touchez une corde pour entendre sa note et la choisir. Touchez à nouveau pour l\'automatique.</string>
+    <string name="report_title">Signaler un problème ou une idée</string>
+    <string name="report_problem">Problème</string>
+    <string name="report_idea">Idée</string>
+    <string name="report_short">Titre court</string>
+    <string name="report_details">Que s\'est-il passé, ou qu\'est-ce qui vous aiderait ? Étapes pour le revoir.</string>
+    <string name="report_with_device">Ajouter la version et l\'appareil : %1$s</string>
+    <string name="report_with_crash">Ajouter les détails du plantage (ci-dessous)</string>
+    <string name="report_privacy">Envoyé anonymement au service de rapports de GuitarNest à Paris (Scaleway). Il ne garde pas votre adresse IP. Le mainteneur le lit avant toute publication.</string>
+    <string name="report_not_ready">Le service de rapports anonymes n\'est pas encore prêt. Utilisez GitHub (compte nécessaire ; public) ou partagez le texte par e-mail ou messagerie.</string>
+    <string name="report_send">Envoyer anonymement</string>
+    <string name="report_github">Ouvrir sur GitHub</string>
+    <string name="report_share">Partager le texte</string>
+    <string name="report_sent">Merci : le rapport a été envoyé.</string>
+    <string name="crash_banner">GuitarNest s\'est arrêté de façon inattendue la dernière fois. Vous pouvez envoyer un rapport : rien n\'est envoyé sans votre choix.</string>
 </resources>
