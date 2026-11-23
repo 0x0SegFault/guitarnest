@@ -179,4 +179,6 @@
     <string name="pattern_help_strum">D ab, U auf, R Rasgueado, x gedämpft, - Pause</string>
     <string name="pattern_help_pick">B Bass, b Wechselbass, 1–6 Saite (1 = hohe E-Saite), - Pause</string>
     <string name="chords_in_song">Akkorde</string>
+    <string name="play_reference">A4 spielen (%1$d Hz)</string>
+    <string name="strings_hint">Tippe auf eine Saite, um ihren Ton zu hören und sie zu wählen. Erneut tippen für automatisch.</string>
 </resources>

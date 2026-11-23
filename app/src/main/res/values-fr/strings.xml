@@ -182,4 +182,6 @@
     <string name="pattern_help_strum">D bas, U haut, R rasgueado, x étouffé, - silence</string>
     <string name="pattern_help_pick">B basse, b basse alternée, 1–6 corde (1 = mi aigu), - silence</string>
     <string name="chords_in_song">Accords</string>
+    <string name="play_reference">Jouer le la (%1$d Hz)</string>
+    <string name="strings_hint">Touchez une corde pour entendre sa note et la choisir. Touchez à nouveau pour l\'automatique.</string>
 </resources>

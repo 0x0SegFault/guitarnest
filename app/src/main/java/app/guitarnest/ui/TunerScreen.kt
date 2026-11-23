@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -162,7 +163,8 @@ fun TunerScreen(modifier: Modifier = Modifier, vm: TunerViewModel = viewModel())
         }
         Gauge(reading, color, state.listening, state.frequency)
         GuitarStrings(state, reading, color, vm::toggleString)
-        ReferencePitch(state.a4, vm::setA4)
+        Text(stringResource(R.string.strings_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        ReferencePitch(state.a4, vm::setA4, vm::playReference)
     }
 }
 
@@ -352,9 +354,10 @@ private fun GuitarStrings(state: TunerState, reading: Reading, color: Color, onT
 }
 
 @Composable
-private fun ReferencePitch(a4: Int, onChange: (Int) -> Unit) {
+private fun ReferencePitch(a4: Int, onChange: (Int) -> Unit, onPlay: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(stringResource(R.string.reference_pitch), Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
+        IconButton(onClick = onPlay) { Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = stringResource(R.string.play_reference, a4)) }
         IconButton(onClick = { onChange(a4 - 1) }) { Text("−", style = MaterialTheme.typography.titleLarge) }
         Text("A4 = $a4 Hz", style = MaterialTheme.typography.titleSmall, modifier = Modifier.size(width = 96.dp, height = 24.dp), textAlign = TextAlign.Center)
         IconButton(onClick = { onChange(a4 + 1) }) { Text("+", style = MaterialTheme.typography.titleLarge) }

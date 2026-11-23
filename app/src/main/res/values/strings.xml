@@ -194,4 +194,6 @@
     <string name="pattern_help_strum">D down, U up, R rasgueado, x muted, - rest</string>
     <string name="pattern_help_pick">B bass, b alternate bass, 1–6 string (1 = high E), - rest</string>
     <string name="chords_in_song">Chords</string>
+    <string name="play_reference">Play A4 (%1$d Hz)</string>
+    <string name="strings_hint">Tap a string to hear its note and lock it. Tap again for automatic.</string>
 </resources>

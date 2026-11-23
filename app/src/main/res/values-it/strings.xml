@@ -182,4 +182,6 @@
     <string name="pattern_help_strum">D giù, U su, R rasgueado, x stoppato, - pausa</string>
     <string name="pattern_help_pick">B basso, b basso alternato, 1–6 corda (1 = mi cantino), - pausa</string>
     <string name="chords_in_song">Accordi</string>
+    <string name="play_reference">Suona La4 (%1$d Hz)</string>
+    <string name="strings_hint">Tocca una corda per sentire la sua nota e sceglierla. Tocca di nuovo per l\'automatico.</string>
 </resources>

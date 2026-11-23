@@ -182,4 +182,6 @@
     <string name="pattern_help_strum">D abajo, U arriba, R rasgueado, x apagado, - silencio</string>
     <string name="pattern_help_pick">B bajo, b bajo alterno, 1–6 cuerda (1 = mi agudo), - silencio</string>
     <string name="chords_in_song">Acordes</string>
+    <string name="play_reference">Tocar La4 (%1$d Hz)</string>
+    <string name="strings_hint">Toca una cuerda para oír su nota y elegirla. Vuelve a tocarla para modo automático.</string>
 </resources>

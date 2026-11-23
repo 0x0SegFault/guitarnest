@@ -30,3 +30,18 @@ class TunerTrackerTest {
         assertEquals(110.0, t.update(Pitch(147.0, 0.7), 20).frequency)
     }
 }
+
+class ToneSynthTest {
+    @Test
+    fun soundsHaveTheRightPitch() {
+        val rate = 48_000
+        val detector = PitchDetector(rate)
+        for (f in listOf(82.41, 110.0, 440.0)) {
+            val pluck = ToneSynth.pluck(f, rate)
+            val got = detector.detect(pluck.copyOfRange(rate / 4, rate / 4 + detector.windowSize))!!.frequency
+            assertTrue(kotlin.math.abs(1200 * kotlin.math.log2(got / f)) < 5, "pluck $f -> $got")
+        }
+        val fork = ToneSynth.fork(440.0, rate)
+        assertTrue(kotlin.math.abs(detector.detect(fork.copyOfRange(rate, rate + detector.windowSize))!!.frequency - 440.0) < 0.5)
+    }
+}

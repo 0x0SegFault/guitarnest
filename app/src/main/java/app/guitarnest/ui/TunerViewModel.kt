@@ -11,7 +11,11 @@ import app.guitarnest.BuildConfig
 import app.guitarnest.audio.DemoSignal
 import app.guitarnest.audio.Microphone
 import app.guitarnest.tuner.PitchDetector
+import app.guitarnest.audio.TonePlayer
+import app.guitarnest.tuner.Notes
+import app.guitarnest.tuner.ToneSynth
 import app.guitarnest.tuner.TunerTracker
+import kotlinx.coroutines.Dispatchers
 import app.guitarnest.tuner.Tuning
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +45,7 @@ class TunerViewModel(app: Application, handle: SavedStateHandle) : AndroidViewMo
     private val detector = PitchDetector(mic.sampleRate)
     private val demoHz: Float? = if (BuildConfig.DEBUG) handle.get<Float>("demo_hz") else null
     private val tracker = TunerTracker()
+    private val tones = TonePlayer()
     private var job: Job? = null
 
     private val _state = MutableStateFlow(
@@ -82,16 +87,35 @@ class TunerViewModel(app: Application, handle: SavedStateHandle) : AndroidViewMo
         _state.update { it.copy(a4 = a4) }
     }
 
-    /** Tap a string to lock it; tap it again to return to automatic. */
-    fun toggleString(index: Int) =
+    /** Tap a string to lock it (and hear its note); tap it again to return to automatic. */
+    fun toggleString(index: Int) {
+        val s = _state.value
         _state.update { it.copy(lockedString = if (it.lockedString == index) null else index) }
+        if (s.lockedString != index) playString(index)
+    }
+
+    /** The note of a string, as a plucked string, to tune by ear. */
+    fun playString(index: Int) {
+        val s = _state.value
+        val f = Notes.frequencyOf(s.tuning.strings[index], s.a4.toDouble())
+        viewModelScope.launch(Dispatchers.Default) { tones.play(ToneSynth.pluck(f, tones.sampleRate)) }
+    }
+
+    /** The reference pitch (A4) as a tuning fork. */
+    fun playReference() {
+        val a4 = _state.value.a4.toDouble()
+        viewModelScope.launch(Dispatchers.Default) { tones.play(ToneSynth.fork(a4, tones.sampleRate)) }
+    }
 
     private fun onWindow(samples: FloatArray) {
         val reading = tracker.update(detector.detect(samples), SystemClock.elapsedRealtime())
         _state.update { it.copy(frequency = reading.frequency, fresh = reading.fresh) }
     }
 
-    override fun onCleared() = stop()
+    override fun onCleared() {
+        stop()
+        tones.stop()
+    }
 
     private companion object {
         const val KEY_TUNING = "tuning"
