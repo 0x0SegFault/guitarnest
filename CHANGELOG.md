@@ -9,7 +9,7 @@
 - Tuner: the reading stays while the string rings out; tap a string to hear its note; play A4 as a tuning fork.
 - Import MIDI files (for example public-domain guitar music from the Mutopia Project).
 - Sign in with OpenRouter (one account for many AI models), and Anthropic's API directly.
-- Report a problem or an idea anonymously (EU-hosted service), on GitHub or as text; crashes are kept on the phone and reported only if you choose.
+- Report a problem or an idea anonymously (EU-hosted service), on GitHub or as text. The exact issue is shown before sending; crash details are anonymised. My reports shows the status and the public link; anonymised crash reports can be sent automatically (off by default).
 - Song search retries when MusicBrainz is busy.
 - iPhone app builds and passes its tests in CI.
 

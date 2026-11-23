@@ -1,1 +1,1 @@
-Diagrammi degli accordi con barré, arpeggi e ritmi flamenco, accordo attuale e successivo, suoni dell'accordatore, import MIDI, accesso con OpenRouter, segnalazioni anonime.
+Diagrammi degli accordi con barré, arpeggi e ritmi flamenco, accordo attuale e successivo, suoni dell'accordatore, import MIDI, accesso con OpenRouter, segnalazioni anonime con stato.
