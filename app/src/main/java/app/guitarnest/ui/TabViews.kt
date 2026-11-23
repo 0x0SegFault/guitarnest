@@ -38,12 +38,15 @@ fun StrumRow(pattern: StrumPattern, modifier: Modifier = Modifier, active: Int? 
     val description = pattern.name + ": " + pattern.steps.map {
         when (it) { 'D' -> "down"; 'U' -> "up"; 'x' -> "mute"; 'R' -> "rasgueado"; 'B' -> "bass"; 'b' -> "alternate bass"; '-' -> "rest"; else -> "string $it" }
     }.joinToString(" ")
-    Row(modifier.semantics { contentDescription = description }, horizontalArrangement = Arrangement.spacedBy(if (big) 6.dp else 2.dp)) {
+    // Long patterns (a 12-beat compás) get smaller cells so they fit the screen.
+    val long = pattern.steps.length > 8
+    val cell = if (big) (if (long) 25.dp else 34.dp) else 18.dp
+    Row(modifier.semantics { contentDescription = description }, horizontalArrangement = Arrangement.spacedBy(if (big) (if (long) 3.dp else 6.dp) else 2.dp)) {
         pattern.steps.forEachIndexed { i, c ->
             val on = i == active
             val onBeat = i % pattern.perBeat == 0
             Box(
-                Modifier.size(if (big) 34.dp else 18.dp)
+                Modifier.size(cell)
                     .background(if (on) MaterialTheme.colorScheme.primary else Color.Transparent, RoundedCornerShape(6.dp)),
                 contentAlignment = Alignment.Center,
             ) {
@@ -56,11 +59,11 @@ fun StrumRow(pattern: StrumPattern, modifier: Modifier = Modifier, active: Int? 
                 when (c) {
                     'D', 'U' -> Icon(
                         if (c == 'D') Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward, null,
-                        tint = tint, modifier = Modifier.size(if (big) 26.dp else 15.dp),
+                        tint = tint, modifier = Modifier.size(if (big) (if (long) 20.dp else 26.dp) else 15.dp),
                     )
                     else -> Text(
                         when (c) { 'x' -> "×"; '-' -> "·"; else -> c.toString() },
-                        fontSize = if (big) 20.sp else 12.sp,
+                        fontSize = if (big) (if (long) 16.sp else 20.sp) else 12.sp,
                         fontWeight = if (onBeat || c == 'R') FontWeight.ExtraBold else FontWeight.Bold,
                         color = if (c == 'R' && !on) MaterialTheme.colorScheme.tertiary else tint,
                     )

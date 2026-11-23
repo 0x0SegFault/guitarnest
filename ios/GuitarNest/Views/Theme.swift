@@ -29,16 +29,19 @@ struct StrumRow: View {
     var big = false
 
     var body: some View {
-        HStack(spacing: big ? 6 : 2) {
+        // Long patterns (a 12-beat compás) get smaller cells so they fit the screen.
+        let long = steps.count > 8
+        let cell: CGFloat = big ? (long ? 25 : 34) : 18
+        HStack(spacing: big ? (long ? 3 : 6) : 2) {
             ForEach(Array(steps.enumerated()), id: \.offset) { index, stroke in
                 let on = index == active
                 ZStack {
                     RoundedRectangle(cornerRadius: 6).fill(on ? Palette.primary : Color.clear)
                     symbol(stroke)
-                        .font(.system(size: big ? 22 : 13, weight: index % max(1, perBeat) == 0 ? .heavy : .regular))
+                        .font(.system(size: big ? (long ? 16 : 22) : 13, weight: index % max(1, perBeat) == 0 ? .heavy : .regular))
                         .foregroundStyle(on ? Color.white : (stroke == "-" ? Palette.outline : Color.primary))
                 }
-                .frame(width: big ? 34 : 18, height: big ? 34 : 18)
+                .frame(width: cell, height: cell)
             }
         }
         .accessibilityElement(children: .ignore)

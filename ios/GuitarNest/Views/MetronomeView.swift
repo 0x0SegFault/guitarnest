@@ -38,11 +38,13 @@ struct MetronomeView: View {
                     }
                     Button(L10n.t("tap_tempo")) { tap() }.buttonStyle(.bordered)
                 }
-                HStack(spacing: 10) {
+                let many = beatsPerBar > 7
+                HStack(spacing: many ? 5 : 10) {
                     ForEach(0..<beatsPerBar, id: \.self) { b in
+                        let size: CGFloat = b == 0 ? (many ? 22 : 28) : (many ? 17 : 22)
                         Circle()
                             .fill(position?.beat == b ? (b == 0 ? Palette.primary : Palette.inTune) : Palette.outlineVariant)
-                            .frame(width: b == 0 ? 28 : 22, height: b == 0 ? 28 : 22)
+                            .frame(width: size, height: size)
                     }
                 }
                 if let pattern {

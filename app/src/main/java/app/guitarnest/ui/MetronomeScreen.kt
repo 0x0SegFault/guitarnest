@@ -74,11 +74,12 @@ fun MetronomeScreen(settings: MetronomeSettings, playing: Playing?, vm: SongsVie
         }
 
         // Beats
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        val many = settings.beatsPerBar > 7
+        Row(horizontalArrangement = Arrangement.spacedBy(if (many) 5.dp else 10.dp)) {
             repeat(settings.beatsPerBar) { b ->
                 val on = mine != null && mine.beat == b
                 Box(
-                    Modifier.size(if (b == 0) 28.dp else 22.dp).background(
+                    Modifier.size(if (b == 0) (if (many) 22.dp else 28.dp) else (if (many) 17.dp else 22.dp)).background(
                         when {
                             on && b == 0 -> MaterialTheme.colorScheme.primary
                             on -> MaterialTheme.colorScheme.tertiary
