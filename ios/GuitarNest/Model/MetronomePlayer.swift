@@ -74,10 +74,12 @@ final class MetronomePlayer: ObservableObject {
                     if s.sub == s.beatsPerBar * s.subdivisions {
                         s.sub = 0
                         s.bar += 1
-                        s.barStart = Int64((s.nextClick + s.sampleRate * 60 / s.bpm / Double(s.subdivisions)).rounded())
+                        let stepLength: Double = s.sampleRate * 60.0 / s.bpm / Double(s.subdivisions)
+                        s.barStart = Int64((s.nextClick + stepLength).rounded())
                         if let next = tempo(s.bar) { s.bpm = next } else { s.finished = true }
                     }
-                    s.nextClick += s.sampleRate * 60 / s.bpm / Double(s.subdivisions)
+                    let nextStep: Double = s.sampleRate * 60.0 / s.bpm / Double(s.subdivisions)
+                    s.nextClick += nextStep
                 }
                 var value: Float = 0
                 if s.clickIndex >= 0 {
@@ -116,14 +118,22 @@ final class MetronomePlayer: ObservableObject {
             onEnd()
             return
         }
-        let samplesPerBeat = s.sampleRate * 60 / s.bpm
-        let inBar = max(0, Double(s.sample - s.barStart)) / samplesPerBeat
-        position = Position(bar: s.bar, beat: min(s.beatsPerBar - 1, Int(inBar)), step: Int(inBar * 4), bpm: Int(s.bpm.rounded()))
+        let samplesPerBeat: Double = s.sampleRate * 60.0 / s.bpm
+        let elapsed: Double = max(0.0, Double(s.sample - s.barStart))
+        let inBar: Double = elapsed / samplesPerBeat
+        let beat: Int = min(s.beatsPerBar - 1, Int(inBar))
+        position = Position(bar: s.bar, beat: beat, step: Int(inBar * 4.0), bpm: Int(s.bpm.rounded()))
     }
 
     private static func tone(_ frequency: Double, _ gain: Double, _ rate: Double) -> [Float] {
-        (0..<Int(rate * 0.03)).map { i in
-            Float(gain * exp(-Double(i) / (rate * 0.006)) * sin(2 * .pi * frequency * Double(i) / rate))
+        let count = Int(rate * 0.03)
+        var out = [Float](repeating: 0, count: count)
+        for i in 0..<count {
+            let t: Double = Double(i) / rate
+            let envelope: Double = exp(-t / 0.006)
+            let wave: Double = sin(2.0 * Double.pi * frequency * t)
+            out[i] = Float(gain * envelope * wave)
         }
+        return out
     }
 }
