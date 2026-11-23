@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.1 (2026-11-23)
+
+- Chord diagrams computed for every chord (open and barre shapes up the neck); tap a diagram for another voicing, saved in the song.
+- Play along shows the chord now and the next chord; with a fingerpicking pattern, the string to pick lights up.
+- Fingerpicking patterns (bass, alternate bass, strings) and flamenco strumming: rumba, tangos, rasgueado, soleá and bulerías (12-beat compás).
+- Print and PDF start with the chord diagrams; the text export lists the shapes.
+- Tuner: the reading stays while the string rings out; tap a string to hear its note; play A4 as a tuning fork.
+- Import MIDI files (for example public-domain guitar music from the Mutopia Project).
+- Sign in with OpenRouter (one account for many AI models), and Anthropic's API directly.
+- Report a problem or an idea anonymously (EU-hosted service), on GitHub or as text; crashes are kept on the phone and reported only if you choose.
+- Song search retries when MusicBrainz is busy.
+- iPhone app builds and passes its tests in CI.
+
 ## 0.1.0 (2026-11-22)
 
 - Guitar tuner: YIN pitch detection, 9 tunings with their usual note names (E♭ in half step down), reference pitch 415–466 Hz. The six strings are shown; the string being tuned lights up; tap a string to lock it.

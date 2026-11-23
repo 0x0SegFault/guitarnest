@@ -1,1 +1,1 @@
-Première version.
+Diagrammes d'accords avec barrés, arpèges et rythmiques flamenco, accord actuel et suivant, sons de l'accordeur, import MIDI, connexion OpenRouter, rapports anonymes.

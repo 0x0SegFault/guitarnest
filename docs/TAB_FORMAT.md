@@ -36,7 +36,9 @@ A `.gnt` file is UTF-8 JSON. It is open: other apps and tools may read and write
 | `tuning` | A preset (`standard`, `half_step_down`, `whole_step_down`, `drop_d`, `drop_c`, `dadgad`, `open_d`, `open_g`, `open_e`) or six notes from low to high, for example `"D2 A2 D3 G3 B3 E4"`. |
 | `capo` | 0–12. Frets and chord names are relative to the capo (the shapes the player fingers). |
 | `tempo`, `beatsPerBar` | Quarter-note beats per minute (20–300) and per bar (1–12). |
-| `patterns[].steps` | One character per step: `D` down, `U` up, `x` muted strum, `-` no stroke. `perBeat`: 2 (eighths) or 4 (sixteenths). The pattern repeats over the bar. |
+| `patterns[].kind` | `strum` (default) or `pick`. |
+| `patterns[].steps` | One character per step. Strumming: `D` down, `U` up, `R` rasgueado, `x` muted strum, `-` no stroke. Fingerpicking: `B` bass string of the chord, `b` alternate bass, `1`–`6` string (1 = high E), `-` rest. `perBeat`: 1 (quarters), 2 (eighths) or 4 (sixteenths). The pattern repeats over the bar. |
+| `shapes` | Optional chord diagrams chosen by the player: chord name → frets from the lowest string, `x` = not played, for example `{"G": "320003", "C": "x35553"}`; frets of 10 or more are written with dashes: `"8-10-10-9-8-8"`. |
 | `sections[].strum`, `bars[].strum` | Pattern id for a section, or for one bar. |
 | `chords[].beat` | Beat in the bar where the chord starts, from 0. |
 | `beats[].at` | Position in the bar in beats, from 0, on a sixteenth-note grid (multiples of 0.25). |

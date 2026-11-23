@@ -10,7 +10,7 @@ import kotlinx.serialization.json.Json
  */
 object Reports {
     /** The deployed service, for example "https://guitarnestreports-xxxx.functions.fnc.fr-par.scw.cloud". Null: not deployed yet. */
-    val SERVICE_URL: String? = null
+    val SERVICE_URL: String? = "https://nshappyarchimedes2bwelnel-fct-stoic-wiles.functions.fnc.fr-par.scw.cloud"
 
     const val GITHUB_NEW_ISSUE = "https://github.com/0x0SegFault/guitarnest/issues/new"
 

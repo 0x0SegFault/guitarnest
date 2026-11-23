@@ -10,29 +10,41 @@ A free and open-source app to learn songs on the guitar, for **Android and iPhon
 **Status: early development.** No release yet.
 
 <p>
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="16%" alt="Song library">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="16%" alt="Play along: current bar and strum">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="16%" alt="Tab from audio">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="16%" alt="A tab made from a recording">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="16%" alt="Metronome with strumming pattern">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" width="16%" alt="Tuner">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="16%" alt="Song with chord diagrams">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="16%" alt="Play along: chord now and next">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="16%" alt="Fingerpicking: the string to pick lights up">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="16%" alt="Tab from audio">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" width="16%" alt="Metronome: soleá compás">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" width="16%" alt="Tuner">
+</p>
+
+iPhone (from the CI simulator):
+
+<p>
+  <img src="ios/fastlane/screenshots/en-US/2-play-along.png" width="19%" alt="iPhone: play along">
+  <img src="ios/fastlane/screenshots/en-US/3-metronome.png" width="19%" alt="iPhone: metronome">
+  <img src="ios/fastlane/screenshots/en-US/4-tuner.png" width="19%" alt="iPhone: tuner">
+  <img src="ios/fastlane/screenshots/en-US/5-tab-from-audio.png" width="19%" alt="iPhone: tab from audio">
 </p>
 
 | Platform | App | Status |
 |---|---|---|
 | Android 8+ | `app/` (Kotlin, Jetpack Compose) | Built, tested on the emulator |
-| iPhone, iOS 17+ | `ios/` (SwiftUI) | Built and tested by CI on macOS; screenshots in the `ios-preview` release |
+| iPhone, iOS 17+ | `ios/` (SwiftUI) | Builds and passes its tests in CI on macOS |
 | Shared logic | `shared/` (Kotlin Multiplatform) | Tab format, music analysis, note model, AI requests |
 
 ## Features
 
-- **Tab library**: write tabs and strumming patterns; import GuitarNest (`.gnt`) and MusicXML files; export, print or save as PDF.
+- **Tab library**: write tabs and patterns; import GuitarNest (`.gnt`), MusicXML and MIDI files ([free music to import](docs/OPEN_MUSIC.md)); export, print or save as PDF.
 - **Tab from audio**: a song file you own, a recording of you playing, or (Android) the sound of an app that allows capture becomes a draft tab with tempo, chords, capo, tuning and strumming, at your level. The notes are found **on your phone** (Basic Pitch model, no internet needed).
-- **Play along**: the current bar and strum light up with the metronome; count-in, loop a section, play at 50–100 % or speed up step by step.
+- **Play along**: the current bar and strum light up with the metronome; the chord now and next are shown as diagrams; with fingerpicking the string to pick lights up. Count-in, loop a section, play at 50–100 % or speed up step by step.
+- **Chord diagrams**: computed for every chord, open and barre shapes up the neck; choose the one you play. Printed with the tab.
+- **Strumming and fingerpicking patterns**, including flamenco (rumba, tangos, rasgueado, soleá and bulerías compás).
 - **Metronome**: 30–250 BPM, accents, subdivisions, tap tempo, speed trainer, strumming patterns.
-- **Tuner**: 9 tunings; the string being tuned lights up.
+- **Tuner**: 9 tunings; the string being tuned lights up; tap a string to hear its note; reference A4 as a tuning fork.
 - **Your own AI** (optional): connect a cloud account (Anthropic, OpenAI, Mistral, OpenRouter), your gateway (LiteLLM) or a local model (Ollama, LM Studio). It improves drafts, arranges a tab for your level or adds strumming patterns. Only the tab and your request are sent, to the address you choose; never audio.
 - **Song search** in MusicBrainz (open data) to start a new tab.
+- **Report a problem or idea** anonymously (EU-hosted, no IP stored), on GitHub, or as text.
 - **Encrypted backups**: one password-protected file with all songs and practice history, where you want it. Android and iPhone use the same format.
 - **AI toolkit** for your computer ([ai/](ai/README.md)): the same analysis from the command line, with a skill file for AI agents.
 - English, French, German, Spanish, Italian.

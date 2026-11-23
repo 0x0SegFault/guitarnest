@@ -1,1 +1,1 @@
-Erste Version.
+Akkorddiagramme mit Barrés, Zupf- und Flamenco-Muster, aktueller und nächster Akkord, Töne im Stimmgerät, MIDI-Import, Anmeldung mit OpenRouter, anonyme Meldungen.

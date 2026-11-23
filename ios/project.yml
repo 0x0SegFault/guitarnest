@@ -7,8 +7,8 @@ options:
   developmentLanguage: en
 settings:
   base:
-    MARKETING_VERSION: "0.1.0"
-    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "0.1.1"
+    CURRENT_PROJECT_VERSION: "2"
     SWIFT_VERSION: "5.9"
     # Simulator builds are signed to run locally; App Store signing is set in Xcode with the maintainer's account.
     CODE_SIGN_STYLE: Manual

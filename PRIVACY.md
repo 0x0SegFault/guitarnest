@@ -18,9 +18,11 @@ No other permissions. CI fails if a new permission appears.
 |---|---|---|
 | Find a song | Your search words and the app name | [MusicBrainz](https://musicbrainz.org) (open music database, MetaBrainz Foundation). See their [privacy policy](https://metabrainz.org/privacy). |
 | Ask AI / Make a tab with AI | The song you selected (as a GuitarNest tab), the level and your request | The address you set in Settings → AI connection: your own computer, your own server, or the cloud service you chose. Their privacy policy applies. |
+| Report a problem or idea (anonymous) | Kind, title and text you write; if you leave them on: app version, device model and system version, the last crash | GuitarNest's report service at Scaleway (Paris, EU). It never reads request headers, so it does not see or store your IP address; nothing is logged. The report becomes an issue in a private repository read by the maintainer. |
+| Sign in with OpenRouter | Nothing from GuitarNest; you sign in on openrouter.ai, which returns a key to the app | OpenRouter. Their privacy policy applies. The key is stored encrypted on your phone; you can delete it on openrouter.ai. |
 | Search for tabs in the browser | Artist and title | Opens your browser with a DuckDuckGo search. The app itself downloads nothing. |
 
-Audio is never sent: notes are found on this phone. Your AI gets only the draft tab. Your other songs, your practice history and your settings are never sent.
+Audio is never sent: notes are found on this phone. Crashes are kept on the phone only; GuitarNest asks before sending one. Your AI gets only the draft tab. Your other songs, your practice history and your settings are never sent.
 
 ## iPhone
 
