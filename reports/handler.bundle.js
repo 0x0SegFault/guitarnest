@@ -89,7 +89,7 @@ module.exports = { validate, toIssue, LIMITS };
 } };
 __modules['github.js'] = { loaded: false, module: { exports: {} }, fn: (module, exports) => {
 'use strict';
-// Creates an issue in the private intake repository.
+// Creates an issue in the private intake repository. Returns { ok, status } (GitHub's HTTP status, for diagnosis).
 
 async function createIssue({ token, repo, issue, fetchImpl = globalThis.fetch }) {
   const send = (body) => fetchImpl(`https://api.github.com/repos/${repo}/issues`, {
@@ -108,7 +108,7 @@ async function createIssue({ token, repo, issue, fetchImpl = globalThis.fetch })
     const { labels, ...withoutLabels } = issue;
     response = await send(withoutLabels);
   }
-  return response.ok;
+  return { ok: response.ok, status: response.status };
 }
 
 module.exports = { createIssue };
@@ -300,8 +300,12 @@ async function handle(event, context, deps = {}) {
     if (!verifySolution(env.POW_KEY, input.proof) || !firstUse(input.proof.salt)) return json(403, { error: 'proof' });
     const { report, error } = validate(input);
     if (error) return json(400, { error });
-    const ok = await createIssue({ token: env.GITHUB_TOKEN, repo: env.GITHUB_REPO, issue: toIssue(report), fetchImpl: deps.fetch });
-    return ok ? json(200, { ok: true }) : json(502, { error: 'upstream' });
+    // Setting problems are named (never their values), so the maintainer can fix the deployment.
+    const missing = ['GITHUB_TOKEN', 'GITHUB_REPO', 'POW_KEY'].filter((k) => !env[k]);
+    if (missing.length) return json(500, { error: 'config', missing });
+    const result = await createIssue({ token: env.GITHUB_TOKEN, repo: env.GITHUB_REPO, issue: toIssue(report), fetchImpl: deps.fetch });
+    // 401: token wrong or expired. 403: token without "Issues: write". 404: repository name wrong or not in the token.
+    return result.ok ? json(200, { ok: true }) : json(502, { error: 'upstream', github: result.status });
   }
   if (method === 'GET') return reply(200, 'text/html; charset=utf-8', formPage(event.queryStringParameters || {}));
   return json(405, { error: 'method' });

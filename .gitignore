@@ -55,3 +55,4 @@ ios/GuitarNest/Resources/*.lproj/
 ios/*.xcodeproj/
 ios/GuitarNest/Info.plist
 reports/function.zip
+reports/handler.bundle.js

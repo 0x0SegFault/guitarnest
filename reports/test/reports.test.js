@@ -89,3 +89,17 @@ test('pages carry strict security headers and the handler never reads request he
   assert.equal(page.headers['Referrer-Policy'], 'no-referrer');
   assert.match(page.body, /value="feature" selected/);
 });
+
+test('deployment problems are named: missing settings and the GitHub status (never the values)', async () => {
+  const report = async (testEnv, fetch) => {
+    const challenge = JSON.parse((await handle({ httpMethod: 'GET', path: '/challenge' }, {}, { env: testEnv })).body);
+    const body = JSON.stringify({ kind: 'bug', title: 'App closes', details: 'It closes when I save.', proof: solve(challenge) });
+    return handle({ httpMethod: 'POST', path: '/report', body }, {}, { env: testEnv, fetch });
+  };
+  const missing = await report({ POW_KEY: KEY, GITHUB_REPO: 'owner/reports' }, async () => ({ ok: true, status: 201 }));
+  assert.equal(missing.statusCode, 500);
+  assert.deepEqual(JSON.parse(missing.body), { error: 'config', missing: ['GITHUB_TOKEN'] });
+  const denied = await report(env, async () => ({ ok: false, status: 404 }));
+  assert.deepEqual(JSON.parse(denied.body), { error: 'upstream', github: 404 });
+  assert.ok(!denied.body.includes('t"'));
+});

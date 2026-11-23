@@ -1,5 +1,5 @@
 'use strict';
-// Creates an issue in the private intake repository.
+// Creates an issue in the private intake repository. Returns { ok, status } (GitHub's HTTP status, for diagnosis).
 
 async function createIssue({ token, repo, issue, fetchImpl = globalThis.fetch }) {
   const send = (body) => fetchImpl(`https://api.github.com/repos/${repo}/issues`, {
@@ -18,7 +18,7 @@ async function createIssue({ token, repo, issue, fetchImpl = globalThis.fetch })
     const { labels, ...withoutLabels } = issue;
     response = await send(withoutLabels);
   }
-  return response.ok;
+  return { ok: response.ok, status: response.status };
 }
 
 module.exports = { createIssue };
