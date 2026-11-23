@@ -184,6 +184,9 @@ object Bridge {
     fun reportEncodeSent(list: List<Reports.Sent>): String = Reports.encodeSent(list)
     fun reportDecodeSent(text: String): List<Reports.Sent> = Reports.decodeSent(text)
     fun reportParseStatus(body: String): Reports.Status = Reports.parseStatus(body)
+    // "public" is a Swift keyword: Swift reads the status through these.
+    fun reportStatusName(status: Reports.Status): String = status.status
+    fun reportStatusLink(status: Reports.Status): String? = status.public
     fun reportGithubUrl(kind: String, title: String, details: String, version: String, device: String): String =
         Reports.githubUrl(kind, title, details, version, device)
     fun reportShareText(kind: String, title: String, details: String, version: String, device: String): String =

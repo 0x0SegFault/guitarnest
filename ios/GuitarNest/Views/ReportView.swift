@@ -94,7 +94,7 @@ struct ReportView: View {
 
 /// Reports sent from this iPhone with their status. The status is asked only while this list is open.
 struct MyReportsView: View {
-    @State private var sent = ReportStore.sent()
+    @State private var sent: [Reports.Sent] = ReportStore.sent()
     @State private var status: [String: Reports.Status] = [:]
 
     var body: some View {
@@ -102,13 +102,7 @@ struct MyReportsView: View {
             Text(L10n.t("my_reports_help")).font(.caption).foregroundStyle(.secondary)
             if sent.isEmpty { Text(L10n.t("my_reports_empty")) }
             ForEach(sent, id: \.code) { report in
-                VStack(alignment: .leading, spacing: 4) {
-                    Text((report.kind == "bug" ? "🐞 " : "💡 ") + report.title).font(.headline)
-                    Text(label(status[report.code]?.status)).font(.caption).foregroundStyle(.secondary)
-                    if let link = status[report.code]?.public, let url = URL(string: link) {
-                        Link(L10n.t("status_open_public"), destination: url).font(.caption)
-                    }
-                }
+                SentReportRow(report: report, status: status[report.code])
             }
         }
         .navigationTitle(L10n.t("my_reports"))
@@ -117,10 +111,27 @@ struct MyReportsView: View {
             for report in sent { status[report.code] = await ReportStore.status(report.code) }
         }
     }
+}
 
-    private func label(_ status: String?) -> String {
-        switch status {
-        case nil: return L10n.t("working")
+private struct SentReportRow: View {
+    let report: Reports.Sent
+    let status: Reports.Status?
+
+    var body: some View {
+        let icon: String = report.kind == "bug" ? "🐞 " : "💡 "
+        let link: String? = status.flatMap { Bridge.shared.reportStatusLink(status: $0) }
+        VStack(alignment: .leading, spacing: 4) {
+            Text(icon + report.title).font(.headline)
+            Text(label).font(.caption).foregroundStyle(.secondary)
+            if let link, let url = URL(string: link) {
+                Link(L10n.t("status_open_public"), destination: url).font(.caption)
+            }
+        }
+    }
+
+    private var label: String {
+        guard let status else { return L10n.t("working") }
+        switch Bridge.shared.reportStatusName(status: status) {
         case "received": return L10n.t("status_received")
         case "published": return L10n.t("status_published")
         case "closed": return L10n.t("status_closed")
