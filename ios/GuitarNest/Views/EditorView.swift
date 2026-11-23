@@ -75,7 +75,8 @@ struct EditorView: View {
                 .onDelete { patterns.remove(atOffsets: $0) }
                 ForEach(Bridge.shared.presetPatterns().filter { preset in !patterns.contains { $0.id == preset.id } }, id: \.id) { preset in
                     Button("+ \(preset.name)") {
-                        patterns.append(PatternDraft(id: preset.id, name: preset.name, steps: preset.steps, perBeat: Int(preset.perBeat), kind: Bridge.shared.patternKind(pattern: preset)))
+                        let kind = Bridge.shared.patternKind(pattern: preset)
+                        patterns.append(PatternDraft(id: preset.id, name: preset.name, steps: preset.steps, perBeat: Int(preset.perBeat), kind: kind))
                     }
                 }
             }

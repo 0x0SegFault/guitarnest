@@ -75,17 +75,18 @@ enum SongPrinter {
         let small: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 6)]
         if first > 1 { ("\(first)" as NSString).draw(at: CGPoint(x: x, y: top), withAttributes: small) }
         if barre.count == 3 {
-            let cy = top + (CGFloat(barre[0] - first) + 0.5) * gap
-            UIBezierPath(roundedRect: CGRect(x: left + CGFloat(barre[1]) * gap - 2.5, y: cy - 2.5, width: CGFloat(barre[2] - barre[1]) * gap + 5, height: 5), cornerRadius: 2.5).fill()
+            let centerY = top + (CGFloat(barre[0] - first) + 0.5) * gap
+            let bar = CGRect(x: left + CGFloat(barre[1]) * gap - 2.5, y: centerY - 2.5, width: CGFloat(barre[2] - barre[1]) * gap + 5, height: 5)
+            UIBezierPath(roundedRect: bar, cornerRadius: 2.5).fill()
         }
         for (s, fret) in frets.enumerated() {
-            let cx = left + CGFloat(s) * gap
+            let centerX = left + CGFloat(s) * gap
             if fret < 0 {
-                ("x" as NSString).draw(at: CGPoint(x: cx - 1.8, y: top - 8), withAttributes: small)
+                ("x" as NSString).draw(at: CGPoint(x: centerX - 1.8, y: top - 8), withAttributes: small)
             } else if fret == 0 {
-                ("o" as NSString).draw(at: CGPoint(x: cx - 1.8, y: top - 8), withAttributes: small)
+                ("o" as NSString).draw(at: CGPoint(x: centerX - 1.8, y: top - 8), withAttributes: small)
             } else {
-                UIBezierPath(ovalIn: CGRect(x: cx - 2.6, y: top + (CGFloat(fret - first) + 0.5) * gap - 2.6, width: 5.2, height: 5.2)).fill()
+                UIBezierPath(ovalIn: CGRect(x: centerX - 2.6, y: top + (CGFloat(fret - first) + 0.5) * gap - 2.6, width: 5.2, height: 5.2)).fill()
             }
         }
     }
