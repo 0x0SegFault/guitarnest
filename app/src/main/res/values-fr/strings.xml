@@ -191,11 +191,10 @@
     <string name="report_details">Que s\'est-il passé, ou qu\'est-ce qui vous aiderait ? Étapes pour le revoir.</string>
     <string name="report_with_device">Ajouter la version et l\'appareil : %1$s</string>
     <string name="report_with_crash">Ajouter les détails du plantage (ci-dessous)</string>
-    <string name="report_privacy">Envoyé anonymement au service de rapports de GuitarNest à Paris (Scaleway). Il ne garde pas votre adresse IP. Le mainteneur le lit avant toute publication.</string>
-    <string name="report_not_ready">Le service de rapports anonymes n\'est pas encore prêt. Utilisez GitHub (compte nécessaire ; public) ou partagez le texte par e-mail ou messagerie.</string>
+    <string name="report_privacy">Envoyé anonymement au service de rapports de GuitarNest à Paris (Scaleway). Rien sur vous n\'est gardé : ni votre adresse IP, ni cookie.</string>
+    <string name="report_not_ready">Le service de rapports anonymes n\'est pas encore prêt. Utilisez GitHub (compte nécessaire ; le rapport est public).</string>
     <string name="report_send">Envoyer anonymement</string>
     <string name="report_github">Ouvrir sur GitHub</string>
-    <string name="report_share">Partager le texte</string>
     <string name="report_sent">Merci : le rapport a été envoyé.</string>
     <string name="crash_banner">GuitarNest s\'est arrêté de façon inattendue la dernière fois. Vous pouvez envoyer un rapport : rien n\'est envoyé sans votre choix.</string>
     <string name="report_preview">Cela crée le ticket suivant :</string>

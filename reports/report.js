@@ -39,7 +39,7 @@ function toIssue(report) {
     `App version: ${report.version || 'not given'}`,
     `Device: ${report.device || 'not given'}`,
     '',
-    '_Sent anonymously. The sender sees only the status (received, published with its public link, closed), not comments here._',
+    '_Sent anonymously._',
   ];
   if (report.followUp) lines.push(`<!-- follow-up: ${followUpHash(report.followUp)} -->`);
   return { title: `${prefix}: ${report.title}`, body: lines.join('\n'), labels: KINDS[report.kind] };

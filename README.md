@@ -45,7 +45,7 @@ iPhone (from the CI simulator):
 - **Your own AI** (optional): connect a cloud account (Anthropic, OpenAI, Mistral, OpenRouter), your gateway (LiteLLM) or a local model (Ollama, LM Studio). It improves drafts, arranges a tab for your level or adds strumming patterns. Only the tab and your request are sent, to the address you choose; never audio.
 - **Song search** in MusicBrainz (open data) to start a new tab.
 - **Find the title** of a recording with AcoustID (optional, off by default). Only a fingerprint of the sound is sent.
-- **Report a problem or idea** anonymously (EU-hosted, no IP stored), on GitHub, or as text.
+- **Report a problem or idea** anonymously (EU-hosted, nothing about you kept) or on GitHub.
 - **Encrypted backups**: one password-protected file with all songs and practice history, where you want it. Android and iPhone use the same format.
 - **AI toolkit** for your computer ([ai/](ai/README.md)): the same analysis from the command line, with a skill file for AI agents.
 - English, French, German, Spanish, Italian.

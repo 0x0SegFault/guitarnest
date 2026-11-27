@@ -116,12 +116,6 @@ fun ReportSheet(crash: String?, onDone: (String?) -> Unit) {
             if (withCrash) CrashLog.clear(context)
             onDone(null)
         }) { Text(stringResource(R.string.report_github)) }
-        OutlinedButton(enabled = valid, modifier = Modifier.fillMaxWidth(), onClick = {
-            val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, Reports.shareText(kind, title, fullDetails, version, device))
-            context.startActivity(Intent.createChooser(send, context.getString(R.string.report_share)))
-            if (withCrash) CrashLog.clear(context)
-            onDone(null)
-        }) { Text(stringResource(R.string.report_share)) }
     }
 }
 

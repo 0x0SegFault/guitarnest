@@ -37,8 +37,8 @@ function formPage(query = {}) {
 <body>
 <main>
   <h1>GuitarNest · anonymous report</h1>
-  <p class="lead">No account and no email. Nothing about you is stored: not your IP address, not a cookie.
-  Do not paste copyrighted tabs or lyrics. Reports are read by the maintainer before anything is made public.</p>
+  <p class="lead">Anonymous: no account, no email. Nothing about you is kept: not your IP address, not a cookie.
+  Do not paste copyrighted tabs or lyrics.</p>
   <form id="report">
     <label for="kind">Type</label>
     <select id="kind" name="kind">

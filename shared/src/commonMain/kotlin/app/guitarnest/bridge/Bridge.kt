@@ -205,8 +205,6 @@ object Bridge {
     fun reportStatusLink(status: Reports.Status): String? = status.public
     fun reportGithubUrl(kind: String, title: String, details: String, version: String, device: String): String =
         Reports.githubUrl(kind, title, details, version, device)
-    fun reportShareText(kind: String, title: String, details: String, version: String, device: String): String =
-        Reports.shareText(kind, title, details, version, device)
 
     /** Audio (mono, 22050 Hz) to a draft song. [progress] gets (windows done, total). */
     @Throws(Exception::class)

@@ -191,11 +191,10 @@
     <string name="report_details">¿Qué pasó, o qué te ayudaría? Pasos para verlo de nuevo.</string>
     <string name="report_with_device">Añadir versión y dispositivo: %1$s</string>
     <string name="report_with_crash">Añadir los detalles del cierre (abajo)</string>
-    <string name="report_privacy">Se envía de forma anónima al servicio de informes de GuitarNest en París (Scaleway). No guarda tu dirección IP. El mantenedor lo lee antes de publicar nada.</string>
-    <string name="report_not_ready">El servicio de informes anónimos aún no está listo. Usa GitHub (requiere cuenta; público) o comparte el texto por correo o mensajería.</string>
+    <string name="report_privacy">Se envía de forma anónima al servicio de informes de GuitarNest en París (Scaleway). No se guarda nada sobre ti: ni tu dirección IP ni cookies.</string>
+    <string name="report_not_ready">El servicio de informes anónimos aún no está listo. Usa GitHub (necesita una cuenta; el informe es público).</string>
     <string name="report_send">Enviar de forma anónima</string>
     <string name="report_github">Abrir en GitHub</string>
-    <string name="report_share">Compartir como texto</string>
     <string name="report_sent">Gracias: el informe se ha enviado.</string>
     <string name="crash_banner">GuitarNest se cerró de forma inesperada la última vez. Puedes enviar un informe: no se envía nada sin que lo elijas.</string>
     <string name="report_preview">Esto crea la siguiente incidencia:</string>

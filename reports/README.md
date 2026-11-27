@@ -1,6 +1,6 @@
 # Anonymous reports
 
-A small Scaleway Serverless Function (Paris) that lets users report a problem or suggest a feature **without an account or an email**. Reports become issues in a **private** GitHub repository, where the maintainer reads them before anything is made public.
+A small Scaleway Serverless Function (Paris) that lets users report a problem or suggest a feature **without an account or an email**. It keeps nothing about the sender (no IP address, no cookie). Reports become issues in a **private** GitHub repository.
 
 ```
 GuitarNest app ──GET /challenge, POST /report──▶ this function ──▶ issue in the private repo 0x0SegFault/guitarnest-reports

@@ -203,11 +203,10 @@
     <string name="report_details">What happened, or what would help you? Steps to see it again.</string>
     <string name="report_with_device">Add app version and device: %1$s</string>
     <string name="report_with_crash">Add the crash details (shown below)</string>
-    <string name="report_privacy">Sent anonymously to GuitarNest\'s report service in Paris (Scaleway). It does not store your IP address. The maintainer reads it before anything is made public.</string>
-    <string name="report_not_ready">The anonymous report service is not ready yet. Use GitHub (needs an account; public) or share the text by e-mail or messenger.</string>
+    <string name="report_privacy">Sent anonymously to GuitarNest\'s report service in Paris (Scaleway). Nothing about you is kept: not your IP address, not a cookie.</string>
+    <string name="report_not_ready">The anonymous report service is not ready yet. Use GitHub (needs an account; the report is public).</string>
     <string name="report_send">Send anonymously</string>
     <string name="report_github">Open on GitHub</string>
-    <string name="report_share">Share as text</string>
     <string name="report_sent">Thank you: the report was sent.</string>
     <string name="crash_banner">GuitarNest stopped unexpectedly last time. You can send a report: nothing is sent unless you choose to.</string>
     <string name="report_preview">This creates the following issue:</string>

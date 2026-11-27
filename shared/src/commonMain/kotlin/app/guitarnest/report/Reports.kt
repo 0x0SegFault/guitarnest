@@ -49,7 +49,7 @@ object Reports {
     }
 
     /** Same footer as reports/report.js. */
-    const val FOOTER = "_Sent anonymously. The sender sees only the status (received, published with its public link, closed), not comments here._"
+    const val FOOTER = "_Sent anonymously._"
 
     /**
      * A crash report without personal content: the first line (app and system version), error types and
@@ -93,10 +93,6 @@ object Reports {
         val label = if (kind == "bug") "bug" else "enhancement"
         return "$GITHUB_NEW_ISSUE?labels=$label&title=${encode(title)}&body=${encode(body.take(6000))}"
     }
-
-    /** Plain text to share with any app (e-mail, messenger). */
-    fun shareText(kind: String, title: String, details: String, version: String, device: String): String =
-        "GuitarNest ${if (kind == "bug") "problem" else "idea"}: $title\n\n$details\n\nApp version: $version\nDevice: $device"
 
     private fun encode(text: String): String = buildString {
         for (b in text.encodeToByteArray()) {

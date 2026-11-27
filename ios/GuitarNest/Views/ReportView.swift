@@ -13,7 +13,6 @@ struct ReportView: View {
     @State private var sending = false
     @State private var error: String?
     @State private var sharing: ExportFile?
-    @State private var shareText: String?
 
     private var version: String { Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "" }
     private var device: String { withDevice ? "\(UIDevice.current.model), iOS \(UIDevice.current.systemVersion)" : "" }
@@ -47,19 +46,9 @@ struct ReportView: View {
                 dismiss()
             }
             .disabled(!valid)
-            Button(L10n.t("report_share")) {
-                shareText = Bridge.shared.reportShareText(kind: kind, title: title, details: details, version: version, device: device)
-            }
-            .disabled(!valid)
         }
         .navigationTitle(L10n.t("report_title"))
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(item: Binding(get: { shareText.map { SharedText(text: $0) } }, set: { shareText = $0?.text })) { item in ShareSheet(items: [item.text]) }
-    }
-
-    private struct SharedText: Identifiable {
-        let text: String
-        var id: String { text }
     }
 
     private func send() {
