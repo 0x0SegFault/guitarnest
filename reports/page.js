@@ -31,6 +31,8 @@ function formPage(query = {}) {
     color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
   button:disabled { opacity: .6; cursor: wait; }
   .note { color: var(--muted); font-size: .9rem; }
+  .hint { margin: 4px 0 0; font-size: .85rem; color: var(--muted); min-height: 1.2em; }
+  [aria-invalid="true"] { border-color: var(--rose); outline: 2px solid var(--rose); }
   #status { margin-top: 16px; font-weight: 600; }
 </style>
 </head>
@@ -40,7 +42,7 @@ function formPage(query = {}) {
   <p class="lead">Anonymous: no account, no email. Nothing about you is kept: not your IP address, not a cookie.
   Do not paste copyrighted tabs or lyrics.</p>
   <noscript><p class="note" style="font-weight:600">This form needs JavaScript. Turn it on for this page, or send the report with GitHub.</p></noscript>
-  <form id="report">
+  <form id="report" novalidate>
     <label for="kind">Type</label>
     <select id="kind" name="kind">
       <option value="bug"${kind === 'bug' ? ' selected' : ''}>Problem</option>
@@ -48,8 +50,10 @@ function formPage(query = {}) {
     </select>
     <label for="title">Summary</label>
     <input id="title" name="title" maxlength="120" required minlength="5" value="${v('title', 120)}">
+    <p id="title-hint" class="hint"></p>
     <label for="details">Details</label>
     <textarea id="details" name="details" maxlength="5000" required minlength="10">${v('what', 5000)}</textarea>
+    <p id="details-hint" class="hint"></p>
     <div class="row">
       <div><label for="version">App version</label><input id="version" name="version" maxlength="40" value="${v('version', 40)}"></div>
       <div><label for="device">Phone</label><input id="device" name="device" maxlength="120" value="${v('device', 120)}"></div>
@@ -149,9 +153,33 @@ function show(text) {
   if (text) status.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
 
+// Summary and details need a minimum length. Each box says how much is missing, so nothing fails in silence.
+const RULES = [['title', 5, 'Summary'], ['details', 10, 'Details']];
+function missing(name, min) { return Math.max(0, min - form.elements[name].value.trim().length); }
+function updateHints() {
+  for (const [name, min] of RULES) {
+    const n = missing(name, min);
+    document.getElementById(name + '-hint').textContent = n ? 'At least ' + min + ' characters: ' + n + ' more.' : '';
+    if (!n) form.elements[name].removeAttribute('aria-invalid');
+  }
+}
+form.addEventListener('input', updateHints);
+updateHints();
+
 form.addEventListener('submit', async (event) => {
-  log('Send pressed.');
   event.preventDefault();
+  log('Send pressed.');
+  for (const [name, min, label] of RULES) {
+    if (missing(name, min)) {
+      const field = form.elements[name];
+      field.setAttribute('aria-invalid', 'true');
+      show('Please write at least ' + min + ' characters in ' + label + '.');
+      field.focus();
+      field.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      log(label + ' too short.');
+      return;
+    }
+  }
   button.disabled = true;
   button.textContent = 'Checking…';
   show('');
