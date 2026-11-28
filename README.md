@@ -42,7 +42,7 @@ iPhone (from the CI simulator):
 - **Tab from audio**: a song file you own, a recording of you playing, or (Android) the sound of an app that allows capture becomes a draft tab with tempo, chords, capo, tuning and strumming, at your level. The notes are found **on your phone** (Basic Pitch model, no internet needed).
 - **Play along**: the current bar and strum light up with the metronome; the chord now and next are shown as diagrams; with fingerpicking the string to pick lights up. Count-in, loop a section, play at 50–100 % or speed up step by step.
 - **Chord diagrams**: computed for every chord, open and barre shapes up the neck; choose the one you play. Printed with the tab.
-- **Strumming and fingerpicking patterns**, including flamenco (rumba, tangos, rasgueado, soleá and bulerías compás).
+- **Strumming and fingerpicking patterns**, including flamenco (rumba, tangos, garrotín, rasgueado, sevillanas, fandango de Huelva, tanguillo, and the soleá, alegrías, bulerías, guajira and seguiriya compás) and a muted backbeat for rumba and island pop.
 - **Metronome**: 30–250 BPM, accents, subdivisions, tap tempo, speed trainer, strumming patterns.
 - **Tuner**: 9 tunings; the string being tuned lights up; tap a string to hear its note; reference A4 as a tuning fork.
 - **Your own AI** (optional): connect a cloud account (Anthropic, OpenAI, Mistral, OpenRouter), your gateway (LiteLLM) or a local model (Ollama, LM Studio). It improves drafts, arranges a tab for your level or adds strumming patterns. Only the tab and your request are sent, to the address you choose; never audio.

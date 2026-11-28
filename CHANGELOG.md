@@ -4,6 +4,7 @@
 
 - Song book: 24 public-domain songs, arranged at three levels (chords and strumming, melody with chords, fingerstyle). No lyrics.
 - Search finds free guitar scores (public domain or Creative Commons, Mutopia Project) and makes a tab in one tap.
+- Flamenco: seguiriya, sevillanas, fandango de Huelva, tanguillo and garrotín patterns; soleá also covers alegrías, bulerías also covers guajira. A muted backbeat strum for rumba and island pop. The metronome sets 3, 6 or 12 beats for these patterns.
 - Chords (AI) on a search result: your own AI writes a chord chart only, with no lyrics and no melody.
 - Licence: GuitarNest now uses the EUPL-1.2, the open-source licence of the European Union, instead of the GPL-3.0.
 - Report form: shows the minimum length under each box, names the box that is too short, and has a debug mode.

@@ -108,10 +108,11 @@ fun MetronomeScreen(settings: MetronomeSettings, playing: Playing?, vm: SongsVie
         Label(R.string.strumming_pattern)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             FilterChip(selected = settings.pattern == null, onClick = { vm.updateMetronome { it.copy(pattern = null) } }, label = { Text(stringResource(R.string.none)) })
-            // A 12-beat flamenco compás sets 12 beats per bar, so its accents land on the right beats.
+            // A pattern of 3, 6 or 12 beats (waltz, sevillanas, tanguillo, a flamenco compás) sets the beats per bar,
+            // so its accents land on the right beats.
             PRESET_PATTERNS.filter { !it.picking }.forEach { p ->
                 FilterChip(selected = settings.pattern?.id == p.id, onClick = {
-                    vm.updateMetronome { it.copy(pattern = p, beatsPerBar = if (p.beats == 12) 12 else if (it.beatsPerBar == 12) 4 else it.beatsPerBar) }
+                    vm.updateMetronome { it.copy(pattern = p, beatsPerBar = if (p.beats != 4) p.beats else if (it.beatsPerBar in setOf(6, 12)) 4 else it.beatsPerBar) }
                 }, label = { Text(p.name) })
             }
         }

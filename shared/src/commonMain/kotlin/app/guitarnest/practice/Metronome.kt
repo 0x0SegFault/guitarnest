@@ -93,12 +93,23 @@ val PRESET_PATTERNS = listOf(
     app.guitarnest.tab.StrumPattern("eighths", "Eighths", "DUDUDUDU"),
     app.guitarnest.tab.StrumPattern("waltz", "Waltz (3/4)", "D-DUDU"),
     app.guitarnest.tab.StrumPattern("sixteenths", "Sixteenths", "D-DUD-DUD-DUD-DU", perBeat = 4),
-    // Flamenco. R = rasgueado; the 12-beat compás accents beats 3, 6, 8, 10 and 12 (soleá) or starts on 12 (bulerías).
+    // Flamenco. R = rasgueado on the accents of the compás (the rhythm cycle of each style).
     app.guitarnest.tab.StrumPattern("rumba", "Rumba (flamenco)", "DUxUDUxU"),
+    app.guitarnest.tab.StrumPattern("backbeat", "Muted backbeat (rumba, island pop)", "D-xU-UxU"),
     app.guitarnest.tab.StrumPattern("tangos", "Tangos (flamenco)", "--D-DUR-"),
+    app.guitarnest.tab.StrumPattern("garrotin", "Garrotín", "D-DUR-DU"),
     app.guitarnest.tab.StrumPattern("rasgueado", "Rasgueado", "R-DUR-DU"),
-    app.guitarnest.tab.StrumPattern("solea", "Soleá (12-beat compás)", "DDRDDRDRDRDR", perBeat = 1),
-    app.guitarnest.tab.StrumPattern("bulerias", "Bulerías (12-beat compás)", "RDDRDDRDRDRD", perBeat = 1),
+    // 12-beat compás. Soleá and alegrías: accents on 3, 6, 8, 10, 12.
+    app.guitarnest.tab.StrumPattern("solea", "Soleá, alegrías (12-beat compás)", "DDRDDRDRDRDR", perBeat = 1),
+    // Bulerías and guajira: the same accents, counted from 12 (12, 3, 6, 8, 10).
+    app.guitarnest.tab.StrumPattern("bulerias", "Bulerías, guajira (12-beat compás)", "RDDRDDRDRDRD", perBeat = 1),
+    // Seguiriya: five uneven beats, short-short-long-long-short (2+2+3+3+2): accents on 1, 3, 5, 8, 11.
+    app.guitarnest.tab.StrumPattern("seguiriya", "Seguiriya (12-beat compás)", "RDRDRDDRDDRD", perBeat = 1),
+    // 3-beat styles: the accent on 1.
+    app.guitarnest.tab.StrumPattern("sevillanas", "Sevillanas (3/4)", "R-D-DU"),
+    app.guitarnest.tab.StrumPattern("fandango", "Fandango de Huelva (3/4)", "R-DUDU"),
+    // Tanguillo: 6 beats, accents on 1 and 4.
+    app.guitarnest.tab.StrumPattern("tanguillo", "Tanguillo (6/8)", "RDDRDD", perBeat = 1),
     // Fingerpicking. B = bass string of the chord, b = alternate bass, 1-6 = string (1 = high E).
     app.guitarnest.tab.StrumPattern("arpeggio", "Arpeggio", "B3212321", kind = app.guitarnest.tab.StrumPattern.PICK),
     app.guitarnest.tab.StrumPattern("travis", "Travis picking", "B1b2B1b2", kind = app.guitarnest.tab.StrumPattern.PICK),
