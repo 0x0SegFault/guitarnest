@@ -71,7 +71,7 @@ Android: JDK 17+ and the Android SDK (platform 36).
 
 iPhone (macOS with Xcode 16): see [ios/README.md](ios/README.md).
 
-Releases and stores: [docs/RELEASING.md](docs/RELEASING.md), [docs/STORES.md](docs/STORES.md).
+Releases: [docs/RELEASING.md](docs/RELEASING.md).
 
 ## Contribute
 

@@ -3,7 +3,7 @@
 A small Scaleway Serverless Function (Paris) that lets users report a problem or suggest a feature **without an account or an email**. It keeps nothing about the sender (no IP address, no cookie). Reports become issues in a **private** GitHub repository.
 
 ```
-GuitarNest app ──GET /challenge, POST /report──▶ this function ──▶ issue in the private repo 0x0SegFault/guitarnest-reports
+GuitarNest app ──GET /challenge, POST /report──▶ this function ──▶ issue in a private repository
 (or a browser ──▶ form page at / ──▶ same)        anti-spam puzzle solved on the phone (or in the browser)
 ```
 
@@ -29,10 +29,10 @@ GuitarNest app ──GET /challenge, POST /report──▶ this function ──�
 ## Deploy (once)
 
 ### 1. GitHub
-1. Create a **private** repository `guitarnest-reports`.
+1. Create a **private** repository for the reports.
 2. In it, create the labels `bug`, `enhancement` and `anonymous`.
 3. Create a fine-grained token: Settings → Developer settings → Fine-grained tokens.
-   - Repository access: **Only select repositories** → `guitarnest-reports`
+   - Repository access: **Only select repositories** → the private repository
    - Permissions: **Issues: Read and write** (nothing else)
    - Expiration: 1 year (set a reminder to renew it)
 
@@ -45,7 +45,7 @@ GuitarNest app ──GET /challenge, POST /report──▶ this function ──�
 3. **Create function**: runtime **Node 22**, handler `handler.handle`, upload `function.zip`.
    - Privacy: **Public**. Min scale **0**, max scale **1** (limits cost). Memory: smallest. Timeout: 10 s.
 4. Environment:
-   - Variable `GITHUB_REPO` = `0x0SegFault/guitarnest-reports`
+   - Variable `GITHUB_REPO` = `<owner>/<private repository>`
    - Secret `GITHUB_TOKEN` = the token from step 1
    - Secret `POW_KEY` = a random value: `openssl rand -hex 32`
 5. Deploy, open the function URL in a browser, send a test report, and check the private repository.
@@ -54,17 +54,11 @@ GuitarNest app ──GET /challenge, POST /report──▶ this function ──�
 ### 3. Turn it on in the apps
 Set `SERVICE_URL` in `shared/src/commonMain/kotlin/app/guitarnest/report/Reports.kt` to the function URL (Android and iPhone use it), then release a new version. The app then offers "Send anonymously" in Settings → Report a problem or idea, and after a crash.
 
-## Triage and follow-up
+## Follow-up
 
 The app keeps a random follow-up code for each report; the issue holds only its hash. In the app,
 "My reports" asks `GET /status?code=…` and shows: Sent, Received, Published (with the public link),
 Closed or Declined.
-
-- A good report: read it, remove anything personal, then `reports/publish.sh <number>`. It creates the public
-  issue in `0x0SegFault/guitarnest` (without the device line unless `--keep-device`), adds
-  "Public issue: <link>" to the private issue and closes it.
-- Not planned: close the private issue as "not planned" (`gh issue close <n> -R 0x0SegFault/guitarnest-reports --reason "not planned"`).
-- Fixed without publishing: close it as completed.
 
 ## Update
 Run the tests (`npm test`), package again (step 2), and upload the new `function.zip`.

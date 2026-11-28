@@ -1,6 +1,6 @@
 # Releasing GuitarNest
 
-This page is for maintainers. For Google Play and the App Store, see [STORES.md](STORES.md).
+This page is for maintainers.
 
 ## How a release works
 
@@ -10,7 +10,7 @@ A tag `vX.Y.Z` starts the [release workflow](../.github/workflows/release.yml). 
 2. runs the tests and builds the release APK and App Bundle,
 3. signs them with the release key (GitHub environment `release`, tags `v*` only, your approval),
 4. fails if the permissions differ from the list in [PRIVACY.md](../PRIVACY.md),
-5. publishes `guitarnest-X.Y.Z.apk`, its `.sha256`, `guitarnest-X.Y.Z.aab` (for Google Play) and the changelog as a GitHub release.
+5. publishes `guitarnest-X.Y.Z.apk`, its `.sha256`, `guitarnest-X.Y.Z.aab` and the changelog as a GitHub release.
 
 ## Make a new release
 
@@ -43,12 +43,6 @@ CI builds and tests the iOS app on every change (`.github/workflows/ios.yml`) an
 cd ai && ./fetch_model.sh && pip install onnx && python tools/export_model.py models/nmp.onnx ../models/basic-pitch.gnm
 sha256sum ../models/basic-pitch.gnm   # 63c061291c3853f5f796e41ea3d2a67539e7a939bdd2edd5e7c5372bf51c026b
 ```
-
-## F-Droid
-
-F-Droid accepts apps after 3 months of active development. Points to declare in the metadata:
-- **Anti-feature `NonFreeNet`**: the AI connection lists proprietary services (Anthropic, OpenAI, Mistral, OpenRouter) as presets. They are optional and chosen by the player; local models work too.
-- **Pre-trained model**: the note model is a converted Apache-2.0 model from Spotify's source release; the conversion script is in the repository.
 
 ## Known notices
 

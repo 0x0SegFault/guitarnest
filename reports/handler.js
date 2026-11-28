@@ -3,7 +3,7 @@
 //
 // Environment:
 //   GITHUB_TOKEN   fine-grained token, only the intake repository, permission "Issues: write" (secret)
-//   GITHUB_REPO    e.g. 0x0SegFault/guitarnest-reports
+//   GITHUB_REPO    owner/name of the private repository
 //   POW_KEY        random secret that signs the anti-spam puzzles (secret)
 //
 // Privacy: this code never reads request headers, so it never sees or stores the IP address,
