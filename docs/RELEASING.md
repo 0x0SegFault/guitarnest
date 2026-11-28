@@ -33,7 +33,7 @@ A tag `vX.Y.Z` starts the [release workflow](../.github/workflows/release.yml). 
 
 ## iOS
 
-CI builds and tests the iOS app on every change (`.github/workflows/ios.yml`) and publishes simulator screenshots to the `ios-preview` pre-release. App Store builds need the maintainer's Apple account: see [STORES.md](STORES.md).
+CI builds and tests the iOS app on every change (`.github/workflows/ios.yml`). The build log and simulator screenshots are kept with each run for 14 days (Actions → the run → Artifacts).
 
 ## The note model
 

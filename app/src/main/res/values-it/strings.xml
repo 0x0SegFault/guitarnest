@@ -212,7 +212,7 @@
     <string name="auto_crash_help">Anonimizzati: tipi di errore e righe di codice, versione dell\'app e di Android. Nessun modello di telefono, nessun messaggio, nessun brano.</string>
     <string name="crash_sent_automatically">È stato inviato un rapporto di arresto (anonimizzato).</string>
     <string name="credits_title">Crediti open source</string>
-    <string name="credits_intro">GuitarNest si basa sul lavoro di molte persone. Grazie. GuitarNest è software libero (GPL-3.0 o successiva).</string>
+    <string name="credits_intro">GuitarNest si basa sul lavoro di molte persone. Grazie. GuitarNest è software libero (EUPL-1.2).</string>
     <string name="credits_in_app">Nell\'app</string>
     <string name="credits_services">Servizi online (solo quando usi la funzione)</string>
     <string name="credits_tools">Strumenti di build e test (non nell\'app)</string>

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Licence: GuitarNest now uses the EUPL-1.2, the open-source licence of the European Union, instead of the GPL-3.0.
+- Report form: shows the minimum length under each box, names the box that is too short, and has a debug mode.
+
 ## 0.1.2 (2026-11-23)
 
 - Open-source credits in the app (About and permissions), in CREDITS.md and in the README: every library, service, tool, method and music source, with its licence.

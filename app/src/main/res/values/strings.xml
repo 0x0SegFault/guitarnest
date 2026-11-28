@@ -224,7 +224,7 @@
     <string name="auto_crash_help">Anonymised: error types and code lines, app and Android version. No phone model, no messages, no songs.</string>
     <string name="crash_sent_automatically">A crash report was sent (anonymised).</string>
     <string name="credits_title">Open-source credits</string>
-    <string name="credits_intro">GuitarNest is built on the work of many people. Thank you. GuitarNest itself is free software (GPL-3.0-or-later).</string>
+    <string name="credits_intro">GuitarNest is built on the work of many people. Thank you. GuitarNest itself is free software (EUPL-1.2).</string>
     <string name="credits_in_app">In the app</string>
     <string name="credits_services">Online services (only when you use the feature)</string>
     <string name="credits_tools">Build and test tools (not in the app)</string>

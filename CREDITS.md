@@ -2,7 +2,7 @@
 
 GuitarNest is built on the work of many people. Thank you.
 
-The same list is in the apps: Settings → About → Open-source credits. GuitarNest's own code is [GPL-3.0-or-later](LICENSE).
+The same list is in the apps: Settings → About → Open-source credits. GuitarNest's own code is [EUPL-1.2](LICENSE).
 
 ## In the app
 

@@ -23,13 +23,13 @@ on:
       - ".github/workflows/ios.yml"
   workflow_dispatch:
 
-# contents: write only to publish the "ios-preview" release (build log and screenshots).
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Cancel older runs only on pull requests: a cancelled run on main shows as failing.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   ios:
@@ -88,12 +88,14 @@ jobs:
           xcrun simctl launch "$SIM" $APPID --demo --tab tuner --demo-hz 110.1; shot 4-tuner
           xcrun simctl launch "$SIM" $APPID --demo --tab listen; shot 5-tab-from-audio
           xcrun simctl launch "$SIM" $APPID --demo -AppleLanguages "(fr)" -AppleLocale fr_FR; shot 6-library-fr
-      - name: Publish the iOS preview (log and screenshots)
-        if: always() && github.event_name == 'push'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release view ios-preview >/dev/null 2>&1 || gh release create ios-preview --prerelease \
-            --title "iOS preview (CI)" --notes "Build log and simulator screenshots of the latest iOS CI run on main. Not an installable app."
-          FILES=$(ls ios-build.log gradle-ios.log screenshots/*.png 2>/dev/null || true)
-          if [ -n "$FILES" ]; then gh release upload ios-preview $FILES --clobber; else echo "Nothing to publish"; fi
+      - name: Keep the build log and screenshots with the run
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ios-preview
+          path: |
+            ios-build.log
+            gradle-ios.log
+            screenshots/*.png
+          if-no-files-found: ignore
+          retention-days: 14

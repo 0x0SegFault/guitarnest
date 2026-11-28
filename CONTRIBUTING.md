@@ -34,6 +34,6 @@ The AI toolkit is in [ai/](ai/README.md) (Python): `python ai/tests/test_toolkit
 
 - CI must pass and the maintainer must approve.
 - Keep each pull request to one change.
-- Your contribution is licensed under the [GPL-3.0-or-later](LICENSE).
+- Your contribution is licensed under the [EUPL-1.2](LICENSE).
 
 Follow the [Code of Conduct](CODE_OF_CONDUCT.md).

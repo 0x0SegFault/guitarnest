@@ -3,7 +3,7 @@
 [![Build](https://github.com/0x0SegFault/guitarnest/actions/workflows/build.yml/badge.svg)](https://github.com/0x0SegFault/guitarnest/actions/workflows/build.yml)
 [![iOS](https://github.com/0x0SegFault/guitarnest/actions/workflows/ios.yml/badge.svg)](https://github.com/0x0SegFault/guitarnest/actions/workflows/ios.yml)
 [![AI toolkit](https://github.com/0x0SegFault/guitarnest/actions/workflows/ai.yml/badge.svg)](https://github.com/0x0SegFault/guitarnest/actions/workflows/ai.yml)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![License: EUPL 1.2](https://img.shields.io/badge/license-EUPL--1.2-blue.svg)](LICENSE)
 
 A free and open-source app to learn songs on the guitar, for **Android and iPhone**: tabs, strumming patterns, metronome and tuner, and tabs made from your own audio. No account, no ads, no trackers. Works without Google services. Your songs stay on your phone.
 
@@ -94,4 +94,4 @@ This project is developed with AI assistance. The maintainer reviews, tests and 
 
 ## License
 
-[GPL-3.0-or-later](LICENSE). Font: Nunito ([OFL](LICENSE-font-Nunito.txt)). Basic Pitch note model: Apache-2.0, Spotify ([licence](models/LICENSE-basic-pitch.txt)).
+[EUPL-1.2](LICENSE), the open-source licence of the European Union. Font: Nunito ([OFL](LICENSE-font-Nunito.txt)). Basic Pitch note model: Apache-2.0, Spotify ([licence](models/LICENSE-basic-pitch.txt)).
