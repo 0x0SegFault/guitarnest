@@ -35,6 +35,9 @@ iPhone (from the CI simulator):
 
 ## Features
 
+- **Song book**: 24 public-domain songs arranged for GuitarNest (Ode to Joy, Greensleeves, Amazing Grace, Silent Night, Minuet in G…), each at three levels: chords and strumming, melody with chords, or fingerstyle. No lyrics. Works offline.
+- **Free scores**: search finds guitar scores in the public domain or under Creative Commons (Mutopia Project: Sor, Carulli, Giuliani, Bach…) and makes a tab in one tap. The list is in the app; a score is downloaded only when you tap it.
+- **Chords with your AI**: for other songs, your own AI writes a chord chart (chords, sections, strumming), never lyrics or melody, marked as a draft to check by ear.
 - **Tab library**: write tabs and patterns; import GuitarNest (`.gnt`), MusicXML and MIDI files ([free music to import](docs/OPEN_MUSIC.md)); export, print or save as PDF.
 - **Tab from audio**: a song file you own, a recording of you playing, or (Android) the sound of an app that allows capture becomes a draft tab with tempo, chords, capo, tuning and strumming, at your level. The notes are found **on your phone** (Basic Pitch model, no internet needed).
 - **Play along**: the current bar and strum light up with the metronome; the chord now and next are shown as diagrams; with fingerpicking the string to pick lights up. Count-in, loop a section, play at 50–100 % or speed up step by step.
@@ -43,7 +46,7 @@ iPhone (from the CI simulator):
 - **Metronome**: 30–250 BPM, accents, subdivisions, tap tempo, speed trainer, strumming patterns.
 - **Tuner**: 9 tunings; the string being tuned lights up; tap a string to hear its note; reference A4 as a tuning fork.
 - **Your own AI** (optional): connect a cloud account (Anthropic, OpenAI, Mistral, OpenRouter), your gateway (LiteLLM) or a local model (Ollama, LM Studio). It improves drafts, arranges a tab for your level or adds strumming patterns. Only the tab and your request are sent, to the address you choose; never audio.
-- **Song search** in MusicBrainz (open data) to start a new tab.
+- **Song search** in MusicBrainz (open data) to start a new tab, with free scores and chords from your AI.
 - **Find the title** of a recording with AcoustID (optional, off by default). Only a fingerprint of the sound is sent.
 - **Report a problem or idea** anonymously (EU-hosted, nothing about you kept) or on GitHub.
 - **Encrypted backups**: one password-protected file with all songs and practice history, where you want it. Android and iPhone use the same format.

@@ -158,9 +158,13 @@ struct AskAIView: View {
 }
 
 struct SearchView: View {
+    @EnvironmentObject var model: AppModel
     let onPick: (SongInfo) -> Void
+    let onMade: (Song) -> Void
+    private let connection = AIConnection.load()
     @State private var query = ""
     @State private var results: [SongInfo]?
+    @State private var scores: [FreeScore] = []
     @State private var working = false
     @State private var error: String?
 
@@ -173,14 +177,40 @@ struct SearchView: View {
             }
             if working { ProgressView() }
             if let error { Text(error).foregroundStyle(Palette.off) }
+            if !scores.isEmpty {
+                Section {
+                    Text(L10n.t("free_scores_help")).font(.caption).foregroundStyle(.secondary)
+                    ForEach(Array(scores.enumerated()), id: \.offset) { _, s in
+                        Button { importScore(s) } label: {
+                            VStack(alignment: .leading) {
+                                Text(s.title).font(.headline).foregroundStyle(.primary)
+                                Text([s.composer, s.opus, s.licence].filter { !$0.isEmpty }.joined(separator: " · "))
+                                    .font(.caption).foregroundStyle(.secondary)
+                            }
+                        }
+                        .disabled(working)
+                    }
+                } header: { Text(L10n.t("free_scores")) }
+            }
             if let results {
-                if results.isEmpty { Text(L10n.t("no_results")) }
+                if results.isEmpty {
+                    Text(L10n.t("no_results"))
+                } else {
+                    Text(L10n.t(connection.configured ? "search_pick_help_ai" : "search_pick_help")).font(.caption).foregroundStyle(.secondary)
+                }
                 ForEach(Array(results.enumerated()), id: \.offset) { _, r in
-                    Button { onPick(r) } label: {
-                        VStack(alignment: .leading) {
-                            Text(r.title).font(.headline).foregroundStyle(.primary)
-                            Text([r.artist, r.album, r.year, r.seconds.map { String(format: "%d:%02d", Int(truncating: $0) / 60, Int(truncating: $0) % 60) } ?? ""]
-                                .filter { !$0.isEmpty }.joined(separator: " · ")).font(.caption).foregroundStyle(.secondary)
+                    HStack {
+                        Button { onPick(r) } label: {
+                            VStack(alignment: .leading) {
+                                Text(r.title).font(.headline).foregroundStyle(.primary)
+                                Text([r.artist, r.album, r.year, r.seconds.map { String(format: "%d:%02d", Int(truncating: $0) / 60, Int(truncating: $0) % 60) } ?? ""]
+                                    .filter { !$0.isEmpty }.joined(separator: " · ")).font(.caption).foregroundStyle(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        Spacer()
+                        if connection.configured {
+                            Button(L10n.t("ai_chords")) { chords(r) }.buttonStyle(.borderless).disabled(working)
                         }
                     }
                 }
@@ -190,8 +220,42 @@ struct SearchView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
+    /// Your AI writes the chords and strumming of the song: no lyrics, no melody.
+    private func chords(_ info: SongInfo) {
+        working = true
+        error = nil
+        let request = [info.title, info.artist].filter { !$0.isEmpty }.joined(separator: " – ")
+        Task {
+            do {
+                let made = try await AIClient.makeSong(connection, taskIndex: AIClient.chordsTask,
+                                                       level: Bridge.shared.level(index: 1), request: request, song: nil)
+                onMade(model.save(made))
+            } catch {
+                self.error = error.localizedDescription
+            }
+            working = false
+        }
+    }
+
+    /// Downloads the free score and opens it as a new song.
+    private func importScore(_ score: FreeScore) {
+        working = true
+        error = nil
+        Task {
+            do {
+                let data = try await AIClient.scoreMidi(score)
+                let song = try Bridge.shared.freeScoreSong(score: score, midi: Convert.bytes(data))
+                onMade(model.save(song))
+            } catch {
+                self.error = error.localizedDescription
+            }
+            working = false
+        }
+    }
+
     private func search() {
         guard !query.isEmpty else { return }
+        scores = Bridge.shared.freeScores(query: query)
         working = true
         error = nil
         let q = query

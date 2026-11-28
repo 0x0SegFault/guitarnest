@@ -8,7 +8,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 /** What the player asks the AI to do. */
-enum class AiTask { ARRANGE, STRUMMING, WRITE, REFINE }
+/** New tasks go at the end: the iPhone app refers to them by index. */
+enum class AiTask { ARRANGE, STRUMMING, WRITE, REFINE, CHORDS }
 
 @Serializable
 data class ChatMessage(val role: String, val content: String)
@@ -77,6 +78,11 @@ Rules:
             AiTask.WRITE -> "Write a new ${level.name.lowercase()} tab from the player's description."
             AiTask.REFINE -> "This draft was made automatically from a recording; tempo, chords, capo and strumming are estimates. " +
                 "Check and correct it with your music knowledge, keep what is right, and arrange it for the ${level.name.lowercase()} level."
+            AiTask.CHORDS -> "Write a chord chart for the song below from your knowledge of its harmony: key, capo, tempo, " +
+                "time signature, sections in order with their chords per beat, and one strumming pattern per section " +
+                "that fits the ${level.name.lowercase()} level. Chords only: no lyrics, no melody, no riffs, no single notes " +
+                "(every \"beats\" list stays empty), and \"notes\" stays empty. Do not copy a published chord sheet. " +
+                "If you do not know this song well enough, answer only with $UNKNOWN_SONG_ANSWER"
         }
         val content = buildString {
             appendLine(ask)
@@ -88,6 +94,24 @@ Rules:
         }
         return ChatRequest(model, listOf(ChatMessage("system", SYSTEM), ChatMessage("user", content)))
     }
+
+    /** The answer the AI gives when it does not know the song asked for a chord chart. */
+    const val UNKNOWN_SONG_ANSWER = "{\"error\": \"unknown song\"}"
+
+    /** True when the AI said it does not know the song: no chart is made and the request is not repeated. */
+    fun unknownSong(answer: String): Boolean {
+        val t = answer.trim().removePrefix("```json").removePrefix("```").removeSuffix("```").trim()
+        return t.startsWith("{") && t.contains("\"error\"") && t.contains("unknown song", ignoreCase = true) && !t.contains("\"sections\"")
+    }
+
+    /**
+     * A chord chart only: single notes and free text are removed, whatever the AI sent.
+     * This keeps melodies, riffs and lyrics of protected songs out of the app.
+     */
+    fun chordsOnly(song: Song): Song = song.copy(
+        notes = "",
+        sections = song.sections.map { s -> s.copy(bars = s.bars.map { it.copy(beats = emptyList()) }) },
+    )
 
     /** A follow-up message when the answer was not a valid song: the AI gets one chance to fix it. */
     fun repair(previous: ChatRequest, answer: String, problem: String): ChatRequest =

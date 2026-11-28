@@ -143,6 +143,13 @@ object Bridge {
     @Throws(Exception::class)
     fun aiSong(answer: String, source: String, level: Level?): Song = AiTabMaker.songFrom(answer, source, level)
     fun aiRepair(request: ChatRequest, answer: String, problem: String): ChatRequest = AiTabMaker.repair(request, answer, problem)
+    fun aiUnknownSong(answer: String): Boolean = AiTabMaker.unknownSong(answer)
+    fun songBook(): List<app.guitarnest.songbook.BookSong> = app.guitarnest.songbook.SongBook.songs()
+    fun songBookSong(book: app.guitarnest.songbook.BookSong, level: Level): Song = app.guitarnest.songbook.SongBook.song(book, level)
+    fun freeScores(query: String): List<app.guitarnest.scores.FreeScore> = app.guitarnest.scores.FreeScores.search(query)
+    @Throws(Exception::class)
+    fun freeScoreSong(score: app.guitarnest.scores.FreeScore, midi: ByteArray): Song = app.guitarnest.scores.FreeScores.toSong(score, midi)
+    fun aiChordsOnly(song: Song): Song = AiTabMaker.chordsOnly(song)
 
     fun searchUrl(query: String): String = SongSearch.url(query)
     fun searchUserAgent(): String = SongSearch.USER_AGENT

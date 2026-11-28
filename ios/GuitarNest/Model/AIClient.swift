@@ -55,18 +55,43 @@ enum AIClient {
         return try Bridge.shared.aiAnswer(body: body, baseUrl: base)
     }
 
+    /// Task index of the chords-only chart in the shared enum (0 arrange, 1 strumming, 2 write, 3 refine, 4 chords).
+    static let chordsTask = 4
+
+    struct UnknownSong: LocalizedError {
+        var errorDescription: String? { L10n.t("ai_unknown_song") }
+    }
+
     /// A song from the AI; an invalid answer goes back once with the problem.
+    /// A chords-only chart keeps chords and strumming only, whatever the AI sent.
     static func makeSong(_ connection: AIConnection, taskIndex: Int, level: Level, request: String, song: Song?) async throws -> Song {
         var chat = Bridge.shared.aiRequest(model: connection.model, task: Bridge.shared.aiTask(index: Int32(taskIndex)), level: level, request: request, song: song)
         var answer = try await AIClient.chat(connection, chat)
+        let chords = taskIndex == chordsTask
+        if chords && Bridge.shared.aiUnknownSong(answer: answer) { throw UnknownSong() }
         let keep: Level? = taskIndex == 1 ? nil : level // 1 = strumming: keep the song's level
+        let source = chords ? "AI, chords only (\(connection.model))" : "AI (\(connection.model))"
+        let made: Song
         do {
-            return try Bridge.shared.aiSong(answer: answer, source: "AI (\(connection.model))", level: keep)
+            made = try Bridge.shared.aiSong(answer: answer, source: source, level: keep)
         } catch {
             chat = Bridge.shared.aiRepair(request: chat, answer: answer, problem: error.localizedDescription)
             answer = try await AIClient.chat(connection, chat)
-            return try Bridge.shared.aiSong(answer: answer, source: "AI (\(connection.model))", level: keep)
+            if chords && Bridge.shared.aiUnknownSong(answer: answer) { throw UnknownSong() }
+            made = try Bridge.shared.aiSong(answer: answer, source: source, level: keep)
         }
+        return chords ? Bridge.shared.aiChordsOnly(song: made) : made
+    }
+
+    /// Downloads one free score (a MIDI file) from the Mutopia Project, only when the player taps it.
+    static func scoreMidi(_ score: FreeScore) async throws -> Data {
+        guard let url = URL(string: score.midiUrl) else { throw URLError(.badURL) }
+        var request = URLRequest(url: url, timeoutInterval: 30)
+        request.setValue(Bridge.shared.searchUserAgent(), forHTTPHeaderField: "User-Agent")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
+        guard data.count <= 2_000_000 else { throw URLError(.dataLengthExceedsMaximum) }
+        return data
     }
 
     /// Song search in MusicBrainz (open data). Only the search words are sent. MusicBrainz allows about

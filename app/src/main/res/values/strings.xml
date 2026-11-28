@@ -235,4 +235,16 @@
     <string name="step_identifying">Finding the title…</string>
     <string name="identify_none">Title not found. Type it in the song editor.</string>
     <string name="identify_too_short">Title not found: the audio must be 10 s or longer.</string>
+    <string name="ai_chords">Chords (AI)</string>
+    <string name="search_pick_help">Tap a song to start an empty tab with its title and artist.</string>
+    <string name="search_pick_help_ai">Tap a song to start an empty tab, or tap Chords (AI): your AI writes its chords and strumming, without lyrics or melody. Check them by ear.</string>
+    <string name="ai_unknown_song">Your AI does not know this song well enough to write its chords. Start an empty tab, or make one from your own recording.</string>
+    <string name="free_scores">Free scores</string>
+    <string name="free_scores_help">Public domain or Creative Commons, from the Mutopia Project. Tap one to download it and make a tab.</string>
+    <string name="other_songs">Other songs</string>
+    <string name="song_book">Song book</string>
+    <string name="song_book_help">Songs in the public domain, arranged for GuitarNest. No lyrics. Pick a level, then a song: it is added to your songs.</string>
+    <string name="song_book_beginner">Chords with a simple strum.</string>
+    <string name="song_book_intermediate">The melody on the strings, with its chords and a fuller strum.</string>
+    <string name="song_book_advanced">Fingerstyle: the melody with a bass note on the strong beats.</string>
 </resources>

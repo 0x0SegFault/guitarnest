@@ -16,19 +16,26 @@ import java.net.URL
 
 class AiException(message: String) : Exception(message)
 
+/** The AI said it does not know the song asked for a chord chart. */
+class AiUnknownSongException : Exception("unknown song")
+
 /** Asks the AI for a song; an invalid answer is sent back once with the problem, so the AI can fix it. */
 suspend fun AiClient.makeSong(connection: AiConnection, task: AiTask, level: Level, request: String, song: Song?): Song {
     var chat = AiTabMaker.request(connection.model, task, level, request, song)
     var answer = chat(connection, chat)
-    val source = "AI (${connection.model})"
+    val chords = task == AiTask.CHORDS
+    if (chords && AiTabMaker.unknownSong(answer)) throw AiUnknownSongException()
+    val source = if (chords) "AI, chords only (${connection.model})" else "AI (${connection.model})"
     val keepLevel = level.takeIf { task != AiTask.STRUMMING }
-    return try {
+    val song = try {
         AiTabMaker.songFrom(answer, source, keepLevel)
     } catch (e: TabFormatException) {
         chat = AiTabMaker.repair(chat, answer, e.message ?: "invalid")
         answer = chat(connection, chat)
+        if (chords && AiTabMaker.unknownSong(answer)) throw AiUnknownSongException()
         AiTabMaker.songFrom(answer, source, keepLevel)
     }
+    return if (chords) AiTabMaker.chordsOnly(song) else song
 }
 
 /**

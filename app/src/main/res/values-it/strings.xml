@@ -223,4 +223,16 @@
     <string name="step_identifying">Ricerca del titolo…</string>
     <string name="identify_none">Titolo non trovato. Scrivilo nell\'editor.</string>
     <string name="identify_too_short">Titolo non trovato: l\'audio deve durare 10 s o più.</string>
+    <string name="ai_chords">Accordi (IA)</string>
+    <string name="search_pick_help">Tocca un brano per creare una tab vuota con titolo e artista.</string>
+    <string name="search_pick_help_ai">Tocca un brano per creare una tab vuota, o tocca Accordi (IA): la tua IA scrive accordi e ritmo, senza testo né melodia. Controllali a orecchio.</string>
+    <string name="ai_unknown_song">La tua IA non conosce questo brano abbastanza per scriverne gli accordi. Crea una tab vuota, o creane una dalla tua registrazione.</string>
+    <string name="free_scores">Spartiti liberi</string>
+    <string name="free_scores_help">Pubblico dominio o Creative Commons, dal Mutopia Project. Toccane uno per scaricarlo e farne una tab.</string>
+    <string name="other_songs">Altri brani</string>
+    <string name="song_book">Canzoniere</string>
+    <string name="song_book_help">Brani di pubblico dominio, arrangiati per GuitarNest. Senza testo. Scegli un livello, poi un brano: viene aggiunto ai tuoi brani.</string>
+    <string name="song_book_beginner">Accordi con un ritmo semplice.</string>
+    <string name="song_book_intermediate">La melodia sulle corde, con gli accordi e un ritmo più ricco.</string>
+    <string name="song_book_advanced">Fingerstyle: la melodia con un basso sui tempi forti.</string>
 </resources>

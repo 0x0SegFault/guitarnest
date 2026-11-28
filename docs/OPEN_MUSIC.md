@@ -1,10 +1,10 @@
 # Free music to import
 
-GuitarNest never downloads music. You can download these scores yourself in the browser and import them (Songs → Import file). Check the licence of each piece: it is shown on its page.
+GuitarNest never downloads audio. Free guitar scores from the Mutopia Project are in the app: search a title or a composer, then tap a score to make a tab. Scores from the other sources below can be downloaded in the browser and imported (Songs → Import file). Check the licence of each piece: it is shown on its page and kept with the song.
 
 | Source | Licence | Format to import | Guitar |
 |---|---|---|---|
-| [Mutopia Project](https://www.mutopiaproject.org/) | Public domain or Creative Commons (CC BY-SA, CC BY) | MIDI (`.mid`) | About 370 solo guitar pieces (Sor, Carulli, Giuliani, Bach…) |
+| [Mutopia Project](https://www.mutopiaproject.org/) | Public domain or Creative Commons (CC BY-SA, CC BY) | MIDI (`.mid`) | Guitar pieces (Sor, Carulli, Giuliani, Bach…); 135 of them can be opened from the app |
 | [OpenScore](https://openscore.cc/) | CC0 (no rights reserved) | MusicXML (`.mxl`, `.musicxml`) | Mostly piano and voice; GuitarNest places the notes on the guitar |
 
 How GuitarNest uses them:

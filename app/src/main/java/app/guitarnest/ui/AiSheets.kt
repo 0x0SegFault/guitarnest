@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import app.guitarnest.R
 import app.guitarnest.ai.AiTask
 import app.guitarnest.ai.SongInfo
+import app.guitarnest.scores.FreeScore
 import app.guitarnest.data.AiConnection
 import app.guitarnest.tab.Level
 import app.guitarnest.tab.Song
@@ -130,7 +131,10 @@ fun AskAiSheet(song: Song?, connection: AiConnection, job: Job<String>, onSetup:
 }
 
 @Composable
-fun SearchSheet(job: Job<List<SongInfo>>, onSearch: (String) -> Unit, onPick: (SongInfo) -> Unit) {
+fun SearchSheet(
+    job: Job<List<SongInfo>>, scores: List<FreeScore>, aiJob: Job<*>, aiReady: Boolean,
+    onSearch: (String) -> Unit, onPick: (SongInfo) -> Unit, onChords: (SongInfo) -> Unit, onScore: (FreeScore) -> Unit,
+) {
     var query by rememberSaveable { mutableStateOf("") }
     Column(Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(stringResource(R.string.find_song), style = MaterialTheme.typography.titleLarge)
@@ -141,14 +145,34 @@ fun SearchSheet(job: Job<List<SongInfo>>, onSearch: (String) -> Unit, onPick: (S
             Text(stringResource(R.string.find_song_privacy), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         JobStatus(job, ok = null)
+        JobStatus(aiJob, ok = null)
+        if (scores.isNotEmpty()) {
+            Text(stringResource(R.string.free_scores), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.free_scores_help), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Column(Modifier.heightIn(max = 260.dp).verticalScroll(rememberScrollState())) {
+                scores.forEach { s ->
+                    Column(Modifier.fillMaxWidth().clickable(enabled = !aiJob.running) { onScore(s) }.padding(vertical = 8.dp)) {
+                        Text(s.title, style = MaterialTheme.typography.titleSmall)
+                        Text(listOf(s.composer, s.opus, s.licence).filter { it.isNotBlank() }.joinToString(" · "), style = MaterialTheme.typography.bodySmall)
+                    }
+                    HorizontalDivider()
+                }
+            }
+            if (job.result?.isNotEmpty() == true) Text(stringResource(R.string.other_songs), style = MaterialTheme.typography.titleMedium)
+        }
         job.result?.let { results ->
             if (results.isEmpty()) Text(stringResource(R.string.no_results))
+            else Text(stringResource(if (aiReady) R.string.search_pick_help_ai else R.string.search_pick_help),
+                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             LazyColumn(Modifier.heightIn(max = 420.dp)) {
                 items(results) { r ->
-                    Column(Modifier.fillMaxWidth().clickable { onPick(r) }.padding(vertical = 10.dp)) {
-                        Text(r.title, style = MaterialTheme.typography.titleMedium)
-                        Text(listOf(r.artist, r.album, r.year, r.seconds?.let { "%d:%02d".format(it / 60, it % 60) } ?: "")
-                            .filter { it.isNotBlank() }.joinToString(" · "), style = MaterialTheme.typography.bodySmall)
+                    Row(Modifier.fillMaxWidth().padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f).clickable { onPick(r) }.padding(vertical = 4.dp)) {
+                            Text(r.title, style = MaterialTheme.typography.titleMedium)
+                            Text(listOf(r.artist, r.album, r.year, r.seconds?.let { "%d:%02d".format(it / 60, it % 60) } ?: "")
+                                .filter { it.isNotBlank() }.joinToString(" · "), style = MaterialTheme.typography.bodySmall)
+                        }
+                        if (aiReady) TextButton(onClick = { onChords(r) }, enabled = !aiJob.running) { Text(stringResource(R.string.ai_chords)) }
                     }
                     HorizontalDivider()
                 }

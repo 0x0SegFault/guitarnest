@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -49,6 +50,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import app.guitarnest.tab.Level
+import app.guitarnest.ai.AiTask
 import app.guitarnest.BuildConfig
 import app.guitarnest.R
 import app.guitarnest.data.SongPrinter
@@ -84,6 +87,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
     }
     val ai by vm.ai.collectAsStateWithLifecycle()
     val aiJob by vm.aiJob.collectAsStateWithLifecycle()
+    val scores by vm.scores.collectAsStateWithLifecycle()
     val search by vm.search.collectAsStateWithLifecycle()
     var confirmDelete by remember { mutableStateOf(false) }
     var editorError by remember { mutableStateOf<String?>(null) }
@@ -152,6 +156,7 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
                             onDelete = { confirmDelete = true },
                         )
                         tab == Tab.SONGS -> {
+                            IconButton(onClick = { sheet = "song_book" }) { Icon(Icons.AutoMirrored.Outlined.MenuBook, stringResource(R.string.song_book)) }
                             IconButton(onClick = { importer.launch(arrayOf("*/*")) }) { Icon(Icons.Filled.LibraryMusic, stringResource(R.string.import_file)) }
                             NewSongMenu(
                                 onListen = { listening = true },
@@ -222,12 +227,20 @@ fun AppRoot(vm: SongsViewModel = viewModel()) {
         "my_reports" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             MyReportsSheet()
         }
+        "song_book" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+            SongBookSheet { book, level -> vm.addFromSongBook(book, level) { made -> sheet = null; openId = made.id; tab = Tab.SONGS } }
+        }
         "search" -> ModalBottomSheet(onDismissRequest = { sheet = null }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
-            SearchSheet(search, vm::searchSongs) { info ->
+            SearchSheet(search, scores, aiJob, ai.configured, vm::searchSongs, onScore = { score ->
+                vm.importScore(score) { made -> sheet = null; openId = made.id; tab = Tab.SONGS }
+            }, onPick = { info ->
                 seed = Song(title = info.title, artist = info.artist, notes = listOf(info.album, info.year).filter { it.isNotBlank() }.joinToString(", "))
                 sheet = null
                 editing = ""
-            }
+            }, onChords = { info ->
+                val request = listOf(info.title, info.artist).filter { it.isNotBlank() }.joinToString(" – ")
+                vm.askAi(AiTask.CHORDS, Level.INTERMEDIATE, request, null) { made -> sheet = null; openId = made.id; tab = Tab.SONGS }
+            })
         }
     }
 }

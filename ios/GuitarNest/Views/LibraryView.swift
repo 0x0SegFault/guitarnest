@@ -10,7 +10,7 @@ struct LibraryView: View {
     @State private var sheet: Sheet?
 
     enum Sheet: String, Identifiable {
-        case ai, ask, search, backup, report, myReports, about
+        case ai, ask, search, songBook, backup, report, myReports, about
         var id: String { rawValue }
     }
 
@@ -32,6 +32,8 @@ struct LibraryView: View {
         .navigationTitle("GuitarNest")
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
+                Button { sheet = .songBook } label: { Image(systemName: "book") }
+                    .accessibilityLabel(L10n.t("song_book"))
                 Menu {
                     Button(L10n.t("listen_title")) { path.append(.listen) }
                     Button(L10n.t("write_tab")) { path.append(.edit("")) }
@@ -64,9 +66,16 @@ struct LibraryView: View {
                 switch which {
                 case .ai: AIConnectionView()
                 case .ask: AskAIView(song: nil) { made in sheet = nil; path.append(.song(made.id)) }
-                case .search: SearchView { info in
+                case .search: SearchView(onPick: { info in
                     sheet = nil
                     path.append(.newSong(title: info.title, artist: info.artist))
+                }, onMade: { made in
+                    sheet = nil
+                    path.append(.song(made.id))
+                })
+                case .songBook: SongBookView { made in
+                    sheet = nil
+                    path.append(.song(made.id))
                 }
                 case .backup: BackupView()
                 case .report: ReportView()

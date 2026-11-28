@@ -220,4 +220,16 @@
     <string name="step_identifying">Titel wird gesucht…</string>
     <string name="identify_none">Titel nicht gefunden. Gib ihn im Editor ein.</string>
     <string name="identify_too_short">Titel nicht gefunden: Das Audio muss 10 s oder länger sein.</string>
+    <string name="ai_chords">Akkorde (KI)</string>
+    <string name="search_pick_help">Tippe auf einen Song, um einen leeren Tab mit Titel und Künstler anzulegen.</string>
+    <string name="search_pick_help_ai">Tippe auf einen Song für einen leeren Tab, oder auf Akkorde (KI): Deine KI schreibt Akkorde und Anschlag, ohne Text und ohne Melodie. Prüfe sie nach Gehör.</string>
+    <string name="ai_unknown_song">Deine KI kennt diesen Song nicht gut genug, um seine Akkorde zu schreiben. Lege einen leeren Tab an oder erstelle einen aus deiner eigenen Aufnahme.</string>
+    <string name="free_scores">Freie Noten</string>
+    <string name="free_scores_help">Gemeinfrei oder Creative Commons, vom Mutopia Project. Tippe auf ein Stück, um es zu laden und daraus einen Tab zu machen.</string>
+    <string name="other_songs">Andere Songs</string>
+    <string name="song_book">Liederbuch</string>
+    <string name="song_book_help">Gemeinfreie Lieder, für GuitarNest arrangiert. Ohne Text. Wähle eine Stufe, dann ein Lied: Es wird zu deinen Songs hinzugefügt.</string>
+    <string name="song_book_beginner">Akkorde mit einem einfachen Anschlag.</string>
+    <string name="song_book_intermediate">Die Melodie auf den Saiten, mit Akkorden und vollerem Anschlag.</string>
+    <string name="song_book_advanced">Fingerstyle: die Melodie mit einem Basston auf den betonten Schlägen.</string>
 </resources>

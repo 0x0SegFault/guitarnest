@@ -26,6 +26,7 @@ object Credits {
         )),
         CreditSection("credits_services", listOf(
             Credit("MusicBrainz", "Song search (title, artist, album); only your search words are sent", "Data CC0, MetaBrainz Foundation", "https://musicbrainz.org"),
+            Credit("Mutopia Project", "Free guitar scores: the list is in the app; a score is downloaded only when you tap it", "Each score: public domain or Creative Commons (shown with the song)", "https://www.mutopiaproject.org"),
             Credit("AcoustID", "Finds the song title from a sound fingerprint, only if you turn on Find the title; the audio is never sent", "Data CC BY-SA 3.0, AcoustID OÜ (Estonia, EU)", "https://acoustid.org"),
             Credit("Your AI provider", "Only if you connect one: Anthropic, OpenAI, Mistral, OpenRouter, LiteLLM, Ollama, LM Studio or any OpenAI-compatible server", "Their own terms", "https://openrouter.ai"),
             Credit("Scaleway", "Hosts the anonymous report service (Paris, EU)", "Service", "https://www.scaleway.com"),

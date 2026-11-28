@@ -23,6 +23,12 @@ import app.guitarnest.data.NotABackupException
 import app.guitarnest.data.WrongPasswordException
 import app.guitarnest.data.AiSettings
 import app.guitarnest.net.AiClient
+import app.guitarnest.net.ScoreClient
+import app.guitarnest.scores.FreeScore
+import app.guitarnest.songbook.BookSong
+import app.guitarnest.songbook.SongBook
+import app.guitarnest.scores.FreeScores
+import app.guitarnest.net.AiUnknownSongException
 import app.guitarnest.net.MusicBrainzClient
 import app.guitarnest.net.OpenRouterSignIn
 import app.guitarnest.net.makeSong
@@ -218,11 +224,39 @@ class SongsViewModel(app: Application) : AndroidViewModel(app) {
             refresh()
             _aiJob.value = Job()
             done(saved)
+        }.onFailure {
+            val message = if (it is AiUnknownSongException) getApplication<Application>().getString(R.string.ai_unknown_song) else it.message
+            _aiJob.value = Job(error = message)
+        }
+    }
+
+    private val _scores = MutableStateFlow<List<FreeScore>>(emptyList())
+    /** Free scores that match the last search: searched on the phone, nothing is sent. */
+    val scores: StateFlow<List<FreeScore>> = _scores.asStateFlow()
+
+    /** Adds a song of the song book, at a level, to the player's songs. */
+    fun addFromSongBook(book: BookSong, level: Level, done: (Song) -> Unit) = viewModelScope.launch {
+        val saved = withContext(Dispatchers.IO) { repo.save(SongBook.song(book, level)) }
+        refresh()
+        done(saved)
+    }
+
+    /** Downloads the free score, imports it as a new song and opens it. */
+    fun importScore(score: FreeScore, done: (Song) -> Unit) = viewModelScope.launch {
+        _aiJob.value = Job(running = true)
+        runCatching {
+            val song = FreeScores.toSong(score, ScoreClient.midi(score))
+            withContext(Dispatchers.IO) { repo.save(song) }
+        }.onSuccess { saved ->
+            refresh()
+            _aiJob.value = Job()
+            done(saved)
         }.onFailure { _aiJob.value = Job(error = it.message) }
     }
 
     fun searchSongs(query: String) = viewModelScope.launch {
         if (query.isBlank()) return@launch
+        _scores.value = FreeScores.search(query)
         _search.value = Job(running = true)
         _search.value = runCatching { MusicBrainzClient.search(query) }.fold({ Job(result = it) }, { Job(error = it.message) })
     }
