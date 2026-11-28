@@ -131,7 +131,7 @@ object SongBook {
         val heard = notes.filter { it.midi != null }.map { HeardNote(it.at, it.midi!!, it.length, 1f) }
         if (heard.isEmpty()) return emptyList()
         val (_, placed) = Fingering.place(heard, tuning, 0)
-        return placed.groupBy { it.note.time }.toSortedMap().map { (at, group) ->
+        return placed.groupBy { it.note.time }.entries.sortedBy { it.key }.map { (at, group) ->
             // Fingering counts strings from the lowest (0); tabs count from the high E (1).
             Beat(at, group.map { TabNote(string = 6 - it.string, fret = it.fret) }.sortedBy { it.string })
         }
