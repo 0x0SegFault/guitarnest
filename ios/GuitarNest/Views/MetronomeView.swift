@@ -59,9 +59,15 @@ struct MetronomeView: View {
                         ForEach(Bridge.shared.presetPatterns().filter { Bridge.shared.patternKind(pattern: $0) == "strum" }, id: \.id) { Text($0.name).tag($0.id) }
                     }
                     .pickerStyle(.menu)
-                    // A 12-beat flamenco compás sets 12 beats per bar, so its accents land on the right beats.
+                    // A pattern of 3, 6 or 12 beats (waltz, sevillanas, tanguillo, a flamenco compás) sets the beats per bar,
+                    // so its accents land on the right beats.
                     .onChange(of: patternId) { _, _ in
-                        if let p = pattern, Bridge.shared.patternBeats(pattern: p) != 4 { beatsPerBar = Int(Bridge.shared.patternBeats(pattern: p)) } else if beatsPerBar == 6 || beatsPerBar == 12 { beatsPerBar = 4 }
+                        let beats = pattern.map { Int(Bridge.shared.patternBeats(pattern: $0)) } ?? 4
+                        if beats != 4 {
+                            beatsPerBar = beats
+                        } else if beatsPerBar == 6 || beatsPerBar == 12 {
+                            beatsPerBar = 4
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
