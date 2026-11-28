@@ -39,6 +39,7 @@ function formPage(query = {}) {
   <h1>GuitarNest · anonymous report</h1>
   <p class="lead">Anonymous: no account, no email. Nothing about you is kept: not your IP address, not a cookie.
   Do not paste copyrighted tabs or lyrics.</p>
+  <noscript><p class="note" style="font-weight:600">This form needs JavaScript. Turn it on for this page, or send the report with GitHub.</p></noscript>
   <form id="report">
     <label for="kind">Type</label>
     <select id="kind" name="kind">
@@ -55,6 +56,7 @@ function formPage(query = {}) {
     </div>
     <button id="send" type="submit">Send</button>
     <p id="status" role="status" aria-live="polite"></p>
+    <pre id="log" hidden></pre>
     <p class="note">Before sending, your browser solves a small puzzle for a second or two. It stops spam without tracking you.</p>
   </form>
 </main>
@@ -64,6 +66,22 @@ function formPage(query = {}) {
 }
 
 const formScript = `'use strict';
+// Debug mode (?debug=1 in the address): each step is shown on the page. Nothing is sent or stored.
+const logBox = document.getElementById('log');
+const debug = new URLSearchParams(location.search).has('debug');
+const t0 = Date.now();
+function log(text) {
+  if (!debug) return;
+  logBox.hidden = false;
+  logBox.textContent += ((Date.now() - t0) / 1000).toFixed(1) + ' s  ' + text + '\\n';
+}
+window.addEventListener('error', (e) => {
+  log('Error: ' + e.message + ' (line ' + e.lineno + ')');
+  document.getElementById('status').textContent = 'Page error: ' + e.message;
+});
+window.addEventListener('unhandledrejection', (e) => log('Error: ' + (e.reason && e.reason.message || e.reason)));
+log('Script loaded. ' + navigator.userAgent);
+log('Address: ' + location.origin + location.pathname);
 const form = document.getElementById('report');
 const status = document.getElementById('status');
 const button = document.getElementById('send');
@@ -132,6 +150,7 @@ function show(text) {
 }
 
 form.addEventListener('submit', async (event) => {
+  log('Send pressed.');
   event.preventDefault();
   button.disabled = true;
   button.textContent = 'Checking…';
@@ -140,14 +159,18 @@ form.addEventListener('submit', async (event) => {
     const answer = await fetch('challenge', { cache: 'no-store' });
     if (!answer.ok) throw new Error('challenge ' + answer.status);
     const challenge = await answer.json();
+    log('Puzzle received (HTTP ' + answer.status + ').');
+    const started = Date.now();
     const proof = await solve(challenge, (percent) => { button.textContent = 'Checking… ' + percent + ' %'; });
     button.textContent = 'Sending…';
     const data = Object.fromEntries(new FormData(form));
+    log('Puzzle solved in ' + ((Date.now() - started) / 1000).toFixed(1) + ' s.');
     const response = await fetch('report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...data, proof }),
     });
+    log('Report answer: HTTP ' + response.status + '.');
     if (response.ok) {
       form.reset();
       show('Thank you. Your report was sent.');
@@ -158,6 +181,7 @@ form.addEventListener('submit', async (event) => {
         : 'The report could not be sent. Please try again later. (' + (error || response.status) + ')');
     }
   } catch (e) {
+    log('Error: ' + (e && e.message || e));
     show('The report could not be sent. Check your connection and try again. (' + (e && e.message || 'error') + ')');
   } finally {
     button.disabled = false;
